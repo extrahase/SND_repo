@@ -14,14 +14,13 @@ local etaFlight = functions.CalculateEtaFlight3()
 
 if Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType then
     Actions.Teleport(closestAetheryteId)
-end
+    functions.WaitForZoneAndReady()
+    end
 
 if etaTp <= etaFlight then
     functions.WaitForReady()
     Actions.Teleport(closestAetheryteId)
     functions.Wait(5)
-else
-    functions.Echo("Flight is better")
 end
 
 functions.FlyToFlag()
