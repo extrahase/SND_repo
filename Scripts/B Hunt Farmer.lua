@@ -5,9 +5,11 @@
 -- ############
 
 import("System.Numerics")
-local huntLocations = require("huntLocations")
-local huntMarks = require("huntMarks")
-local zoneList = require("vac_lists").Zone_List
+
+HUNT_LOCATIONS = require("huntLocations")
+HUNT_MARKS = require("huntMarks")
+ZONE_LIST = require("vac_lists").Zone_List
+
 local functions = require("functions")
 
 MOUNT_SPEED = 20.6
@@ -23,7 +25,7 @@ functions.Echo("Script started!")
 
 local huntMarksByRank = { }
 
-for _, expansion in pairs(huntMarks) do
+for _, expansion in pairs(HUNT_MARKS) do
     if expansion.B then
         for _, mark in ipairs(expansion.B) do
             table.insert(huntMarksByRank, mark)

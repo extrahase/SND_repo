@@ -1,7 +1,9 @@
 -- Fly to Flag
 
 import("System.Numerics")
-local zoneList = require("vac_lists").Zone_List
+
+ZONE_LIST = require("vac_lists").Zone_List
+
 local functions = require("functions")
 
 MOUNT_SPEED = 20.6

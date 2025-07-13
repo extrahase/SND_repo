@@ -6,7 +6,7 @@
 
 local functions = require("functions")
 
-local ITEMS_TO_DESYNTH = {
+ITEMS_TO_DESYNTH = {
     Nuts = {
         ["Neo Kingdom Index"] = { a = 0, b = 1, c = 1},
         ["Neo Kingdom Round Brush"] = { a = 0, b = 3, c = 1},
@@ -19,19 +19,19 @@ local ITEMS_TO_DESYNTH = {
     }
 }
 
-local POETICS_VENDOR = {
+POETICS_VENDOR = {
     name = "Agora Merchant",
     pos = { x = 16.92, y = 2.8, z = 1.23 },
     shopName = "InclusionShop"
 }
 
-local NUTS_VENDOR = {
+NUTS_VENDOR = {
     name = "Ryubool Ja",
     pos = { x = 25.89, y = -14, z = 127.01 },
     shopName = "ShopExchangeCurrency"
 }
 
-local itemList = require("vac_lists").Item_List
+ITEM_LIST = require("vac_lists").Item_List
 
 -- #################
 -- ### FUNCTIONS ###

@@ -222,7 +222,7 @@ Returns:
 ]]
 functions.GetAetherytesInFlagZone = function()
     local flagZoneId = Instances.Map.Flag.TerritoryId
-    local flagZone = zoneList[tostring(flagZoneId)]
+    local flagZone = ZONE_LIST[tostring(flagZoneId)]
     local aetherytePos = {}
 
     if flagZone and flagZone.Aetherytes then
@@ -274,7 +274,7 @@ Returns:
 ]]
 functions.FindItemID = function(item_to_find)
     local search_term = string.lower(item_to_find)
-    for key, item in pairs(itemList) do
+    for key, item in pairs(ITEM_LIST) do
         local item_name = string.lower(item['Name'])
         if item_name == search_term then
             return key
@@ -295,7 +295,7 @@ Returns:
 ]]
 functions.FindZoneNameByTerritoryId = function(territoryId)
     territoryId = tostring(territoryId)
-    for id, zone in pairs(zoneList) do
+    for id, zone in pairs(ZONE_LIST) do
         if id == territoryId then
             return zone.Zone
         end
@@ -313,7 +313,7 @@ Returns:
 - positions (table) or nil
 ]]
 functions.GetZoneHuntLocations = function(territoryId)
-    for _, expansion in pairs(huntLocations) do
+    for _, expansion in pairs(HUNT_LOCATIONS) do
         for _, zone in ipairs(expansion) do
             if zone.mapId == territoryId then
                 return zone.positions
