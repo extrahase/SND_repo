@@ -10,7 +10,7 @@ Parameters:
 - message (string)
 ]]
 functions.Echo = function(message)
-	yield("/echo "..tostring(message))
+    yield("/echo "..tostring(message))
 end
 
 --[[
@@ -20,60 +20,56 @@ Parameters:
 - number (float or int)
 ]]
 functions.Wait = function(number)
-	yield("/wait "..number)
+    yield("/wait "..number)
 end
 
 --[[
 WaitForReady
 Waits until the player is not busy.
-Dependencies:
+External dependencies:
 - Player.IsBusy
-- functions.Wait
 ]]
 functions.WaitForReady = function()
-	while Player.IsBusy do
-		functions.Wait(0.1)
-	end
+    while Player.IsBusy do
+        functions.Wait(0.1)
+    end
 end
 
 --[[
 WaitForOutOfCombat
 Waits until the player is no longer in combat.
-Dependencies:
+External dependencies:
 - Player.Entity.IsInCombat
-- functions.Wait
 ]]
 functions.WaitForOutOfCombat = function()
-	while Player.Entity.IsInCombat do
-		functions.Wait(0.1)
-	end
+    while Player.Entity.IsInCombat do
+        functions.Wait(0.1)
+    end
 end
 
 --[[
 WaitForCombat
 Waits until the player enters combat.
-Dependencies:
+External dependencies:
 - Player.Entity.IsInCombat
-- functions.Wait
 ]]
 functions.WaitForCombat = function()
-	while not Player.Entity.IsInCombat do
-		functions.Wait(0.1)
-	end
+    while not Player.Entity.IsInCombat do
+        functions.Wait(0.1)
+    end
 end
 
 --[[
 WaitForVnav
 Waits until vnav pathfinding is finished.
-Dependencies:
+External dependencies:
 - IPC.vnavmesh.PathfindInProgress
 - IPC.vnavmesh.IsRunning
-- functions.Wait
 ]]
 functions.WaitForVnav = function()
-	while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
-		functions.Wait(0.1)
-	end
+    while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
+        functions.Wait(0.1)
+    end
 end
 
 --[[
@@ -81,76 +77,68 @@ WaitForAddon
 Waits until the specified addon is ready.
 Parameters:
 - name (string)
-Dependencies:
+External dependencies:
 - Addons.GetAddon
-- functions.Wait
 ]]
 functions.WaitForAddon = function(name)
-	while not Addons.GetAddon(name).Ready do
-		functions.Wait(0.1)
-	end
+    while not Addons.GetAddon(name).Ready do
+        functions.Wait(0.1)
+    end
 end
 
 --[[
 WaitForZoneAndReady
 Waits until zone matches flag zone and player is ready.
-Dependencies:
+External dependencies:
 - Instances.Map.Flag.TerritoryId
 - Svc.ClientState.TerritoryType
-- functions.Wait
-- functions.WaitForReady
 ]]
 functions.WaitForZoneAndReady = function()
-	while Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType do
-		functions.Wait(0.1)
-	end
-	functions.WaitForReady()
+    while Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType do
+        functions.Wait(0.1)
+    end
+    functions.WaitForReady()
 end
 
 --[[
 MountUp
 Mounts the player using Mount Roulette if possible.
-Dependencies:
+External dependencies:
 - Svc.Condition[4]
 - Player.CanMount
-- functions.WaitForOutOfCombat
-- functions.WaitForReady
-- functions.Wait
 ]]
 functions.MountUp = function()
-	if not Svc.Condition[4] and Player.CanMount then
-		functions.WaitForOutOfCombat()
-		functions.WaitForReady()
-		yield('/gaction "Mount Roulette"')
-		functions.Wait(1)
-	end
+    if not Svc.Condition[4] and Player.CanMount then
+        functions.WaitForOutOfCombat()
+        functions.WaitForReady()
+        yield('/gaction "Mount Roulette"')
+        functions.Wait(1)
+    end
 end
 
 --[[
 Dismount
 Dismounts the player if mounted.
-Dependencies:
+External dependencies:
 - Svc.Condition[4]
-- functions.Wait
 ]]
 functions.Dismount = function()
-	while Svc.Condition[4] do
-		yield('/gaction "Mount Roulette"')
-		functions.Wait(1)
-	end
+    while Svc.Condition[4] do
+        yield('/gaction "Mount Roulette"')
+        functions.Wait(1)
+    end
 end
 
 --[[
 FlyToFlag
 Mounts up and flies to the current map flag using vnav.
-Dependencies:
-- functions.MountUp
-- functions.WaitForVnav
+External dependencies:
+- yield /vnav flyflag
 ]]
 functions.FlyToFlag = function()
-	functions.MountUp()
-	yield("/vnav flyflag")
-	functions.WaitForVnav()
+    functions.MountUp()
+    yield("/vnav flyflag")
+    functions.WaitForVnav()
 end
 
 --[[
@@ -158,9 +146,11 @@ MoveToCoordinates
 Moves player to specified coordinates using vnav.
 Parameters:
 - x, y, z (float)
+External dependencies:
+- yield /vnav moveto
 ]]
 functions.MoveToCoordinates = function(x, y, z)
-	yield("/vnav moveto "..x.." "..y.." "..z)
+    yield("/vnav moveto "..x.." "..y.." "..z)
 end
 
 --[[
@@ -172,40 +162,37 @@ Returns:
 - distance (float)
 ]]
 functions.DistanceBetweenVectors = function(vectorA, vectorB)
-	local distance = math.sqrt(
-	(vectorB.X - vectorA.X)^2 +
-	(vectorB.Y - vectorA.Y)^2 +
-	(vectorB.Z - vectorA.Z)^2
-	)
-	return distance
+    local distance = math.sqrt(
+    (vectorB.X - vectorA.X)^2 +
+    (vectorB.Y - vectorA.Y)^2 +
+    (vectorB.Z - vectorA.Z)^2
+    )
+    return distance
 end
 
 --[[
 CalculateEtaFlight3
 Estimates ETA to flag when flying.
-Dependencies:
+External dependencies:
 - Player.Entity.Position
 - Instances.Map.Flag.Vector3
 - MOUNT_SPEED
-- functions.DistanceBetweenVectors
 Returns:
 - eta (float)
 ]]
 functions.CalculateEtaFlight3 = function()
-	local playerPos = Player.Entity.Position
-	local flagPos = Instances.Map.Flag.Vector3
-	local distance = functions.DistanceBetweenVectors(playerPos, flagPos)
-	local eta = distance / MOUNT_SPEED
-	return eta
+    local playerPos = Player.Entity.Position
+    local flagPos = Instances.Map.Flag.Vector3
+    local distance = functions.DistanceBetweenVectors(playerPos, flagPos)
+    local eta = distance / MOUNT_SPEED
+    return eta
 end
 
 --[[
 CalculateEtaTp3
 Estimates ETA to flag if teleporting.
-Dependencies:
-- functions.GetAetherytesInFlagZone
+External dependencies:
 - Instances.Map.Flag.Vector3
-- functions.DistanceBetweenVectors
 - MOUNT_SPEED
 - TP_DELAY
 Returns:
@@ -213,8 +200,8 @@ Returns:
 - closestAetheryteId (int)
 ]]
 functions.CalculateEtaTp3 = function()
-	local aetherytePos = functions.GetAetherytesInFlagZone()
-	local flagPos = Instances.Map.Flag.Vector3
+    local aetherytePos = functions.GetAetherytesInFlagZone()
+    local flagPos = Instances.Map.Flag.Vector3
 
     local shortestDistance = math.huge
     local closestAetheryteId = nil
@@ -229,14 +216,14 @@ functions.CalculateEtaTp3 = function()
         end
     end
 
-	local eta = (shortestDistance / MOUNT_SPEED) + TP_DELAY
-	return eta, closestAetheryteId
+    local eta = (shortestDistance / MOUNT_SPEED) + TP_DELAY
+    return eta, closestAetheryteId
 end
 
 --[[
 GetAetherytesInFlagZone
 Returns a list of aetherytes (id and position) in the flag's zone.
-Dependencies:
+External dependencies:
 - Instances.Map.Flag.TerritoryId
 - zoneList
 - Instances.Telepo:GetAetherytePosition
@@ -244,23 +231,23 @@ Returns:
 - aetherytePos (table)
 ]]
 functions.GetAetherytesInFlagZone = function()
-	local flagZoneId = Instances.Map.Flag.TerritoryId
-	local flagZone = zoneList[tostring(flagZoneId)]
-	local aetherytePos = {}
+    local flagZoneId = Instances.Map.Flag.TerritoryId
+    local flagZone = zoneList[tostring(flagZoneId)]
+    local aetherytePos = {}
 
-	if flagZone and flagZone.Aetherytes then
-	    for _, aetheryte in ipairs(flagZone.Aetherytes) do
-	        local aetheryteId = tonumber(aetheryte.ID)
-	        if aetheryteId then
-	            local pos = Instances.Telepo:GetAetherytePosition(aetheryteId)
-	            if pos then
-			        table.insert(aetherytePos, { id = aetheryteId, position = pos })
-	            end
-	        end
-	    end
-	end
+    if flagZone and flagZone.Aetherytes then
+        for _, aetheryte in ipairs(flagZone.Aetherytes) do
+            local aetheryteId = tonumber(aetheryte.ID)
+            if aetheryteId then
+                local pos = Instances.Telepo:GetAetherytePosition(aetheryteId)
+                if pos then
+                    table.insert(aetherytePos, { id = aetheryteId, position = pos })
+                end
+            end
+        end
+    end
 
-	return aetherytePos
+    return aetherytePos
 end
 
 --[[
@@ -269,9 +256,11 @@ Buys an item from shop via callback.
 Parameters:
 - shopName (string)
 - a, b, c (int)
+External dependencies:
+- yield /callback
 ]]
 functions.BuyFromShop = function(shopName, a, b, c)
-	yield("/callback "..shopName.." true "..a.." "..b.." "..c)
+    yield("/callback "..shopName.." true "..a.." "..b.." "..c)
 end
 
 --[[
@@ -280,9 +269,11 @@ Navigates to a shop category via callback.
 Parameters:
 - shopName (string)
 - a, b (int)
+External dependencies:
+- yield /callback
 ]]
 functions.NavigateToShopCategory = function(shopName, a, b)
-	yield("/callback "..shopName.." true "..a.." "..b)
+    yield("/callback "..shopName.." true "..a.." "..b)
 end
 
 --[[
@@ -290,20 +281,20 @@ FindItemID
 Finds item ID by name from itemList.
 Parameters:
 - item_to_find (string)
-Dependencies:
+External dependencies:
 - itemList
 Returns:
 - item ID (int) or nil
 ]]
 functions.FindItemID = function(item_to_find)
-	local search_term = string.lower(item_to_find)
-	for key, item in pairs(itemList) do
-		local item_name = string.lower(item['Name'])
-		if item_name == search_term then
-			return key
-		end
-	end
-	return nil
+    local search_term = string.lower(item_to_find)
+    for key, item in pairs(itemList) do
+        local item_name = string.lower(item['Name'])
+        if item_name == search_term then
+            return key
+        end
+    end
+    return nil
 end
 
 --[[
@@ -311,18 +302,18 @@ FindZoneNameByTerritoryId
 Returns the zone name for a given territory ID.
 Parameters:
 - territoryId (int)
-Dependencies:
+External dependencies:
 - zoneList
 Returns:
 - zone name (string)
 ]]
 functions.FindZoneNameByTerritoryId = function(territoryId)
-	territoryId = tostring(territoryId)
-	for id, zone in pairs(zoneList) do
-		if id == territoryId then
-			return zone.Zone
-		end
-	end
+    territoryId = tostring(territoryId)
+    for id, zone in pairs(zoneList) do
+        if id == territoryId then
+            return zone.Zone
+        end
+    end
 end
 
 --[[
@@ -330,19 +321,19 @@ GetZoneHuntLocations
 Returns hunt positions for a given territory ID.
 Parameters:
 - territoryId (int)
-Dependencies:
+External dependencies:
 - huntLocations
 Returns:
 - positions (table) or nil
 ]]
 functions.GetZoneHuntLocations = function(territoryId)
-	for _, expansion in pairs(huntLocations) do
-		for _, zone in ipairs(expansion) do
-			if zone.mapId == territoryId then
-				return zone.positions
-			end
-		end
-	end
+    for _, expansion in pairs(huntLocations) do
+        for _, zone in ipairs(expansion) do
+            if zone.mapId == territoryId then
+                return zone.positions
+            end
+        end
+    end
 end
 
 --[[
@@ -356,10 +347,10 @@ Returns:
 - newX, newY (float)
 ]]
 functions.ConvertToRealCoordinates = function(territoryId, x, y)
-	local mapScale = (territoryId >= 397 and territoryId <= 402) and 95 or 100
-	local newX = 50 * (x - 1 - (2048 / mapScale))
-	local newY = 50 * (y - 1 - (2048 / mapScale))
-	return territoryId, newX, newY
+    local mapScale = (territoryId >= 397 and territoryId <= 402) and 95 or 100
+    local newX = 50 * (x - 1 - (2048 / mapScale))
+    local newY = 50 * (y - 1 - (2048 / mapScale))
+    return territoryId, newX, newY
 end
 
 --[[
@@ -372,55 +363,48 @@ end
 --[[
 SearchAndDestroy
 Targets hunt marks in current zone, moves to them, engages, waits, and repeats if still alive.
-Dependencies:
+External dependencies:
 - yield /vbm commands
 - VBM_PRESET
 - Svc.ClientState.TerritoryType
 - huntMarksByRank
 - Entity
 - IPC.vnavmesh
-- functions.FindZoneNameByTerritoryId
-- functions.MountUp
-- functions.Echo
-- functions.WaitForVnav
-- functions.Dismount
-- functions.WaitForOutOfCombat
-- functions.Wait
 ]]
 functions.SearchAndDestroy = function()
-	yield("/vbm ar clear")
-	yield("/vbm ar set "..VBM_PRESET)
+    yield("/vbm ar clear")
+    yield("/vbm ar set "..VBM_PRESET)
 
-	local zoneName = functions.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
+    local zoneName = functions.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
 
-	for _, mark in pairs(huntMarksByRank) do
-		if mark.zone == zoneName then
-			local huntMark = Entity.GetEntityByName(mark.name)
-			if huntMark ~= nil then
-				functions.MountUp()
-				IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
-				functions.Echo("Distance: "..tostring(huntMark.DistanceTo))
-				functions.WaitForVnav()
-				huntMark:SetAsTarget()
-				functions.Dismount()
-				functions.WaitForOutOfCombat()
-				yield("/vbm ar clear")
-				functions.Wait(10)
-				huntMark = Entity.GetEntityByName(mark.name)
-				if huntMark ~= nil then
-					functions.MountUp()
-					IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
-					functions.Echo("Distance: "..tostring(huntMark.DistanceTo))
-					functions.WaitForVnav()
-					huntMark:SetAsTarget()
-					functions.Dismount()
-					functions.WaitForOutOfCombat()
-					yield("/vbm ar clear")
-					functions.Wait(10)
-				end
-			end
-		end
-	end
+    for _, mark in pairs(huntMarksByRank) do
+        if mark.zone == zoneName then
+            local huntMark = Entity.GetEntityByName(mark.name)
+            if huntMark ~= nil then
+                functions.MountUp()
+                IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
+                functions.Echo("Distance: "..tostring(huntMark.DistanceTo))
+                functions.WaitForVnav()
+                huntMark:SetAsTarget()
+                functions.Dismount()
+                functions.WaitForOutOfCombat()
+                yield("/vbm ar clear")
+                functions.Wait(10)
+                huntMark = Entity.GetEntityByName(mark.name)
+                if huntMark ~= nil then
+                    functions.MountUp()
+                    IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
+                    functions.Echo("Distance: "..tostring(huntMark.DistanceTo))
+                    functions.WaitForVnav()
+                    huntMark:SetAsTarget()
+                    functions.Dismount()
+                    functions.WaitForOutOfCombat()
+                    yield("/vbm ar clear")
+                    functions.Wait(10)
+                end
+            end
+        end
+    end
 end
 
 return functions
