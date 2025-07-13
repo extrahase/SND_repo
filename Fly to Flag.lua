@@ -1,3 +1,5 @@
+-- Fly to Flag
+
 import("System.Numerics")
 local zoneList = require("vac_lists").Zone_List
 local functions = require("functions")

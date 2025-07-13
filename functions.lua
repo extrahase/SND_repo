@@ -17,7 +17,7 @@ end
 Wait
 Pauses script execution for the given number of seconds.
 Parameters:
-- number (float or int)
+- number (number)
 ]]
 functions.Wait = function(number)
     yield("/wait "..number)
@@ -26,8 +26,6 @@ end
 --[[
 WaitForReady
 Waits until the player is not busy.
-External dependencies:
-- Player.IsBusy
 ]]
 functions.WaitForReady = function()
     while Player.IsBusy do
@@ -38,8 +36,6 @@ end
 --[[
 WaitForOutOfCombat
 Waits until the player is no longer in combat.
-External dependencies:
-- Player.Entity.IsInCombat
 ]]
 functions.WaitForOutOfCombat = function()
     while Player.Entity.IsInCombat do
@@ -50,8 +46,6 @@ end
 --[[
 WaitForCombat
 Waits until the player enters combat.
-External dependencies:
-- Player.Entity.IsInCombat
 ]]
 functions.WaitForCombat = function()
     while not Player.Entity.IsInCombat do
@@ -63,8 +57,7 @@ end
 WaitForVnav
 Waits until vnav pathfinding is finished.
 External dependencies:
-- IPC.vnavmesh.PathfindInProgress
-- IPC.vnavmesh.IsRunning
+- vnavmesh
 ]]
 functions.WaitForVnav = function()
     while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
@@ -77,8 +70,6 @@ WaitForAddon
 Waits until the specified addon is ready.
 Parameters:
 - name (string)
-External dependencies:
-- Addons.GetAddon
 ]]
 functions.WaitForAddon = function(name)
     while not Addons.GetAddon(name).Ready do
@@ -89,9 +80,6 @@ end
 --[[
 WaitForZoneAndReady
 Waits until zone matches flag zone and player is ready.
-External dependencies:
-- Instances.Map.Flag.TerritoryId
-- Svc.ClientState.TerritoryType
 ]]
 functions.WaitForZoneAndReady = function()
     while Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType do
@@ -103,9 +91,6 @@ end
 --[[
 MountUp
 Mounts the player using Mount Roulette if possible.
-External dependencies:
-- Svc.Condition[4]
-- Player.CanMount
 ]]
 functions.MountUp = function()
     if not Svc.Condition[4] and Player.CanMount then
@@ -119,8 +104,6 @@ end
 --[[
 Dismount
 Dismounts the player if mounted.
-External dependencies:
-- Svc.Condition[4]
 ]]
 functions.Dismount = function()
     while Svc.Condition[4] do
@@ -133,7 +116,7 @@ end
 FlyToFlag
 Mounts up and flies to the current map flag using vnav.
 External dependencies:
-- yield /vnav flyflag
+- vnavmesh
 ]]
 functions.FlyToFlag = function()
     functions.MountUp()
@@ -145,9 +128,9 @@ end
 MoveToCoordinates
 Moves player to specified coordinates using vnav.
 Parameters:
-- x, y, z (float)
+- x, y, z (number)
 External dependencies:
-- yield /vnav moveto
+- vnavmesh
 ]]
 functions.MoveToCoordinates = function(x, y, z)
     yield("/vnav moveto "..x.." "..y.." "..z)
@@ -159,7 +142,7 @@ Returns distance between two Vector3 positions.
 Parameters:
 - vectorA, vectorB (Vector3)
 Returns:
-- distance (float)
+- distance (number)
 ]]
 functions.DistanceBetweenVectors = function(vectorA, vectorB)
     local distance = math.sqrt(
@@ -174,11 +157,9 @@ end
 CalculateEtaFlight3
 Estimates ETA to flag when flying.
 External dependencies:
-- Player.Entity.Position
-- Instances.Map.Flag.Vector3
 - MOUNT_SPEED
 Returns:
-- eta (float)
+- eta (number)
 ]]
 functions.CalculateEtaFlight3 = function()
     local playerPos = Player.Entity.Position
@@ -192,12 +173,11 @@ end
 CalculateEtaTp3
 Estimates ETA to flag if teleporting.
 External dependencies:
-- Instances.Map.Flag.Vector3
 - MOUNT_SPEED
 - TP_DELAY
 Returns:
-- eta (float)
-- closestAetheryteId (int)
+- eta (number)
+- closestAetheryteId (number)
 ]]
 functions.CalculateEtaTp3 = function()
     local aetherytePos = functions.GetAetherytesInFlagZone()
@@ -224,9 +204,7 @@ end
 GetAetherytesInFlagZone
 Returns a list of aetherytes (id and position) in the flag's zone.
 External dependencies:
-- Instances.Map.Flag.TerritoryId
 - zoneList
-- Instances.Telepo:GetAetherytePosition
 Returns:
 - aetherytePos (table)
 ]]
@@ -255,9 +233,7 @@ BuyFromShop
 Buys an item from shop via callback.
 Parameters:
 - shopName (string)
-- a, b, c (int)
-External dependencies:
-- yield /callback
+- a, b, c (number)
 ]]
 functions.BuyFromShop = function(shopName, a, b, c)
     yield("/callback "..shopName.." true "..a.." "..b.." "..c)
@@ -268,9 +244,7 @@ NavigateToShopCategory
 Navigates to a shop category via callback.
 Parameters:
 - shopName (string)
-- a, b (int)
-External dependencies:
-- yield /callback
+- a, b (number)
 ]]
 functions.NavigateToShopCategory = function(shopName, a, b)
     yield("/callback "..shopName.." true "..a.." "..b)
@@ -284,7 +258,7 @@ Parameters:
 External dependencies:
 - itemList
 Returns:
-- item ID (int) or nil
+- item ID (number) or nil
 ]]
 functions.FindItemID = function(item_to_find)
     local search_term = string.lower(item_to_find)
@@ -301,7 +275,7 @@ end
 FindZoneNameByTerritoryId
 Returns the zone name for a given territory ID.
 Parameters:
-- territoryId (int)
+- territoryId (number)
 External dependencies:
 - zoneList
 Returns:
@@ -320,7 +294,7 @@ end
 GetZoneHuntLocations
 Returns hunt positions for a given territory ID.
 Parameters:
-- territoryId (int)
+- territoryId (number)
 External dependencies:
 - huntLocations
 Returns:
@@ -340,11 +314,11 @@ end
 ConvertToRealCoordinates
 Converts map coordinates to real coordinates based on map scale.
 Parameters:
-- territoryId (int)
-- x, y (float)
+- territoryId (number)
+- x, y (number)
 Returns:
-- territoryId (int)
-- newX, newY (float)
+- territoryId (number)
+- newX, newY (number)
 ]]
 functions.ConvertToRealCoordinates = function(territoryId, x, y)
     local mapScale = (territoryId >= 397 and territoryId <= 402) and 95 or 100
@@ -364,12 +338,10 @@ end
 SearchAndDestroy
 Targets hunt marks in current zone, moves to them, engages, waits, and repeats if still alive.
 External dependencies:
-- yield /vbm commands
+- vnavmesh
+- VBM
 - VBM_PRESET
-- Svc.ClientState.TerritoryType
 - huntMarksByRank
-- Entity
-- IPC.vnavmesh
 ]]
 functions.SearchAndDestroy = function()
     yield("/vbm ar clear")
