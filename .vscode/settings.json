@@ -12,6 +12,7 @@
         "zoneList",
         "Inventory",
         "itemList",
-        "huntLocations"
+        "huntLocations",
+        "huntMarksByRank"
     ]
 }
