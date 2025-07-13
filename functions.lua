@@ -1,5 +1,17 @@
 -- functions.lua
 -- Defines 'functions' table containing reusable utilities for SND scripts
+-- Also defines some globals soon(?)
+
+--[[
+huntLocations = require("huntLocations")
+huntMarks = require("huntMarks")
+zoneList = require("vac_lists").Zone_List
+functions = require("functions")
+MOUNT_SPEED = 20.6 -- Speed for flying mounts
+TP_DELAY = 7 -- Time penalty for using teleport
+VBM_PRESET = "A Ranks" -- Preset for VBM
+HUNT_RANK = "B" -- Hunt rank to search for
+]]
 
 local functions = {}
 
@@ -361,19 +373,6 @@ functions.SearchAndDestroy = function()
                 functions.Dismount()
                 functions.WaitForOutOfCombat()
                 yield("/vbm ar clear")
-                functions.Wait(10)
-                huntMark = Entity.GetEntityByName(mark.name)
-                if huntMark ~= nil then
-                    functions.MountUp()
-                    IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
-                    functions.Echo("Distance: "..tostring(huntMark.DistanceTo))
-                    functions.WaitForVnav()
-                    huntMark:SetAsTarget()
-                    functions.Dismount()
-                    functions.WaitForOutOfCombat()
-                    yield("/vbm ar clear")
-                    functions.Wait(10)
-                end
             end
         end
     end

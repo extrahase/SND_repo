@@ -9,10 +9,6 @@
         "Actions",
         "import",
         "Addons",
-        "zoneList",
         "Inventory",
-        "itemList",
-        "huntLocations",
-        "huntMarksByRank"
     ]
 }
