@@ -1,0 +1,17 @@
+{
+    "Lua.diagnostics.globals": [
+        "IPC",
+        "yield",
+        "Svc",
+        "Player",
+        "Entity",
+        "Instances",
+        "Actions",
+        "import",
+        "Addons",
+        "zoneList",
+        "Inventory",
+        "itemList",
+        "huntLocations"
+    ]
+}
