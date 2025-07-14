@@ -348,33 +348,23 @@ end
 
 --[[
 SearchAndDestroy
-Targets hunt marks in current zone, moves to them, engages, waits, and repeats if still alive.
+Moves to hunt mark, targets them, dismounts, and waits until out of combat
 External dependencies:
 - vnavmesh
 - VBM
-- VBM_PRESET
-- huntMarksByRank
 ]]
-functions.SearchAndDestroy = function()
+functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
     yield("/vbm ar clear")
-    yield("/vbm ar set "..VBM_PRESET)
-
-    local zoneName = functions.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
-
-    for _, mark in pairs(huntMarksByRank) do
-        if mark.zone == zoneName then
-            local huntMark = Entity.GetEntityByName(mark.name)
-            if huntMark ~= nil then
-                functions.MountUp()
-                IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
-                functions.Echo("Distance: "..tostring(huntMark.DistanceTo))
-                functions.WaitForVnav()
-                huntMark:SetAsTarget()
-                functions.Dismount()
-                functions.WaitForOutOfCombat()
-                yield("/vbm ar clear")
-            end
-        end
+    yield("/vbm ar set "..VbmPreset)
+    local huntMark = Entity.GetEntityByName(huntMarkName)
+    if huntMark ~= nil then
+        functions.MountUp()
+        IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
+        functions.WaitForVnav()
+        huntMark:SetAsTarget()
+        functions.Dismount()
+        functions.WaitForOutOfCombat()
+        yield("/vbm ar clear")
     end
 end
 

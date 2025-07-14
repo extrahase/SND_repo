@@ -74,7 +74,23 @@ end
 
 functions.WaitForReady()
 functions.FlyToFlag()
-functions.SearchAndDestroy()
+
+-- Get current zone name
+local zoneName = functions.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
+Echo("Current zone: " .. zoneName)
+
+-- Loop through each hunt mark in the current zone
+if huntMarksByRank then
+    for _, mark in pairs(huntMarksByRank) do
+        if mark.zone == zoneName then
+            Echo("Trying to find hunt mark: " .. mark.name)
+            functions.SearchAndDestroy(mark.name, VBM_PRESET)
+        end
+    end
+else
+    functions.Echo("No hunt marks found for the current zone: " .. zoneName)
+end
+
 functions.MountUp()
 
 functions.Echo("Script done!")

@@ -57,11 +57,10 @@ local function SpendPoetics()
 
     if Svc.ClientState.TerritoryType ~= 962 then
         functions.Echo("Teleporting to vendor zone")
-        while Svc.ClientState.TerritoryType ~= 962 do
-            Actions.Teleport(182)
-            Wait(1)
-            functions.WaitForReady()
-        end
+        functions.WaitForReady()
+        Actions.Teleport(182)
+        functions.Wait(5)
+        functions.WaitForReady()
     end
 
     functions.Echo("Moving to "..vendorName)
