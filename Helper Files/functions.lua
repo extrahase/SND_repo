@@ -46,6 +46,16 @@ functions.WaitForReady = function()
 end
 
 --[[
+WaitForBusy
+Waits until the player is busy.
+]]
+functions.WaitForBusy = function()
+    while not Player.IsBusy do
+        functions.Wait(0.1)
+    end
+end
+
+--[[
 WaitForOutOfCombat
 Waits until the player is no longer in combat.
 ]]
@@ -366,6 +376,21 @@ functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
         functions.WaitForOutOfCombat()
         yield("/vbm ar clear")
     end
+end
+
+--[[
+TpToAetheryte
+Teleports to Aetheryte by ID
+External dependencies:
+- vnavmesh
+- VBM
+]]
+functions.TpToAetheryte = function(aetheryteId)
+    functions.WaitForOutOfCombat()
+    functions.WaitForReady()
+    Actions.Teleport(tonumber(aetheryteId))
+    functions.WaitForBusy()
+    functions.WaitForReady()
 end
 
 return functions
