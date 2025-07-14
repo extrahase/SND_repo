@@ -356,8 +356,10 @@ External dependencies:
 functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
     yield("/vbm ar clear")
     yield("/vbm ar set "..VbmPreset)
+    functions.Echo("Getting entity for: " .. huntMarkName)
     local huntMark = Entity.GetEntityByName(huntMarkName)
     if huntMark ~= nil then
+        functions.Echo("Found hunt mark: " .. huntMarkName)
         functions.MountUp()
         IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
         functions.WaitForVnav()
@@ -365,6 +367,8 @@ functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
         functions.Dismount()
         functions.WaitForOutOfCombat()
         yield("/vbm ar clear")
+    else
+        functions.Echo("Hunt mark not found: " .. huntMarkName)
     end
 end
 

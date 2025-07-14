@@ -24,8 +24,8 @@ HUNT_RANK = "A"
 local huntMarksByRank = { }
 
 for _, expansion in pairs(HUNT_MARKS) do
-    if expansion.B then
-        for _, mark in ipairs(expansion.B) do
+    if expansion.HUNT_RANK then
+        for _, mark in ipairs(expansion.HUNT_RANK) do
             table.insert(huntMarksByRank, mark)
         end
     end
