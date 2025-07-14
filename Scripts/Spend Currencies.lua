@@ -62,8 +62,6 @@ local function SpendPoetics()
             Wait(1)
             functions.WaitForReady()
         end
-        Actions.Teleport(182)
-        functions.WaitForReady()
     end
 
     functions.Echo("Moving to "..vendorName)
