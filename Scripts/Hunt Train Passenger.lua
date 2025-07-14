@@ -39,7 +39,7 @@ functions.MountUp()
 if Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType then
     -- flag is in different zone
     functions.Echo("Waiting for HTA to change zones")
-    functions.WaitForZoneAndReady()
+    functions.WaitForZone(Instances.Map.Flag.TerritoryId)
 
     -- account for switching instances
     if IPC.Lifestream.GetCurrentInstance() ~= 0 then
@@ -65,12 +65,9 @@ local etaTp, closestAetheryteId = functions.CalculateEtaTp3()
 local etaFlight = functions.CalculateEtaFlight3()
 
 if etaTp <= etaFlight then
-    functions.WaitForReady()
-    Actions.Teleport(closestAetheryteId)
-    functions.Wait(5)
+    functions.TpToAetheryte(closestAetheryteId)
 end
 
-functions.WaitForReady()
 functions.FlyToFlag()
 
 -- Get current zone name

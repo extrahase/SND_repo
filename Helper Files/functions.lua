@@ -100,14 +100,13 @@ functions.WaitForAddon = function(name)
 end
 
 --[[
-WaitForZoneAndReady
-Waits until zone matches flag zone and player is ready.
+WaitForZone
+Waits until passed territory ID matches the current zone
 ]]
-functions.WaitForZoneAndReady = function()
-    while Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType do
+functions.WaitForZone = function(territoryId)
+    while territoryId ~= Svc.ClientState.TerritoryType do
         functions.Wait(0.1)
     end
-    functions.WaitForReady()
 end
 
 --[[
@@ -141,6 +140,8 @@ External dependencies:
 - vnavmesh
 ]]
 functions.FlyToFlag = function()
+    functions.WaitForOutOfCombat()
+    functions.WaitForReady()
     functions.MountUp()
     yield("/vnav flyflag")
     functions.WaitForVnav()
