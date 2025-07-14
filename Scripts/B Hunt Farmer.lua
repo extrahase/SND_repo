@@ -6,14 +6,14 @@
 
 import("System.Numerics")
 
-HUNT_LOCATIONS = require("huntLocations")
-HUNT_MARKS = require("huntMarks")
-ZONE_LIST = require("vac_lists").Zone_List
+--HUNT_LOCATIONS = require("huntLocations")
+--HUNT_MARKS = require("huntMarks")
+--ZONE_LIST = require("vac_lists").Zone_List
 
 local functions = require("functions")
 
-MOUNT_SPEED = 20.6
-TP_DELAY = 7
+--MOUNT_SPEED = 20.6
+--TP_DELAY = 7
 VBM_PRESET = "A Ranks"
 HUNT_RANK = "B"
 
@@ -43,11 +43,9 @@ local zoneHuntLocations = { { x = 23.6, y = 25.25 }, { x = 16.85, y = 16.95 } }
 -- loop through each flag, place it and start the hunt
 while true do
     for _, position in ipairs(zoneHuntLocations) do
-        if position[HUNT_RANK] == true then
             Instances.Map.Flag:SetFlagMapMarker(functions.ConvertToRealCoordinates(Svc.ClientState.TerritoryType, position.x, position.y))
             functions.FlyToFlag()
             functions.SearchAndDestroy("Dalvag's Final Flame", VBM_PRESET)
-        end
     end
 end
 
