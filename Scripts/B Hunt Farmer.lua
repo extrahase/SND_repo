@@ -23,15 +23,15 @@ HUNT_RANK = "B"
 
 functions.Echo("Script started!")
 
-local huntMarksByRank = { }
+-- local huntMarksByRank = { }
 
-for _, expansion in pairs(HUNT_MARKS) do
-    if expansion.B then
-        for _, mark in ipairs(expansion.B) do
-            table.insert(huntMarksByRank, mark)
-        end
-    end
-end
+-- for _, expansion in pairs(HUNT_MARKS) do
+--     if expansion[HUNT_MARKS] then
+--         for _, mark in ipairs(expansion[HUNT_MARKS]) do
+--             table.insert(huntMarksByRank, mark)
+--         end
+--     end
+-- end
 
 functions.WaitForOutOfCombat()
 yield("/vbm ar clear")
@@ -46,7 +46,7 @@ while true do
         if position[HUNT_RANK] == true then
             Instances.Map.Flag:SetFlagMapMarker(functions.ConvertToRealCoordinates(Svc.ClientState.TerritoryType, position.x, position.y))
             functions.FlyToFlag()
-            functions.SearchAndDestroy()
+            functions.SearchAndDestroy("Dalvag's Final Flame", VBM_PRESET)
         end
     end
 end
