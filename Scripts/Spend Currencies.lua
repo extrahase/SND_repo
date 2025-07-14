@@ -59,6 +59,7 @@ local function SpendPoetics()
         functions.Echo("Teleporting to vendor zone")
         while Svc.ClientState.TerritoryType ~= 962 do
             Actions.Teleport(182)
+            Wait(1)
             functions.WaitForReady()
         end
         Actions.Teleport(182)
