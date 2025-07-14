@@ -45,7 +45,7 @@ while true do
     for _, position in ipairs(zoneHuntLocations) do
             Instances.Map.Flag:SetFlagMapMarker(functions.ConvertToRealCoordinates(Svc.ClientState.TerritoryType, position.x, position.y))
             functions.FlyToFlag()
-            functions.SearchAndDestroy("Dalvag's Final Flame", VBM_PRESET)
+            functions.SearchAndDestroy("Flame Sergeant Dalvag", VBM_PRESET)
     end
 end
 
