@@ -68,8 +68,6 @@ if etaTp <= etaFlight then
     functions.WaitForReady()
     Actions.Teleport(closestAetheryteId)
     functions.Wait(5)
-else
-    functions.Echo("Flight is better")
 end
 
 functions.WaitForReady()
@@ -77,13 +75,13 @@ functions.FlyToFlag()
 
 -- Get current zone name
 local zoneName = functions.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
-Echo("Current zone: " .. zoneName)
+functions.Echo("Current zone: " .. zoneName)
 
 -- Loop through each hunt mark in the current zone
 if huntMarksByRank then
     for _, mark in pairs(huntMarksByRank) do
         if mark.zone == zoneName then
-            Echo("Trying to find hunt mark: " .. mark.name)
+            functions.Echo("Trying to find hunt mark: " .. mark.name)
             functions.SearchAndDestroy(mark.name, VBM_PRESET)
         end
     end
