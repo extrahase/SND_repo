@@ -373,8 +373,8 @@ functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
         huntMark:SetAsTarget()
         functions.Dismount()
         functions.WaitForOutOfCombat()
-        yield("/vbm ar clear")
     end
+    yield("/vbm ar clear")
 end
 
 --[[
