@@ -45,8 +45,7 @@ local zoneHuntLocations = { { x = 23.6, y = 25.25 }, { x = 16.85, y = 16.95 } }
 while true do
     for _, position in ipairs(zoneHuntLocations) do
             Instances.Map.Flag:SetFlagMapMarker(functions.ConvertToRealCoordinates(Svc.ClientState.TerritoryType, position.x, position.y))
-            functions.FlyToFlag()
-            functions.SearchAndDestroy("Flame Sergeant Dalvag", VBM_PRESET)
+            functions.FlyAndDestroyToFlag("Flame Sergeant Dalvag", VBM_PRESET)
     end
 end
 
