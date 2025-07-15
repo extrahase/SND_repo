@@ -369,7 +369,7 @@ functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
     yield("/vbm ar clear")
     yield("/vbm ar set "..VbmPreset)
     local huntMark = Entity.GetEntityByName(huntMarkName)
-    if huntMark ~= nil then
+    if huntMark ~= nil and huntMark.HealthPercent ~= 0 then
         functions.MountUp()
         IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
         functions.WaitForVnav()
@@ -393,8 +393,10 @@ functions.FlyAndDestroyToFlag = function(huntMarkName, VbmPreset)
 
     while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
         functions.SearchAndDestroy(huntMarkName, VbmPreset)
-        functions.MountUp()
-        yield("/vnav flyflag")
+        if not(IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
+            functions.MountUp()
+            yield("/vnav flyflag")
+        end
         functions.Wait(1)
     end
 end
