@@ -66,60 +66,54 @@ local function SpendPoetics()
     functions.MoveToCoordinates(POETICS_VENDOR.pos.x, POETICS_VENDOR.pos.y, POETICS_VENDOR.pos.z)
     functions.WaitForVnav()
 
-    if newPoeticsAmount >= 1200 then
-        Entity.GetEntityByName(vendorName):SetAsTarget()
-        Entity.Target:Interact()
+    Entity.GetEntityByName(vendorName):SetAsTarget()
+    Entity.Target:Interact()
 
-        functions.WaitForAddon(shopName)
+    functions.WaitForAddon(shopName)
 
-        functions.Echo("Navigating to Physical Ranged DPS, Credendum Gear")
-        functions.NavigateToShopCategory(shopName, 12, 4)
-        functions.NavigateToShopCategory(shopName, 13, 9)
+    functions.Echo("Navigating to Physical Ranged DPS, Credendum Gear")
+    functions.NavigateToShopCategory(shopName, 12, 4)
+    functions.NavigateToShopCategory(shopName, 13, 9)
 
-        functions.BuyFromShop(shopName,
-            itemsToBuy["Augmented Bluebird's Nest"].a,
-            itemsToBuy["Augmented Bluebird's Nest"].b,
-            itemsToBuy["Augmented Bluebird's Nest"].c)
+    functions.BuyFromShop(shopName,
+        itemsToBuy["Augmented Bluebird's Nest"].a,
+        itemsToBuy["Augmented Bluebird's Nest"].b,
+        itemsToBuy["Augmented Bluebird's Nest"].c)
 
-        functions.Echo("Navigating to Healer, Credendum Gear")
-        functions.NavigateToShopCategory(shopName, 12, 6)
-        functions.NavigateToShopCategory(shopName, 13, 9)
+    functions.Echo("Navigating to Healer, Credendum Gear")
+    functions.NavigateToShopCategory(shopName, 12, 6)
+    functions.NavigateToShopCategory(shopName, 13, 9)
 
-        functions.BuyFromShop(shopName,
-            itemsToBuy["Augmented Bunny's Crescent"].a,
-            itemsToBuy["Augmented Bunny's Crescent"].b,
-            itemsToBuy["Augmented Bunny's Crescent"].c)
+    functions.BuyFromShop(shopName,
+        itemsToBuy["Augmented Bunny's Crescent"].a,
+        itemsToBuy["Augmented Bunny's Crescent"].b,
+        itemsToBuy["Augmented Bunny's Crescent"].c)
 
-        yield("/callback "..shopName.." true -1")
-        functions.Wait(1)
+    yield("/callback "..shopName.." true -1")
+    functions.Wait(1)
 
-        DesynthItems()
-        local newPoeticsAmount = Inventory.GetItemCount(28)
+    DesynthItems()
+    local newPoeticsAmount = Inventory.GetItemCount(28)
 
-    else
-        if newPoeticsAmount >= 600 then
-            Entity.GetEntityByName(vendorName):SetAsTarget()
-            Entity.Target:Interact()
+    Entity.GetEntityByName(vendorName):SetAsTarget()
+    Entity.Target:Interact()
 
-            functions.WaitForAddon(shopName)
+    functions.WaitForAddon(shopName)
 
-            functions.Echo("Navigating to Physical Ranged DPS, Credendum Gear")
-            functions.NavigateToShopCategory(shopName, 12, 4)
-            functions.NavigateToShopCategory(shopName, 13, 9)
+    functions.Echo("Navigating to Physical Ranged DPS, Credendum Gear")
+    functions.NavigateToShopCategory(shopName, 12, 4)
+    functions.NavigateToShopCategory(shopName, 13, 9)
 
-            functions.BuyFromShop(shopName,
-            itemsToBuy["Augmented Bluebird's Nest"].a,
-            itemsToBuy["Augmented Bluebird's Nest"].b,
-            itemsToBuy["Augmented Bluebird's Nest"].c)
+    functions.BuyFromShop(shopName,
+    itemsToBuy["Augmented Bluebird's Nest"].a,
+    itemsToBuy["Augmented Bluebird's Nest"].b,
+    itemsToBuy["Augmented Bluebird's Nest"].c)
 
-            yield("/callback "..shopName.." true -1")
-            functions.Wait(1)
+    yield("/callback "..shopName.." true -1")
+    functions.Wait(1)
 
-            DesynthItems()
-            local newPoeticsAmount = Inventory.GetItemCount(28)
-            end
-        end
-    end
+    DesynthItems()
+    local newPoeticsAmount = Inventory.GetItemCount(28)
 end
 
 local function SpendNuts()
