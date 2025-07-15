@@ -377,7 +377,7 @@ functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
         functions.Dismount()
         functions.WaitForOutOfCombat()
         if huntMarkName == "Flame Sergeant Dalvag" then
-            functions.Wait(10)
+            functions.Wait(15) -- Wait for Dalvag to respawn
         end
     end
     yield("/vbm ar clear")
