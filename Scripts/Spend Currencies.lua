@@ -108,6 +108,7 @@ local function SpendPoetics()
     itemsToBuy["Augmented Bluebird's Nest"].a,
     itemsToBuy["Augmented Bluebird's Nest"].b,
     itemsToBuy["Augmented Bluebird's Nest"].c)
+    functions.Wait(1)
 
     yield("/callback "..shopName.." true -1")
     functions.Wait(1)

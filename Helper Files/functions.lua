@@ -110,6 +110,7 @@ functions.WaitForZone = function(territoryId)
         functions.Wait(0.1)
     end
     functions.WaitForReady()
+    functions.Wait(3)
 end
 
 --[[
@@ -352,13 +353,6 @@ functions.ConvertToRealCoordinates = function(territoryId, x, y)
 end
 
 --[[
-CorrectFlagPosition
-Placeholder function for correcting flag positions.
-]]
-functions.CorrectFlagPosition = function()
-end
-
---[[
 SearchAndDestroy
 Moves to hunt mark, targets them, dismounts, and waits until out of combat
 External dependencies:
@@ -366,10 +360,9 @@ External dependencies:
 - VBM
 ]]
 functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
-    yield("/vbm ar clear")
-    yield("/vbm ar set "..VbmPreset)
     local huntMark = Entity.GetEntityByName(huntMarkName)
     if huntMark ~= nil and huntMark.HealthPercent ~= 0 then
+        yield("/vbm ar set "..VbmPreset)
         functions.MountUp()
         IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
         functions.WaitForVnav()
