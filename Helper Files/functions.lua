@@ -397,7 +397,7 @@ functions.FlyAndDestroyToFlag = function(huntMarkName, VbmPreset)
             functions.MountUp()
             yield("/vnav flyflag")
         end
-        functions.Wait(1)
+        functions.Wait(0.1)
     end
 end
 
