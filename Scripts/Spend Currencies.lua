@@ -56,11 +56,7 @@ local function SpendPoetics()
     --local newPoeticsAmount = Inventory.GetItemCount(28)
 
     if Svc.ClientState.TerritoryType ~= 962 then
-        functions.Echo("Teleporting to vendor zone")
-        functions.WaitForReady()
-        Actions.Teleport(182)
-        functions.Wait(5)
-        functions.WaitForReady()
+        functions.TpToAetheryte(182)
     end
 
     functions.MoveToCoordinates(POETICS_VENDOR.pos.x, POETICS_VENDOR.pos.y, POETICS_VENDOR.pos.z)
@@ -79,6 +75,7 @@ local function SpendPoetics()
         itemsToBuy["Augmented Bluebird's Nest"].a,
         itemsToBuy["Augmented Bluebird's Nest"].b,
         itemsToBuy["Augmented Bluebird's Nest"].c)
+    functions.Wait(1)
 
     functions.Echo("Navigating to Healer, Credendum Gear")
     functions.NavigateToShopCategory(shopName, 12, 6)
@@ -88,6 +85,7 @@ local function SpendPoetics()
         itemsToBuy["Augmented Bunny's Crescent"].a,
         itemsToBuy["Augmented Bunny's Crescent"].b,
         itemsToBuy["Augmented Bunny's Crescent"].c)
+    functions.Wait(1)
 
     yield("/callback "..shopName.." true -1")
     functions.Wait(1)
@@ -123,9 +121,7 @@ local function SpendNuts()
     local newNutsAmount = Inventory.GetItemCount(26533)
 
     if Svc.ClientState.TerritoryType ~= 1185 then
-        functions.Echo("Teleporting to vendor zone")
-        Actions.Teleport(216)
-        functions.WaitForReady()
+        functions.TpToAetheryte(216)
     end
 
     functions.Echo("Moving to "..vendorName)
