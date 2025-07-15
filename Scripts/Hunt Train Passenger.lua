@@ -65,7 +65,9 @@ local etaTp, closestAetheryteId = functions.CalculateEtaTp3()
 local etaFlight = functions.CalculateEtaFlight3()
 
 if etaTp <= etaFlight then
+    if closestAetheryteId ~= 148 then
     functions.TpToAetheryte(closestAetheryteId)
+    end
 end
 
 functions.FlyToFlag()

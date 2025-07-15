@@ -107,6 +107,7 @@ functions.WaitForZone = function(territoryId)
     while territoryId ~= Svc.ClientState.TerritoryType do
         functions.Wait(0.1)
     end
+    functions.WaitForReady()
 end
 
 --[[
