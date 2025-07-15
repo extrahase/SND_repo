@@ -42,7 +42,7 @@ functions.MountUp()
 local zoneHuntLocations = {
     { x = 22.2, y = 26.3 },
     { x = 23.1, y = 22.6 },
-    { x = 16.85, y = 16.95 }
+    { x = 16.6, y = 16.1 }
 }
 
 -- loop through each flag, place it and start the hunt
