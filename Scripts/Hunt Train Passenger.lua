@@ -41,6 +41,7 @@ if Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType then
     -- flag is in different zone
     functions.Echo("Waiting for HTA to change zones")
     functions.WaitForZone(Instances.Map.Flag.TerritoryId)
+    functions.Wait(3)
 
     -- account for switching instances
     if IPC.Lifestream.GetCurrentInstance() ~= 0 then
@@ -53,9 +54,10 @@ else -- flag is in same zone
     if IPC.Lifestream.GetCurrentInstance() ~= 0 then -- account for switching instances
         -- just wait for now if instances are detected
         -- need to know more about how HTA handles this
-        -- IPC.Lifestream.GetNumberOfInstances() also doesn't work atm
+        -- update: HTA teleports to closest Aetheryte, then switches instances
+        -- IPC.Lifestream.GetNumberOfInstances() doesn't work atm
         functions.Echo("Possible HTA instance switching detected, waiting 10s")
-        functions.Wait(10)
+        functions.Wait(15)
     end
 end
 
