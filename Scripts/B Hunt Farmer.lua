@@ -43,7 +43,7 @@ local zoneHuntLocations = {
     { x = 22.7, y = 25.7 },
     { x = 23.1, y = 22.6 },
     { x = 16.85, y = 16.95 },
-    { x = 23.1, y = 22.6 }
+    --{ x = 23.1, y = 22.6 }
 }
 
 -- loop through each flag, place it and start the hunt
