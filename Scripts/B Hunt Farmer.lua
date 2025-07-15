@@ -39,7 +39,12 @@ yield("/vbm ar clear")
 functions.MountUp()
 
 -- build list of flags for current zone
-local zoneHuntLocations = { { x = 22.7, y = 25.7 }, { x = 16.85, y = 16.95 } }
+local zoneHuntLocations = {
+    { x = 22.7, y = 25.7 },
+    { x = 23.7, y = 23.2 },
+    { x = 16.85, y = 16.95 },
+    { x = 23.7, y = 23.2 }
+}
 
 -- loop through each flag, place it and start the hunt
 while true do
