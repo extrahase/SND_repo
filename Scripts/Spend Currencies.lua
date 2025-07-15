@@ -6,6 +6,8 @@
 
 local functions = require("functions")
 
+DEBUG = false
+
 ITEMS_TO_DESYNTH = {
     Nuts = {
         ["Neo Kingdom Index"] = { a = 0, b = 1, c = 1},

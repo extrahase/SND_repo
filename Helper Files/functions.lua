@@ -22,7 +22,9 @@ Parameters:
 - message (string)
 ]]
 functions.Echo = function(message)
-    yield("/echo "..tostring(message))
+    if DEBUG then
+        yield("/echo "..tostring(message))
+    end
 end
 
 --[[

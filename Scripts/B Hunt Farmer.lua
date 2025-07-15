@@ -12,6 +12,7 @@ import("System.Numerics")
 
 local functions = require("functions")
 
+DEBUG = false
 --MOUNT_SPEED = 20.6
 --TP_DELAY = 7
 VBM_PRESET = "A Ranks"
