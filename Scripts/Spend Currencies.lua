@@ -53,7 +53,7 @@ local function SpendPoetics()
     local vendorName = POETICS_VENDOR.name
     local shopName = POETICS_VENDOR.shopName
     local itemsToBuy = ITEMS_TO_DESYNTH.Poetics
-    local newPoeticsAmount = Inventory.GetItemCount(28)
+    --local newPoeticsAmount = Inventory.GetItemCount(28)
 
     if Svc.ClientState.TerritoryType ~= 962 then
         functions.Echo("Teleporting to vendor zone")
@@ -93,7 +93,7 @@ local function SpendPoetics()
     functions.Wait(1)
 
     DesynthItems()
-    local newPoeticsAmount = Inventory.GetItemCount(28)
+    --local newPoeticsAmount = Inventory.GetItemCount(28)
 
     Entity.GetEntityByName(vendorName):SetAsTarget()
     Entity.Target:Interact()
@@ -113,7 +113,7 @@ local function SpendPoetics()
     functions.Wait(1)
 
     DesynthItems()
-    local newPoeticsAmount = Inventory.GetItemCount(28)
+    --local newPoeticsAmount = Inventory.GetItemCount(28)
 end
 
 local function SpendNuts()
