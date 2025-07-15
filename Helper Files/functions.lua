@@ -140,8 +140,6 @@ External dependencies:
 - vnavmesh
 ]]
 functions.FlyToFlag = function()
-    functions.WaitForOutOfCombat()
-    functions.WaitForReady()
     functions.MountUp()
     yield("/vnav flyflag")
     functions.WaitForVnav()
@@ -380,11 +378,35 @@ functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
 end
 
 --[[
-TpToAetheryte
-Teleports to Aetheryte by ID
+FlyAndDestroy
+Flies to flag while searching for a hunt mark; attacks mark if found, resumes flight afterwards
 External dependencies:
 - vnavmesh
 - VBM
+]]
+functions.FlyAndDestroyToFlag = function(huntMarkName, VbmPreset)
+    functions.MountUp()
+    yield("/vnav flyflag")
+
+    
+
+    yield("/vbm ar clear")
+    yield("/vbm ar set "..VbmPreset)
+    local huntMark = Entity.GetEntityByName(huntMarkName)
+    if huntMark ~= nil then
+        functions.MountUp()
+        IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
+        functions.WaitForVnav()
+        huntMark:SetAsTarget()
+        functions.Dismount()
+        functions.WaitForOutOfCombat()
+        yield("/vbm ar clear")
+    end
+end
+
+--[[
+TpToAetheryte
+Teleports to Aetheryte by ID
 ]]
 functions.TpToAetheryte = function(aetheryteId)
     functions.WaitForOutOfCombat()
