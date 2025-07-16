@@ -368,6 +368,7 @@ functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
         functions.WaitForVnav()
         huntMark:SetAsTarget()
         functions.Dismount()
+        functions.Wait(3)
         functions.WaitForOutOfCombat()
         yield("/vbm ar clear")
         if huntMarkName == "Flame Sergeant Dalvag" then
