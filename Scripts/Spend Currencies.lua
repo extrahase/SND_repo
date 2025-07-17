@@ -6,7 +6,7 @@
 
 local functions = require("functions")
 
-DEBUG = false
+DEBUG = true
 
 ITEMS_TO_DESYNTH = {
     Nuts = {
@@ -161,7 +161,7 @@ local function SpendNuts()
         functions.Wait(1)
 
         functions.Echo("Desynthesizing items")
-        DesynthItems()		
+        DesynthItems()
     end
 end
 
@@ -192,5 +192,7 @@ else
         end
     end
 end
+
+DesynthItems()
 
 functions.Echo("Script done!")
