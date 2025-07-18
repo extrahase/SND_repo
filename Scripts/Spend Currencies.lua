@@ -10,16 +10,8 @@ DEBUG = true
 
 ITEMS_TO_DESYNTH = {
     Nuts = {
-        ["Neo Kingdom War Axe"] = { a = 0, b = 1, c = 1},
-        ["Neo Kingdom Greatsword"] = { a = 0, b = 2, c = 1},
-        ["Neo Kingdom Gunblade"] = { a = 0, b = 3, c = 1},
-        ["Neo Kingdom Sickle"] = { a = 0, b = 5, c = 1},
-        ["Neo Kingdom Knuckles"] = { a = 0, b = 6, c = 1},
-        ["Neo Kingdom Blade"] = { a = 0, b = 7, c = 1},
-        ["Neo Kingdom Sword Breakers"] = { a = 0, b = 8, c = 1},
-        ["Neo Kingdom Twinfangs"] = { a = 0, b = 9, c = 1},
-        ["Neo Kingdom Musketoon"] = { a = 0, b = 11, c = 1},
-        ["Neo Kingdom Terpna"] = { a = 0, b = 12, c = 1}
+        ["Neo Kingdom Halberd"] = { a = 0, b = 4, c = 1},
+        ["Neo Kingdom Composite Bow"] = { a = 0, b = 10, c = 1}
     },
     Poetics = {
         ["Augmented Bunny's Crescent"] = { a = 14, b = 0, c = 1},
