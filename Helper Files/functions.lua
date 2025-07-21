@@ -110,7 +110,7 @@ functions.WaitForZone = function(territoryId)
         functions.Wait(0.1)
     end
     functions.WaitForReady()
-    functions.Wait(2)
+    functions.Wait(3)
 end
 
 --[[
