@@ -22,6 +22,8 @@ HUNT_RANK = "A"
 -- ### MAIN ###
 -- ############
 
+functions.Wait(1)
+
 local huntMarksByRank = { }
 
 for _, expansion in pairs(HUNT_MARKS) do
