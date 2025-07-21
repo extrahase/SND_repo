@@ -378,7 +378,7 @@ functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
 end
 
 --[[
-FlyAndDestroy
+FlyAndDestroyToFlag
 Flies to flag while searching for a hunt mark; attacks mark if found, resumes flight afterwards
 External dependencies:
 - vnavmesh
