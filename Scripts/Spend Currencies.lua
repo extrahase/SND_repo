@@ -56,8 +56,8 @@ local function SpendPoetics()
     local itemsToBuy = ITEMS_TO_DESYNTH.Poetics
     --local newPoeticsAmount = Inventory.GetItemCount(28)
 
-    if Svc.ClientState.TerritoryType ~= 962 then
-        functions.TpToAetheryte(182)
+    if Svc.ClientState.TerritoryType ~= 478 then
+        functions.TpToAetheryte(75)
     end
 
     functions.MoveToCoordinates(POETICS_VENDOR.pos.x, POETICS_VENDOR.pos.y, POETICS_VENDOR.pos.z)
@@ -166,15 +166,15 @@ functions.Echo("Starting script!")
 local poeticsAmount = Inventory.GetItemCount(28)
 local nutsAmount = Inventory.GetItemCount(26533)
 
-if poeticsAmount >= 1800 and Svc.ClientState.TerritoryType == 962 then
-    functions.Echo("Poetics capped and already in Sharlayan --> spending Poetics")
+if poeticsAmount >= 1950 and Svc.ClientState.TerritoryType == 478 then
+    functions.Echo("Poetics capped and already in Idyllshire --> spending Poetics")
     SpendPoetics()
 else
     if nutsAmount >= 3000 and Svc.ClientState.TerritoryType == 1185 then
         functions.Echo("Nuts capped and already in Tuliyollal --> spending Nuts")
         SpendNuts()
     else
-        if poeticsAmount >= 1800 then
+        if poeticsAmount >= 1950 then
             functions.Echo("Poetics capped --> spending Poetics")
             SpendPoetics()
         end
