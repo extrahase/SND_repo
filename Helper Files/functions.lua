@@ -371,28 +371,24 @@ functions.SearchAndDestroy = function(huntMarkName, VbmPreset)
         functions.Wait(3)
         functions.WaitForOutOfCombat()
         yield("/vbm ar clear")
-        if huntMarkName == "Flame Sergeant Dalvag" then
-            functions.Wait(15) -- Wait for Dalvag to respawn
-        end
     end
 end
 
 --[[
 FlyAndDestroyToFlag
-Flies to flag while searching for a hunt mark; attacks mark if found, resumes flight afterwards
+Flies to flag while searching for hunt marks; attacks mark if found
 External dependencies:
 - vnavmesh
 - VBM
 ]]
-functions.FlyAndDestroyToFlag = function(huntMarkName, VbmPreset)
+functions.FlyAndDestroyToFlag = function(huntMarks, VbmPreset)
     functions.MountUp()
     yield("/vnav flyflag")
 
     while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
-        functions.SearchAndDestroy(huntMarkName, VbmPreset)
-        if not(IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
-            functions.MountUp()
-            yield("/vnav flyflag")
+        for _, huntMarkName in pairs(huntMarks) do
+            functions.Echo("Searching for "..huntMarkName)
+            functions.SearchAndDestroy(huntMarkName, VbmPreset)
         end
         functions.Wait(0.1)
     end

@@ -24,16 +24,6 @@ HUNT_RANK = "A"
 
 functions.Wait(1)
 
-local huntMarksByRank = { }
-
-for _, expansion in pairs(HUNT_MARKS) do
-    if expansion[HUNT_RANK] then
-        for _, mark in ipairs(expansion[HUNT_RANK]) do
-            table.insert(huntMarksByRank, mark)
-        end
-    end
-end
-
 functions.WaitForOutOfCombat()
 yield("/vbm ar clear")
 functions.MountUp()
@@ -72,23 +62,21 @@ if etaTp <= etaFlight then
     end
 end
 
-functions.FlyToFlag()
-
--- Get current zone name
+-- construct table with Hunt Marks for current zone
 local zoneName = functions.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
-functions.Echo("Current zone: " .. zoneName)
-
--- Loop through each hunt mark in the current zone
-if huntMarksByRank then
-    for _, mark in pairs(huntMarksByRank) do
-        if mark.zone == zoneName then
-            functions.Echo("Trying to find hunt mark: " .. mark.name)
-            functions.SearchAndDestroy(mark.name, VBM_PRESET)
+local huntMarks = { }
+for _, expansion in pairs(HUNT_MARKS) do
+    if expansion[HUNT_RANK] then
+        for _, mark in ipairs(expansion[HUNT_RANK]) do
+            if mark.zone == zoneName then
+                functions.Echo("Adding "..mark.name.." to hunt marks")
+                table.insert(huntMarks, mark.name)
+            end
         end
     end
-else
-    functions.Echo("No hunt marks found for the current zone: " .. zoneName)
 end
+
+functions.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
 
 functions.MountUp()
 
