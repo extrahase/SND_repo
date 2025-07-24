@@ -56,8 +56,8 @@ local function SpendPoetics()
     local vendorName = POETICS_VENDOR.name
     local shopName = POETICS_VENDOR.shopName
     local itemsToBuy = ITEMS_TO_DESYNTH.Poetics
-    local zoneId = ITEMS_TO_DESYNTH.zoneId
-    local aetheryteId = ITEMS_TO_DESYNTH.aetheryteId
+    local zoneId = POETICS_VENDOR.zoneId
+    local aetheryteId = POETICS_VENDOR.aetheryteId
     --local newPoeticsAmount = Inventory.GetItemCount(28)
 
     if Svc.ClientState.TerritoryType ~= zoneId then
