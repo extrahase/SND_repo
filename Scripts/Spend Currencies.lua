@@ -82,6 +82,7 @@ local function SpendPoetics()
         itemsToBuy["Unidentifiable Shell"].b,
         itemsToBuy["Unidentifiable Shell"].c
     )
+    functions.Wait(1)
 
     yield("/callback "..shopName.." true -1")
     functions.Wait(1)
