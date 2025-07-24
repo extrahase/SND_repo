@@ -10,25 +10,27 @@ DEBUG = true
 
 ITEMS_TO_DESYNTH = {
     Nuts = {
-        ["Neo Kingdom Halberd"] = { a = 0, b = 4, c = 1},
-        ["Neo Kingdom Composite Bow"] = { a = 0, b = 10, c = 1}
+        ["Neo Kingdom Halberd"] = { a = 0, b = 4, c = 1 },
+        ["Neo Kingdom Composite Bow"] = { a = 0, b = 10, c = 1 }
     },
     Poetics = {
-        ["Augmented Bunny's Crescent"] = { a = 14, b = 0, c = 1},
-        ["Augmented Bluebird's Nest"] = { a = 14, b = 0, c = 1}
+        ["Unidentifiable Shell"] = { a = 14, b = 6, c = 13 }
     }
 }
 
 POETICS_VENDOR = {
-    name = "Agora Merchant",
-    pos = { x = 16.92, y = 2.8, z = 1.23 },
-    shopName = "InclusionShop"
+    name = "Rowena's Representative",
+    pos = { x = 38.72, y = -1.76, z = 55.77 },
+    shopName = "InclusionShop",
+    zoneId = 132,
+    aetheryteId = 2
 }
 
 NUTS_VENDOR = {
     name = "Ryubool Ja",
     pos = { x = 25.89, y = -14, z = 127.01 },
     shopName = "ShopExchangeCurrency"
+    -- TODO: Add zoneId and aetheryteId
 }
 
 ITEM_LIST = require("vac_lists").Item_List
@@ -54,10 +56,12 @@ local function SpendPoetics()
     local vendorName = POETICS_VENDOR.name
     local shopName = POETICS_VENDOR.shopName
     local itemsToBuy = ITEMS_TO_DESYNTH.Poetics
+    local zoneId = ITEMS_TO_DESYNTH.zoneId
+    local aetheryteId = ITEMS_TO_DESYNTH.aetheryteId
     --local newPoeticsAmount = Inventory.GetItemCount(28)
 
-    if Svc.ClientState.TerritoryType ~= 478 then
-        functions.TpToAetheryte(75)
+    if Svc.ClientState.TerritoryType ~= zoneId then
+        functions.TpToAetheryte(aetheryteId)
     end
 
     functions.MoveToCoordinates(POETICS_VENDOR.pos.x, POETICS_VENDOR.pos.y, POETICS_VENDOR.pos.z)
@@ -68,52 +72,19 @@ local function SpendPoetics()
 
     functions.WaitForAddon(shopName)
 
-    functions.Echo("Navigating to Physical Ranged DPS, Credendum Gear")
-    functions.NavigateToShopCategory(shopName, 12, 4)
-    functions.NavigateToShopCategory(shopName, 13, 9)
+    functions.Echo("Navigating to Combat Supplies, Special Arms Materials")
+    functions.NavigateToShopCategory(shopName, 12, 7)
+    functions.NavigateToShopCategory(shopName, 13, 1)
 
+    functions.Echo("Buying Unidentifiable Shells")
     functions.BuyFromShop(shopName,
-        itemsToBuy["Augmented Bluebird's Nest"].a,
-        itemsToBuy["Augmented Bluebird's Nest"].b,
-        itemsToBuy["Augmented Bluebird's Nest"].c)
-    functions.Wait(1)
-
-    functions.Echo("Navigating to Healer, Credendum Gear")
-    functions.NavigateToShopCategory(shopName, 12, 6)
-    functions.NavigateToShopCategory(shopName, 13, 9)
-
-    functions.BuyFromShop(shopName,
-        itemsToBuy["Augmented Bunny's Crescent"].a,
-        itemsToBuy["Augmented Bunny's Crescent"].b,
-        itemsToBuy["Augmented Bunny's Crescent"].c)
-    functions.Wait(1)
+        itemsToBuy["Unidentifiable Shell"].a,
+        itemsToBuy["Unidentifiable Shell"].b,
+        itemsToBuy["Unidentifiable Shell"].c
+    )
 
     yield("/callback "..shopName.." true -1")
     functions.Wait(1)
-
-    DesynthItems()
-    --local newPoeticsAmount = Inventory.GetItemCount(28)
-
-    Entity.GetEntityByName(vendorName):SetAsTarget()
-    Entity.Target:Interact()
-
-    functions.WaitForAddon(shopName)
-
-    functions.Echo("Navigating to Physical Ranged DPS, Credendum Gear")
-    functions.NavigateToShopCategory(shopName, 12, 4)
-    functions.NavigateToShopCategory(shopName, 13, 9)
-
-    functions.BuyFromShop(shopName,
-    itemsToBuy["Augmented Bluebird's Nest"].a,
-    itemsToBuy["Augmented Bluebird's Nest"].b,
-    itemsToBuy["Augmented Bluebird's Nest"].c)
-    functions.Wait(1)
-
-    yield("/callback "..shopName.." true -1")
-    functions.Wait(1)
-
-    DesynthItems()
-    --local newPoeticsAmount = Inventory.GetItemCount(28)
 end
 
 local function SpendNuts()
@@ -166,8 +137,8 @@ functions.Echo("Starting script!")
 local poeticsAmount = Inventory.GetItemCount(28)
 local nutsAmount = Inventory.GetItemCount(26533)
 
-if poeticsAmount >= 1950 and Svc.ClientState.TerritoryType == 478 then
-    functions.Echo("Poetics capped and already in Idyllshire --> spending Poetics")
+if poeticsAmount >= 1950 and Svc.ClientState.TerritoryType == POETICS_VENDOR.zoneId then
+    functions.Echo("Poetics capped and already in Gridania --> spending Poetics")
     SpendPoetics()
 else
     if nutsAmount >= 3000 and Svc.ClientState.TerritoryType == 1185 then
