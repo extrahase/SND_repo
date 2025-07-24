@@ -26,7 +26,7 @@ functions.Wait(1)
 
 functions.WaitForOutOfCombat()
 yield("/vbm ar clear")
-functions.MountUp()
+--functions.MountUp()
 
 -- waits for HTA to do its thing depending on if the flag is in a new zone or not
 if Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType then
@@ -78,6 +78,6 @@ end
 
 functions.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
 
--- functions.MountUp()
+--functions.MountUp()
 
 functions.Echo("Script done!")
