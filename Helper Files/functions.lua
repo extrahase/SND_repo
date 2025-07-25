@@ -188,6 +188,7 @@ Returns:
 ]]
 functions.CalculateEtaFlight3 = function()
     local playerPos = Player.Entity.Position
+    playerPos.Y = 0 -- flag and Aetheryte vectors always return 0 as well --> better for distance calculation
     local flagPos = Instances.Map.Flag.Vector3
     local distance = functions.DistanceBetweenVectors(playerPos, flagPos)
     local eta = distance / MOUNT_SPEED
