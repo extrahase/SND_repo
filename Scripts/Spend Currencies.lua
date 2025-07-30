@@ -82,10 +82,8 @@ local function SpendPoetics()
         itemsToBuy["Unidentifiable Shell"].b,
         itemsToBuy["Unidentifiable Shell"].c
     )
-    functions.Wait(1)
 
-    yield("/callback "..shopName.." true -1")
-    functions.Wait(1)
+    functions.CloseShop(shopName)
 end
 
 local function SpendNuts()
@@ -103,30 +101,34 @@ local function SpendNuts()
     functions.WaitForVnav()
 
     functions.Echo("Starting buy/desynth loop")
-    while newNutsAmount >= 140 do
+    -- while newNutsAmount >= 400 do
         functions.Echo("Targeting and interacting with vendor")
         Entity.GetEntityByName(vendorName):SetAsTarget()
         Entity.Target:Interact()
-    
+
         functions.Echo("Waiting for shop window")
         functions.WaitForAddon(shopName)
-    
-        functions.Echo("Buying items from shop")
-        for _, item in pairs(itemsToBuy) do
-            if newNutsAmount >= 140 then
-                functions.BuyFromShop(shopName, item.a, item.b, item.c)
-                functions.Wait(1)
-                newNutsAmount = Inventory.GetItemCount(26533)
-            end
-        end
 
-        functions.Echo("Closing shop")
-        yield("/callback "..shopName.." true -1")
-        functions.Wait(1)
+        functions.Echo("Navigating to Sacks of Nuts Exchange")
+        functions.SelectListOption(shopName, 5)
+
+        functions.Echo("Buying items from shop")
+        local buyAmount = math.floor(newNutsAmount / 400)
+        functions.BuyFromShop(shopName, 0, 9, buyAmount)
+        functions.SelectListOption(SelectYesno, 0) -- confirm purchase
+        -- for _, item in pairs(itemsToBuy) do
+        --     if newNutsAmount >= 140 then
+        --         functions.BuyFromShop(shopName, item.a, item.b, item.c)
+        --         functions.Wait(1)
+        --         newNutsAmount = Inventory.GetItemCount(26533)
+        --     end
+        -- end
+
+        functions.CloseShop(shopName)
 
         functions.Echo("Desynthesizing items")
         DesynthItems()
-    end
+    -- end
 end
 
 -- ############

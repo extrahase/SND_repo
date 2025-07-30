@@ -263,6 +263,18 @@ Parameters:
 ]]
 functions.BuyFromShop = function(shopName, a, b, c)
     yield("/callback "..shopName.." true "..a.." "..b.." "..c)
+    functions.Wait(1)
+end
+
+--[[
+CloseShop
+Closes the shop window via callback.
+Parameters:
+- shopName (string)
+]]
+functions.CloseShop = function(shopName)
+    yield("/callback "..shopName.." true -1")
+    functions.Wait(1)
 end
 
 --[[
@@ -274,6 +286,19 @@ Parameters:
 ]]
 functions.NavigateToShopCategory = function(shopName, a, b)
     yield("/callback "..shopName.." true "..a.." "..b)
+    functions.Wait(1)
+end
+
+--[[
+SelectListOption
+Selects a single option from a list via callback.
+Parameters:
+- addonName (string)
+- a (number)
+]]
+functions.SelectListOption = function(addonName, a)
+    yield("/callback "..addonName.." true "..a)
+    functions.Wait(1)
 end
 
 --[[
