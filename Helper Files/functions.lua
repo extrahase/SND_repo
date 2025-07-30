@@ -229,7 +229,7 @@ end
 ---@return string|nil zoneName
 function functions.FindZoneNameByTerritoryId(territoryId)
     for id, zone in pairs(ZONE_LIST) do
-        if id == territoryId then
+        if id == tostring(territoryId) then
             return zone.Zone
         end
     end
