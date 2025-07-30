@@ -115,7 +115,7 @@ local function SpendNuts()
         functions.Echo("Buying items from shop")
         local buyAmount = math.floor(newNutsAmount / 400)
         functions.BuyFromShop(shopName, 0, 9, buyAmount)
-        functions.SelectListOption(SelectYesno, 0) -- confirm purchase
+        functions.SelectListOption("SelectYesno", 0) -- confirm purchase
         -- for _, item in pairs(itemsToBuy) do
         --     if newNutsAmount >= 140 then
         --         functions.BuyFromShop(shopName, item.a, item.b, item.c)
