@@ -139,7 +139,6 @@ FISH_TO_DESYNTH = {
     "Crepe Sole",
     "Knifejaw",
     "Placodus",
-    "LEGEND",
     "Deepshade Sardine",
     "Sirensong Mussel",
     "Arrowhead",
