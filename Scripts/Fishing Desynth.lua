@@ -242,7 +242,6 @@ local function DesynthFish()
             end
         else
             functions.Echo("Fish not found: "..fish)
-            return
         end
     end
 end
