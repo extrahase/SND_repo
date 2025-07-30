@@ -229,15 +229,21 @@ DEBUG = true
 local functions = require("functions")
 
 local function DesynthFish()
-    for _, fish in pairs(FISH_TO_DESYNTH) do
+    for _, fish in ipairs(FISH_TO_DESYNTH) do
         local fishId = functions.FindItemID(fish)
-        local fishAmount = Inventory.GetItemCount(fishId)
-        if fishAmount > 0 then
-            for i = 1, fishAmount do
-                yield("/desynth "..fishId)
-                functions.WaitForReady()
-                functions.Wait(1)
+        if fishId ~= nil then
+            local fishAmount = Inventory.GetItemCount(fishId)
+            if fishAmount > 0 then
+                functions.Echo("Desynthing: "..fish)
+                for i = 1, fishAmount do
+                    yield("/desynth "..fishId)
+                    functions.WaitForReady()
+                    functions.Wait(1)
+                end
             end
+        else
+            functions.Echo("Fish not found: "..fish)
+            return
         end
     end
 end
