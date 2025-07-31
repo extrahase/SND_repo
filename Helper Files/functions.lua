@@ -20,14 +20,14 @@ function functions.Wait(number)
     yield("/wait " .. number)
 end
 
----Waits until the player is no longer busy (cutscene, teleport, etc).
+---Waits until the player is no longer busy.
 function functions.WaitForReady()
     while Player.IsBusy do
         functions.Wait(0.1)
     end
 end
 
----Waits until the player is busy (e.g. during teleport).
+---Waits until the player is busy.
 function functions.WaitForBusy()
     while not Player.IsBusy do
         functions.Wait(0.1)
@@ -48,9 +48,9 @@ function functions.WaitForCombat()
     end
 end
 
----Waits for vnavmesh pathfinding to complete.
+---Waits for vnav to finish building its mesh, pathfinding and navigating to target.
 function functions.WaitForVnav()
-    while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
+    while not IPC.vnavmesh.IsReady() or IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
         functions.Wait(0.1)
     end
 end
@@ -63,14 +63,27 @@ function functions.WaitForAddon(name)
     end
 end
 
----Waits until the zone ID matches the target territory ID.
+---Waits until the zone ID matches the target territory ID, then waits for player to be ready and vnav to build its mesh.
 ---@param territoryId number
 function functions.WaitForZone(territoryId)
     while territoryId ~= Svc.ClientState.TerritoryType do
         functions.Wait(0.1)
     end
     functions.WaitForReady()
-    functions.Wait(3)
+    functions.WaitForVnav()
+end
+
+---Waits for HTA to change to the specified instance, then waits for player to be ready and vnav to build its mesh.
+---@param instanceId number
+function functions.WaitForInstance(instanceId)
+    if IPC.Lifestream.GetCurrentInstance() ~= 0 and IPC.Lifestream.GetCurrentInstance() ~= instanceId then
+        functions.Echo("Waiting for HTA to change instances")
+        while IPC.Lifestream.GetCurrentInstance() ~= instanceId do
+            functions.Wait(0.1)
+        end
+        functions.WaitForReady()
+        functions.WaitForVnav()
+    end
 end
 
 ---Mounts up using Mount Roulette if not already mounted.
@@ -274,7 +287,7 @@ function functions.SearchAndDestroy(huntMarkName, VbmPreset)
         functions.WaitForVnav()
         huntMark:SetAsTarget()
         functions.Dismount()
-        functions.Wait(3)
+        functions.Wait(5)
         functions.WaitForOutOfCombat()
         yield("/vbm ar clear")
     end
@@ -296,7 +309,7 @@ function functions.FlyAndDestroyToFlag(huntMarks, VbmPreset)
     end
 end
 
----Teleports to the specified aetheryte by ID.
+---Teleports to the specified aetheryte by ID and waits for vnav to be ready.
 ---@param aetheryteId number
 function functions.TpToAetheryte(aetheryteId)
     functions.WaitForOutOfCombat()
@@ -304,6 +317,7 @@ function functions.TpToAetheryte(aetheryteId)
     Actions.Teleport(tonumber(aetheryteId))
     functions.WaitForBusy()
     functions.WaitForReady()
+    functions.WaitForVnav()
 end
 
 return functions
