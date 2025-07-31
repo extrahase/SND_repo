@@ -73,10 +73,10 @@ function functions.WaitForZone(territoryId)
     functions.WaitForVnav()
 end
 
----Waits for HTA to change to the specified instance, then waits for player to be ready and vnav to build its mesh.
+---Waits for HTA to change to the specified instance if any exist, then waits for player to be ready and vnav to build its mesh.
 ---@param instanceId number
 function functions.WaitForInstance(instanceId)
-    if IPC.Lifestream.GetCurrentInstance() ~= 0 and IPC.Lifestream.GetCurrentInstance() ~= instanceId then
+    if IPC.Lifestream.GetNumberOfInstances() ~= 0 and IPC.Lifestream.GetCurrentInstance() ~= instanceId then
         functions.Echo("Waiting for HTA to change instances")
         while IPC.Lifestream.GetCurrentInstance() ~= instanceId do
             functions.Wait(0.1)
