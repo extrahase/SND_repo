@@ -39,8 +39,8 @@ else -- flag is in same zone
         if currentInstance == numberOfInstances then
             functions.Echo("Already in the last instance, no need to wait")
         else
-            functions.Echo("Possible HTA instance switching detected, waiting 3s")
-            functions.Wait(3)
+            functions.Echo("Possible HTA instance switching detected, waiting 2s")
+            functions.Wait(2)
             if Player.IsBusy then -- if player is busy, HTA must be active
                 functions.Echo("Player is busy, HTA must be active, waiting for it to finish")
                 functions.WaitForInstance(currentInstance + 1)
