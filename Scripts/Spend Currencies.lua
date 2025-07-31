@@ -8,29 +8,24 @@ local functions = require("functions")
 
 DEBUG = true
 
-ITEMS_TO_DESYNTH = {
-    Nuts = {
-        ["Neo Kingdom Halberd"] = { a = 0, b = 4, c = 1 },
-        ["Neo Kingdom Composite Bow"] = { a = 0, b = 10, c = 1 }
-    },
-    Poetics = {
-        ["Unidentifiable Shell"] = { a = 14, b = 6, c = 13 }
-    }
-}
+ITEMS_TO_DESYNTH = { }
 
 POETICS_VENDOR = {
     name = "Rowena's Representative",
-    pos = { x = 38.72, y = -1.76, z = 55.77 },
     shopName = "InclusionShop",
     zoneId = 132,
-    aetheryteId = 2
+}
+
+UNCAPPED_VENDOR = {
+    name = "Zircon",
+    shopName = "ShopExchangeCurrency",
+    zoneId = 1186,
 }
 
 NUTS_VENDOR = {
     name = "Ryubool Ja",
-    pos = { x = 25.89, y = -14, z = 127.01 },
-    shopName = "ShopExchangeCurrency"
-    -- TODO: Add zoneId and aetheryteId
+    shopName = "ShopExchangeCurrency",
+    zoneId = 1185,
 }
 
 ITEM_LIST = require("vac_lists").Item_List
@@ -55,80 +50,78 @@ end
 local function SpendPoetics()
     local vendorName = POETICS_VENDOR.name
     local shopName = POETICS_VENDOR.shopName
-    local itemsToBuy = ITEMS_TO_DESYNTH.Poetics
-    local zoneId = POETICS_VENDOR.zoneId
-    local aetheryteId = POETICS_VENDOR.aetheryteId
-    --local newPoeticsAmount = Inventory.GetItemCount(28)
+    local poeticsAmount = Inventory.GetItemCount(28)
 
-    if Svc.ClientState.TerritoryType ~= zoneId then
-        functions.TpToAetheryte(aetheryteId)
+    if poeticsAmount < 1950 then
+        return
     end
 
-    functions.MoveToCoordinates(POETICS_VENDOR.pos.x, POETICS_VENDOR.pos.y, POETICS_VENDOR.pos.z)
-    functions.WaitForVnav()
-
-    Entity.GetEntityByName(vendorName):SetAsTarget()
-    Entity.Target:Interact()
+    yield("/li Poetics")
 
     functions.WaitForAddon(shopName)
 
-    functions.Echo("Navigating to Combat Supplies, Special Arms Materials")
+    functions.Echo("Navigating to correct category")
     functions.NavigateToShopCategory(shopName, 12, 7)
     functions.NavigateToShopCategory(shopName, 13, 1)
 
-    functions.Echo("Buying Unidentifiable Shells")
-    functions.BuyFromShop(shopName,
-        itemsToBuy["Unidentifiable Shell"].a,
-        itemsToBuy["Unidentifiable Shell"].b,
-        itemsToBuy["Unidentifiable Shell"].c
-    )
+    functions.Echo("Buying items from shop")
+    functions.BuyFromShop(shopName, 0, 0, poeticsAmount / 150)
 
+    functions.Echo("Closing shop")
+    functions.CloseShop(shopName)
+end
+
+local function SpendUncapped()
+    local vendorName = UNCAPPED_VENDOR.name
+    local shopName = UNCAPPED_VENDOR.shopName
+    local uncappedAmount = Inventory.GetItemCount(47)
+
+    if uncappedAmount < 1720 then
+        return
+    end
+
+    yield("/li Uncapped")
+
+    functions.WaitForAddon(shopName)
+
+    functions.Echo("Navigating to correct list option")
+    functions.SelectListOption(shopName, 5)
+
+    functions.Echo("Buying items from shop")
+    functions.BuyFromShop(shopName, 0, 0, 20)
+    functions.BuyFromShop(shopName, 0, 1, 20)
+    functions.BuyFromShop(shopName, 0, 2, 20)
+    functions.BuyFromShop(shopName, 0, 3, 20)
+    functions.BuyFromShop(shopName, 0, 4, 20)
+    functions.BuyFromShop(shopName, 0, 5, 20)
+
+    functions.Echo("Closing shop")
     functions.CloseShop(shopName)
 end
 
 local function SpendNuts()
     local vendorName = NUTS_VENDOR.name
     local shopName = NUTS_VENDOR.shopName
-    local itemsToBuy = ITEMS_TO_DESYNTH.Nuts
-    local newNutsAmount = Inventory.GetItemCount(26533)
+    local nutsAmount = Inventory.GetItemCount(26533)
 
-    if Svc.ClientState.TerritoryType ~= 1185 then
-        functions.TpToAetheryte(216)
+    if nutsAmount < 3440 then
+        return
     end
 
-    functions.Echo("Moving to "..vendorName)
-    functions.MoveToCoordinates(NUTS_VENDOR.pos.x, NUTS_VENDOR.pos.y, NUTS_VENDOR.pos.z)
-    functions.WaitForVnav()
+    yield("/li Nuts")
 
-    functions.Echo("Starting buy/desynth loop")
-    -- while newNutsAmount >= 400 do
-        functions.Echo("Targeting and interacting with vendor")
-        Entity.GetEntityByName(vendorName):SetAsTarget()
-        Entity.Target:Interact()
+    functions.Echo("Waiting for shop window")
+    functions.WaitForAddon(shopName)
 
-        functions.Echo("Waiting for shop window")
-        functions.WaitForAddon(shopName)
+    functions.Echo("Navigating to correct list option")
+    functions.SelectListOption(shopName, 5)
 
-        functions.Echo("Navigating to Sacks of Nuts Exchange")
-        functions.SelectListOption(shopName, 5)
+    functions.Echo("Buying items from shop")
+    local buyAmount = math.floor(nutsAmount / 400)
+    functions.BuyFromShop(shopName, 0, 9, buyAmount)
 
-        functions.Echo("Buying items from shop")
-        local buyAmount = math.floor(newNutsAmount / 400)
-        functions.BuyFromShop(shopName, 0, 9, buyAmount)
-        functions.SelectListOption("SelectYesno", 0) -- confirm purchase
-        -- for _, item in pairs(itemsToBuy) do
-        --     if newNutsAmount >= 140 then
-        --         functions.BuyFromShop(shopName, item.a, item.b, item.c)
-        --         functions.Wait(1)
-        --         newNutsAmount = Inventory.GetItemCount(26533)
-        --     end
-        -- end
-
-        functions.CloseShop(shopName)
-
-        functions.Echo("Desynthesizing items")
-        DesynthItems()
-    -- end
+    functions.Echo("Closing shop")
+    functions.CloseShop(shopName)
 end
 
 -- ############
@@ -137,28 +130,19 @@ end
 
 functions.Echo("Starting script!")
 
-local poeticsAmount = Inventory.GetItemCount(28)
-local nutsAmount = Inventory.GetItemCount(26533)
-
-if poeticsAmount >= 1950 and Svc.ClientState.TerritoryType == POETICS_VENDOR.zoneId then
-    functions.Echo("Poetics capped and already in Gridania --> spending Poetics")
+if Svc.ClientState.TerritoryType == POETICS_VENDOR.zoneId then
+    functions.Echo("Poetics capped and already in vendor zone --> spending Poetics")
     SpendPoetics()
+elseif Svc.ClientState.TerritoryType == UNCAPPED_VENDOR.zoneId then
+    functions.Echo("Uncapped tomestones capped and already in vendor zone --> spending Uncapped tomestones")
+    SpendUncapped()
+elseif Svc.ClientState.TerritoryType == NUTS_VENDOR.zoneId then
+    functions.Echo("Nuts capped and already in vendor zone --> spending Nuts")
+    SpendNuts()
 else
-    if nutsAmount >= 3000 and Svc.ClientState.TerritoryType == 1185 then
-        functions.Echo("Nuts capped and already in Tuliyollal --> spending Nuts")
-        SpendNuts()
-    else
-        if poeticsAmount >= 1950 then
-            functions.Echo("Poetics capped --> spending Poetics")
-            SpendPoetics()
-        end
-        if nutsAmount >= 3000 then
-            functions.Echo("Nuts capped --> spending Nuts")
-            SpendNuts()
-        end
-    end
+    SpendPoetics()
+    SpendUncapped()
+    SpendNuts()
 end
-
-DesynthItems()
 
 functions.Echo("Script done!")

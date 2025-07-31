@@ -196,6 +196,8 @@ end
 ---@param c number
 function functions.BuyFromShop(shopName, a, b, c)
     yield("/callback " .. shopName .. " true " .. a .. " " .. b .. " " .. c)
+    functions.WaitForAddon("SelectYesno")
+    yield("/callback SelectYesno true 0")
     functions.Wait(1)
 end
 
