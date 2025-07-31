@@ -31,7 +31,7 @@ yield("/vbm ar clear")
 if Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType then -- flag is in different zone
     functions.Echo("Waiting for HTA to change zones")
     functions.WaitForZone(Instances.Map.Flag.TerritoryId)
-    WaitForInstance(1) -- account for switching instances
+    functions.WaitForInstance(1) -- account for switching instances
 else -- flag is in same zone
     if IPC.Lifestream.GetCurrentInstance() ~= 0 then -- account for switching instances
         -- just wait for now if instances are detected
