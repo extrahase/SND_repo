@@ -302,7 +302,7 @@ function functions.FlyAndDestroyToFlag(huntMarks, VbmPreset)
 
     while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
         for _, huntMarkName in pairs(huntMarks) do
-            functions.Echo("Searching for " .. huntMarkName)
+            --functions.Echo("Searching for " .. huntMarkName)
             functions.SearchAndDestroy(huntMarkName, VbmPreset)
         end
         functions.Wait(0.1)
