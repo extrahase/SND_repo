@@ -67,7 +67,7 @@ local function SpendPoetics()
 
     functions.Echo("Buying items from shop")
     local buyAmount = math.floor(poeticsAmount / 150)
-    functions.BuyFromShop(shopName, 0, 0, buyAmount)
+    functions.BuyFromShop(shopName, 14, 6, buyAmount)
 
     functions.Echo("Closing shop")
     functions.CloseShop(shopName)

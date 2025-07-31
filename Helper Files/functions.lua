@@ -196,7 +196,14 @@ end
 ---@param c number
 function functions.BuyFromShop(shopName, a, b, c)
     yield("/callback " .. shopName .. " true " .. a .. " " .. b .. " " .. c)
-    functions.WaitForAddon("SelectYesno")
+
+    -- timed check in case SelectYesno is auto-confirmed by YesAlready
+    for i = 1, 10 do
+        if not Addons.GetAddon("SelectYesno").Ready then
+            functions.Wait(0.1)
+        end
+    end
+
     yield("/callback SelectYesno true 0")
     functions.Wait(1)
 end
