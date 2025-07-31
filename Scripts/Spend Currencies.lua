@@ -58,6 +58,7 @@ local function SpendPoetics()
 
     yield("/li Poetics")
 
+    functions.Echo("Waiting for shop window")
     functions.WaitForAddon(shopName)
 
     functions.Echo("Navigating to correct category")
@@ -82,6 +83,7 @@ local function SpendUncapped()
 
     yield("/li Uncapped")
 
+    functions.Echo("Waiting for shop window")
     functions.WaitForAddon(shopName)
 
     functions.Echo("Navigating to correct list option")
