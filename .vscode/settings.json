@@ -18,5 +18,7 @@
     ],
     "Lua.workspace.library": [
         "${workspaceFolder}/.vscode"
-  ]
+    ],
+    "editor.folding": true,
+    "editor.foldingStrategy": "auto"
 }

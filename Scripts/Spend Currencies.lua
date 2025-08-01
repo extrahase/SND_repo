@@ -84,7 +84,7 @@ local function SpendUncapped()
 
     yield("/li Uncapped")
 
-    functions.Echo("Waiting for shop window")
+    functions.Echo("Waiting for shop selection window")
     functions.WaitForAddon("SelectIconString")
 
     functions.Echo("Navigating to correct list option")
@@ -114,11 +114,11 @@ local function SpendNuts()
 
     yield("/li Nuts")
 
-    functions.Echo("Waiting for shop window")
-    functions.WaitForAddon(shopName)
+    functions.Echo("Waiting for shop selection window")
+    functions.WaitForAddon("SelectIconString")
 
     functions.Echo("Navigating to correct list option")
-    functions.SelectListOption(shopName, 5)
+    functions.SelectListOption("SelectIconString", 0)
 
     functions.Echo("Buying items from shop")
     local buyAmount = math.floor(nutsAmount / 400)
