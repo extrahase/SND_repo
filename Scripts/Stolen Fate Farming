@@ -2166,49 +2166,21 @@ end
 
 function TurnOnAoes()
     if not AoesOn then
-        if RotationPlugin == "RSR" then
-            yield("/rotation off")
-            yield("/rotation auto on")
-            Dalamud.Log("[FATE] TurnOnAoes /rotation auto on")
-
-            if RSRAoeType == "Off" then
-                yield("/rotation settings aoetype 0")
-            elseif RSRAoeType == "Cleave" then
-                yield("/rotation settings aoetype 1")
-            elseif RSRAoeType == "Full" then
-                yield("/rotation settings aoetype 2")
-            end
-        elseif RotationPlugin == "BMR" then
-            yield("/bmrai setpresetname "..RotationAoePreset)
-        elseif RotationPlugin == "VBM" then
-            yield("/vbm ar set "..RotationAoePreset)
-        end
-        AoesOn = true
+        yield("/vbm ar set "..RotationAoePreset)
     end
+    AoesOn = true
 end
 
 function TurnOffAoes()
     if AoesOn then
-        if RotationPlugin == "RSR" then
-            yield("/rotation settings aoetype 1")
-            yield("/rotation manual")
-            Dalamud.Log("[FATE] TurnOffAoes /rotation manual")
-        elseif RotationPlugin == "BMR" then
-            yield("/bmrai setpresetname "..RotationSingleTargetPreset)
-        elseif RotationPlugin == "VBM" then
-            yield("/vbm ar set "..RotationSingleTargetPreset)
-        end
-        AoesOn = false
+        yield("/vbm ar set "..RotationSingleTargetPreset)
     end
+    AoesOn = false
 end
 
 function TurnOffRaidBuffs()
     if AoesOn then
-        if RotationPlugin == "BMR" then
-            yield("/bmrai setpresetname "..RotationHoldBuffPreset)
-        elseif RotationPlugin == "VBM" then
-            yield("/vbm ar deactivate "..RotationHoldBuffPreset)
-        end
+        yield("/vbm ar deactivate "..RotationHoldBuffPreset)
     end
 end
 
@@ -2226,42 +2198,15 @@ end
 function TurnOnCombatMods(rotationMode)
     if not CombatModsOn then
         CombatModsOn = true
-        -- turn on RSR in case you have the RSR 30 second out of combat timer set
-        if RotationPlugin == "RSR" then
-            if rotationMode == "manual" then
-                yield("/rotation manual")
-                Dalamud.Log("[FATE] TurnOnCombatMods /rotation manual")
-            else
-                yield("/rotation off")
-                yield("/rotation auto on")
-                Dalamud.Log("[FATE] TurnOnCombatMods /rotation auto on")
-            end
-        elseif RotationPlugin == "BMR" then
-            yield("/bmrai setpresetname "..RotationAoePreset)
-        elseif RotationPlugin == "VBM" then
-            yield("/vbm ar set "..RotationAoePreset)
-        elseif RotationPlugin == "Wrath" then
-            yield("/wrath auto on")
-        end
-        
+        yield("/vbm ar set "..RotationAoePreset)
         if not AiDodgingOn then
             SetMaxDistance()
-            
-            if DodgingPlugin == "BMR" then
-                yield("/bmrai on")
-                yield("/bmrai followtarget on") -- overrides navmesh path and runs into walls sometimes
-                yield("/bmrai followcombat on")
-                -- yield("/bmrai followoutofcombat on")
-                yield("/bmrai maxdistancetarget " .. MaxDistance)
-            elseif DodgingPlugin == "VBM" then
-                yield("/vbmai on")
-                yield("/vbmai followtarget on") -- overrides navmesh path and runs into walls sometimes
-                yield("/vbmai followcombat on")
-                -- yield("/bmrai followoutofcombat on")
-                yield("/vbmai maxdistancetarget " .. MaxDistance)
-                if RotationPlugin ~= "VBM" then
-                    yield("/vbmai ForbidActions on") --This Disables VBM AI Auto-Target
-                end
+            yield("/vbmai on")
+            yield("/vbmai followtarget on") -- overrides navmesh path and runs into walls sometimes
+            yield("/vbmai followcombat on")
+            yield("/vbmai maxdistancetarget " .. MaxDistance)
+            if RotationPlugin ~= "VBM" then
+                yield("/vbmai ForbidActions on") --This Disables VBM AI Auto-Target
             end
             AiDodgingOn = true
         end
@@ -2273,31 +2218,15 @@ function TurnOffCombatMods()
         Dalamud.Log("[FATE] Turning off combat mods")
         CombatModsOn = false
 
-        if RotationPlugin == "RSR" then
-            yield("/rotation off")
-            Dalamud.Log("[FATE] TurnOffCombatMods /rotation off")
-        elseif RotationPlugin == "BMR" or RotationPlugin == "VBM" then
-            yield("/bmrai setpresetname nil")
-        elseif RotationPlugin == "Wrath" then
-            yield("/wrath auto off")
-        end
-
         -- turn off BMR so you don't start following other mobs
         if AiDodgingOn then
-            if DodgingPlugin == "BMR" then
-                yield("/bmrai off")
-                yield("/bmrai followtarget off")
-                yield("/bmrai followcombat off")
-                yield("/bmrai followoutofcombat off")
-            elseif DodgingPlugin == "VBM" then
-                yield("/vbm ar disable")
-                yield("/vbmai off")
-                yield("/vbmai followtarget off")
-                yield("/vbmai followcombat off")
-                yield("/vbmai followoutofcombat off")
-                if RotationPlugin ~= "VBM" then
-                    yield("/vbmai ForbidActions off") --This Enables VBM AI Auto-Target
-                end
+            yield("/vbm ar disable")
+            yield("/vbmai off")
+            yield("/vbmai followtarget off")
+            yield("/vbmai followcombat off")
+            yield("/vbmai followoutofcombat off")
+            if RotationPlugin ~= "VBM" then
+                yield("/vbmai ForbidActions off") --This Enables VBM AI Auto-Target
             end
             AiDodgingOn = false
         end
@@ -2437,20 +2366,20 @@ function DoFate()
 
     GemAnnouncementLock = false
 
-    -- switches to targeting forlorns for bonus (if present)
+    -- detects a Forlorn if present
     if not IgnoreForlorns then
-        yield("/target Forlorn Maiden")
+        local forlorn = Entity.GetEntityByName("Forlorn Maiden")
         if not IgnoreBigForlornOnly then
-            yield("/target The Forlorn")
+            if not forlorn then
+                forlorn = Entity.GetEntityByName("The Forlorn")
+            end
         end
     end
 
-    if (GetTargetName() == "Forlorn Maiden" or GetTargetName() == "The Forlorn") then
-        if IgnoreForlorns or (IgnoreBigForlornOnly and GetTargetName() == "The Forlorn") then
-            ClearTarget()
-        elseif not Svc.Targets.Target.IsDead then
+    -- if a Forlorn is present, then turn on single target rotation
+    if forlorn then
+        if forlorn.HealthPercent ~= 0 then
             if not ForlornMarked then
-                yield("/enemysign attack1")
                 if Echo == "All" then
                     yield("/echo Found Forlorn! <se.3>")
                 end
@@ -3115,9 +3044,9 @@ end
     RSRAoeType                      = "Full"        --Options: Cleave/Full/Off
 
     -- For BMR/VBM/Wrath
-    RotationSingleTargetPreset      = "FATEs" --Preset name with single target strategies (for forlorns). TURN OFF AUTOMATIC TARGETING FOR THIS PRESET
-    RotationAoePreset               = "FATEs" --Preset with AOE + Buff strategies.
-    RotationHoldBuffPreset          = "FATEs" --Preset to hold 2min burst when progress gets to seleted %
+    RotationSingleTargetPreset      = "Forlorn" --Preset name with single target strategies (for forlorns). TURN OFF AUTOMATIC TARGETING FOR THIS PRESET
+    RotationAoePreset               = "FATE" --Preset with AOE + Buff strategies.
+    RotationHoldBuffPreset          = "FATE" --Preset to hold 2min burst when progress gets to seleted %
     PercentageToHoldBuff            = 100            --Ideally you'll want to make full use of your buffs, higher than 70% will still waste a few seconds if progress is too fast.
 
     IgnoreForlorns = false
