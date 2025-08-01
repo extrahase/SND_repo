@@ -920,13 +920,13 @@ FatesData = {
 --#endregion Data
 
 --#region Utils
-function mysplit(inputstr)
+local function mysplit(inputstr)
   for str in string.gmatch(inputstr, "[^%.]+") do
     return str
   end
 end
 
-function load_type(type_path)
+local function load_type(type_path)
     local assembly = mysplit(type_path)
     luanet.load_assembly(assembly)
     local type_var = luanet.import_type(type_path)
@@ -2340,8 +2340,9 @@ function DoFate()
     GemAnnouncementLock = false
 
     -- detects a Forlorn if present
+    local forlorn = nil
     if not IgnoreForlorns then
-        local forlorn = Entity.GetEntityByName("Forlorn Maiden")
+        forlorn = Entity.GetEntityByName("Forlorn Maiden")
         if not IgnoreBigForlornOnly then
             if not forlorn then
                 forlorn = Entity.GetEntityByName("The Forlorn")

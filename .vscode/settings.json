@@ -11,7 +11,10 @@
         "Addons",
         "Inventory",
         "Dalamud",
-        "InstancedContent"
+        "InstancedContent",
+        "FateState",
+        "Fates",
+        "Config"
     ],
     "Lua.workspace.library": [
         "${workspaceFolder}/.vscode"
