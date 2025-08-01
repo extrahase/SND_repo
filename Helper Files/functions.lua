@@ -1,8 +1,3 @@
----@class Vector3
----@field X number
----@field Y number
----@field Z number
-
 ---@class functions @provides various utility functions for SND scripts.
 local functions = {}
 
