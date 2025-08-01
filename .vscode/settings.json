@@ -10,6 +10,8 @@
         "import",
         "Addons",
         "Inventory",
+        "Dalamud",
+        "InstancedContent"
     ],
     "Lua.workspace.library": [
         "${workspaceFolder}/.vscode"
