@@ -2209,7 +2209,7 @@ function TurnOnCombatMods(rotationMode)
         --         yield("/vbmai ForbidActions on") --This Disables VBM AI Auto-Target
         --     end
             AiDodgingOn = true
-        end
+        -- end
     end
 end
 
