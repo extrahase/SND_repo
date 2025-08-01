@@ -52,7 +52,7 @@ local function SpendPoetics()
     local shopName = POETICS_VENDOR.shopName
     local poeticsAmount = Inventory.GetItemCount(28)
 
-    if poeticsAmount < 1950 then
+    if poeticsAmount < 1640 then
         return
     end
 
