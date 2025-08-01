@@ -287,6 +287,7 @@ function functions.SearchAndDestroy(huntMarkName, VbmPreset)
     if huntMark ~= nil and huntMark.HealthPercent ~= 0 then
         yield("/vbm ar set " .. VbmPreset)
         functions.MountUp()
+        huntMark.Position.Y = huntMark.Position.Y + 50 -- offset to avoid ground collision
         IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
         functions.WaitForVnav()
         huntMark:SetAsTarget()
