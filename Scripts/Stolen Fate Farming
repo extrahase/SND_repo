@@ -2376,7 +2376,7 @@ function DoFate()
         end
     end
 
-    -- if a Forlorn is present, then turn on single target rotation
+    -- if a living Forlorn is present, turn on single target rotation
     if forlorn then
         if forlorn.HealthPercent ~= 0 then
             if not ForlornMarked then
