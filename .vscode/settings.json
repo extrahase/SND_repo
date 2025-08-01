@@ -12,6 +12,6 @@
         "Inventory",
     ],
     "Lua.workspace.library": [
-        "./.vscode",
+        "${workspaceFolder}/.vscode"
   ]
 }
