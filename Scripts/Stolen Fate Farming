@@ -1,7 +1,7 @@
 --[=====[
 [[SND Metadata]]
 author: shufti (original author: pot0to)
-version: 3
+version: 4
 description: >-
   Fate farming script with the following features:
 
@@ -2207,9 +2207,9 @@ function TurnOnCombatMods(rotationMode)
         --     yield("/vbmai maxdistancetarget " .. MaxDistance)
         --     if RotationPlugin ~= "VBM" then
         --         yield("/vbmai ForbidActions on") --This Disables VBM AI Auto-Target
-            end
+        --     end
             AiDodgingOn = true
-        -- end
+        end
     end
 end
 
