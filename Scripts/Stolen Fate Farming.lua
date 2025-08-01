@@ -1,42 +1,20 @@
 --[=====[
 [[SND Metadata]]
-author: pot0to
-version: 5
-description: >-
-  Fate farming script with the following features:
-
-  - Can purchase Bicolor Gemstone Vouchers (both old and new) when your gemstones are almost capped
-
-  - Priority system for Fate selection: distance w/ teleport > most progress > is bonus fate > least time left > distance
-
-  - Will prioritize Forlorns when they show up during Fate
-
-  - Can do all fates, including NPC collection fates
-
-  - Revives upon death and gets back to fate farming
-
-  - Attempts to change instances when there are no fates left in the zone
-
-  - Can process your retainers and Grand Company turn ins, then get back to fate farming
-
-  - Autobuys gysahl greens and grade 8 dark matter when you run out
-
-  - Has companion scripts dedicated to atma farming, or you can write your own! (See section for companion scripts)
+author: shufti
+version: 6
 plugin_dependencies:
 - Lifestream
 - vnavmesh
 - TextAdvance
 configs:
   Food:
-    default: 
     description: Leave blank if you don't want to use any food. If its HQ include <hq> next to the name "Baked Eggplant <hq>"
     type: string
   Potion:
-    default:
     description: Leave blank if you don't want to use any potions. If its HQ include <hq> next to the name "Superior Spiritbond Potion <hq>"
     type: string
   Chocobo Companion Stance:
-    default: "Healer"
+    default: Healer
     description: Options - Follow/Free/Defender/Healer/Attacker/None. Will not summon chocobo if set to "None"
     type: string
   Buy Gysahl Greens?:
@@ -45,12 +23,6 @@ configs:
     type: boolean
   Ignore FATE if progress is over (%):
     default: 80
-    type: int
-    min: 0
-    max: 100
-    required: true
-  Ignore FATE if duration is less than (mins):
-    default: 3
     type: int
     min: 0
     max: 100
@@ -93,16 +65,16 @@ configs:
     required: true
   Forlorns:
     default: All
-    type: string
     description: Options - All/Small/None
+    type: string
     required: true
   Change instances if no FATEs?:
     default: true
     type: boolean
   Exchange bicolor gemstones for:
     default: Turali Bicolor Gemstone Voucher
-    type: string
     description: Leave blank if you don't want to spend your bicolors
+    type: string
   Self repair?:
     default: true
     description: If checked, will attempt to repair your gear. If not checked, will go to Limsa mender.
@@ -112,24 +84,25 @@ configs:
     type: boolean
   Dump extra gear at GC?:
     default: true
-    type: boolean
     description: Used with retainers, in case they come back with too much stuff and clog your inventory.
+    type: boolean
   Return on death?:
     default: true
-    type: boolean
     description: Auto accept the box to return to home aetheryte when you die.
+    type: boolean
   Echo logs:
     default: All
-    type: string
     description: Options - All/Gems/None
+    type: string
   Rotation Plugin:
-    default: "Any"
-    type: string
+    default: Any
     description: Options - Any/Wrath/RotationSolver/BossMod/BossModReborn. What Rotation Plugin to use.
-  Dodging Plugin:
-    default: "Any"
     type: string
+  Dodging Plugin:
+    default: Any
     description: Options - Any/BossMod/BossModReborn/None. What Dodging Plugin to use. If your RotationPlugin is BossModReborn/BossMod, then this will be overriden
+    type: string
+
 [[End Metadata]]
 --]=====]
 --[[
