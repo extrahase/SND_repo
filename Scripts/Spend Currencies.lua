@@ -56,7 +56,7 @@ local function SpendPoetics()
         return
     end
 
-    yield("/li Poetics")
+    functions.Lifestream("Poetics")
 
     functions.Echo("Waiting for shop window")
     functions.WaitForAddon(shopName)
@@ -82,7 +82,7 @@ local function SpendUncapped()
         return
     end
 
-    yield("/li Uncapped")
+    functions.Lifestream("Uncapped")
 
     functions.Echo("Waiting for shop selection window")
     functions.WaitForAddon("SelectIconString")
@@ -112,7 +112,7 @@ local function SpendNuts()
         return
     end
 
-    yield("/li Nuts")
+    functions.Lifestream("Nuts")
 
     functions.Echo("Waiting for shop selection window")
     functions.WaitForAddon("SelectIconString")
