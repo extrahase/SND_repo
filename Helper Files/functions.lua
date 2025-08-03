@@ -105,7 +105,7 @@ end
 ---Executes a Lifestream command.
 ---@param command string
 function functions.Lifestream(command)
-    Echo("Executing /li " .. command)
+    functions.Echo("Executing /li " .. command)
     yield("/vnav stop")
     functions.WaitForOutOfCombat()
     functions.WaitForReady()
