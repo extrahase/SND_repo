@@ -9,6 +9,8 @@ function functions.Echo(message)
     end
 end
 
+--#region Wait functions
+
 ---Waits the specified number of seconds.
 ---@param number number
 function functions.Wait(number)
@@ -80,6 +82,7 @@ function functions.WaitForInstance(instanceId)
         functions.WaitForVnav()
     end
 end
+--#endregion
 
 ---Mounts up using Mount Roulette if not already mounted.
 function functions.MountUp()
@@ -107,6 +110,28 @@ function functions.Lifestream(command)
     functions.WaitForOutOfCombat()
     functions.WaitForReady()
     yield("/li " .. command)
+end
+
+---Buys a single item from the Market Board and closes its menus afterwards.
+---Caution: Item search only works with names that don't have spaces. For others, a workaround is needed.
+---@param itemName string
+function functions.BuyItemFromMarketBoard(itemName)
+    functions.Echo("Buying item: " .. itemName)
+    functions.BuyItemFromMarketBoard(itemName)
+    functions.WaitForAddon("ItemSearch")
+    yield("/callback ItemSearch true 9 1 2 " .. itemName .. " " .. itemName .. " 5 6 7")
+    functions.Wait(1)
+    yield("/callback ItemSearch true 5 17")
+    functions.WaitForAddon("ItemSearchResult")
+    yield("/callback ItemSearchResult true 2 0")
+    functions.WaitForAddon("SelectYesno")
+    yield("/callback SelectYesno true 0")
+    functions.WaitForAddon("ItemSearchResult")
+    yield("/callback ItemSearchResult true -1")
+    functions.WaitForAddon("ItemSearch")
+    yield("/callback ItemSearch true -1")
+    --future function that closes addon and therefore waits until its no longer active
+    --WIP!
 end
 
 ---Mounts up and flies to the active map flag using vnav.
