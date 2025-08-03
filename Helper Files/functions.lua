@@ -99,6 +99,16 @@ function functions.Dismount()
     end
 end
 
+---Executes a Lifestream command.
+---@param command string
+function functions.Lifestream(command)
+    Echo("Executing /li " .. command)
+    yield("/vnav stop")
+    functions.WaitForOutOfCombat()
+    functions.WaitForReady()
+    yield("/li " .. command)
+end
+
 ---Mounts up and flies to the active map flag using vnav.
 function functions.FlyToFlag()
     functions.MountUp()

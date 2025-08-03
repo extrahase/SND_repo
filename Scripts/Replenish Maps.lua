@@ -19,7 +19,7 @@ DEBUG = true
 -- ############
 
 -- move to market board
--- function buymap start
+-- function buyitemfrommarketboard start
     -- access market board
     -- search for map
     -- click on map
@@ -27,6 +27,6 @@ DEBUG = true
     -- exit menus
 -- function end
 -- function deciphermap
--- function buymap
+-- function buyitemfrommarketboard
 -- function storeinsaddlebag
--- function buymap
+-- function buyitemfrommarketboard
