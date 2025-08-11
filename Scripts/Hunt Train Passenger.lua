@@ -22,7 +22,6 @@ HUNT_RANK = "A"
 -- ### MAIN ###
 -- ############
 
-functions.Wait(1)
 functions.WaitForOutOfCombat()
 functions.WaitForReady()
 yield("/vbm ar clear")
