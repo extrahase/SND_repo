@@ -12,7 +12,7 @@ ZONE_LIST = require("vac_lists").Zone_List
 
 local functions = require("functions")
 
-DEBUG = false
+DEBUG = true
 MOUNT_SPEED = 20.6
 TP_DELAY = 7
 VBM_PRESET = "A Ranks"
@@ -29,13 +29,16 @@ yield("/vbm ar clear")
 
 -- if flag in different zone: waits for HTA to do its thing
 -- if flag in same zone: tries to account for HTA instance switching
+functions.Echo("Checking if flag is in different zone or same zone")
 if Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType then -- flag is in different zone
-    functions.Echo("Waiting for HTA to change zones")
+    functions.Echo("Flag in different zone --> waiting for HTA to change zones")
     functions.WaitForZone(Instances.Map.Flag.TerritoryId)
     functions.WaitForInstance(1) -- account for switching instances
 else -- flag is in same zone
+    functions.Echo("Flag in same zone --> checking for instance switching")
     local numberOfInstances = IPC.Lifestream.GetNumberOfInstances()
     if numberOfInstances ~= 0 then -- checks if zone has instances
+        functions.Echo("Zone has instances, checking current instance")
         local currentInstance = IPC.Lifestream.GetCurrentInstance()
         if currentInstance == numberOfInstances then
             functions.Echo("Already in the last instance, no need to wait")
@@ -49,6 +52,7 @@ else -- flag is in same zone
         end
     end
 end
+functions.Echo("We arrived in the right zone and instance, continuing with TP/flight check")
 
 -- determines if (flying) or (teleporting, then flying) is better and starts travel
 local etaTp, closestAetheryteId = functions.CalculateEtaTp3()
