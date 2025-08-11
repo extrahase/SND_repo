@@ -55,8 +55,10 @@ end
 ---Waits until a specific UI addon is ready.
 ---@param name string
 function functions.WaitForAddon(name)
-    while not Addons.GetAddon(name).Ready do
+    for i = 1, 10 do
+        if not Addons.GetAddon(name).Ready then
         functions.Wait(0.1)
+        end
     end
 end
 
@@ -321,7 +323,7 @@ end
 function functions.SearchAndDestroy(huntMarkName, VbmPreset)
     local huntMark = Entity.GetEntityByName(huntMarkName)
     if huntMark ~= nil and huntMark.HealthPercent ~= 0 then
-        yield("/echo Distance to " .. huntMark.Name .. ": " .. huntMark.DistanceTo)
+        yield("/echo Distance to " .. huntMark.Name .. ": " .. math.floor(huntMark.DistanceTo))
         yield("/vbm ar set " .. VbmPreset)
         functions.MountUp()
         huntMark.Position.Y = huntMark.Position.Y + 50 -- offset to avoid ground collision
