@@ -23,7 +23,6 @@ HUNT_RANK = "A"
 -- ############
 
 functions.WaitForOutOfCombat()
-functions.WaitForReady()
 yield("/vbm ar clear")
 
 -- if flag in different zone: waits for HTA to do its thing
