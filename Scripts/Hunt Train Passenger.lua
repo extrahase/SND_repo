@@ -76,6 +76,6 @@ end
 
 functions.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
 
---functions.MountUp()
+functions.MountUp()
 
 functions.Echo("Script done!")
