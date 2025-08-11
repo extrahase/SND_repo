@@ -117,12 +117,36 @@ local function SpendNuts()
     functions.Echo("Waiting for shop selection window")
     functions.WaitForAddon("SelectIconString")
 
+--#region saved Nut spenders
+--[[
+    -- Desynth
+    functions.Echo("Starting buy/desynth loop")
+    while newNutsAmount >= 140 do
+        functions.Echo("Targeting and interacting with vendor")
+        Entity.GetEntityByName(vendorName):SetAsTarget()
+        Entity.Target:Interact()
+    
+        functions.Echo("Waiting for shop window")
+        functions.WaitForAddon(shopName)
+    
+        functions.Echo("Buying items from shop")
+        for _, item in pairs(itemsToBuy) do
+            if newNutsAmount >= 140 then
+                functions.BuyFromShop(shopName, item.a, item.b, item.c)
+                functions.Wait(1)
+                newNutsAmount = Inventory.GetItemCount(26533)
+            end
+        end
+
+    -- Materia
     functions.Echo("Navigating to correct list option")
     functions.SelectListOption("SelectIconString", 0)
 
     functions.Echo("Buying items from shop")
     local buyAmount = math.floor(nutsAmount / 400)
     functions.BuyFromShop(shopName, 0, 9, buyAmount)
+]]
+--#endregion
 
     functions.Echo("Closing shop")
     functions.CloseShop(shopName)
