@@ -324,8 +324,8 @@ function functions.SearchAndDestroy(huntMarkName, VbmPreset)
     local huntMark = Entity.GetEntityByName(huntMarkName)
     if huntMark ~= nil and huntMark.HealthPercent ~= 0 then
         local distance = huntMark.DistanceTo
-        yield("/echo Distance to " .. huntMark.Name .. ": " .. math.floor(distance))
         if distance > 300 then return end
+        yield("/echo Distance to " .. huntMark.Name .. ": " .. math.floor(distance))
         yield("/vbm ar set " .. VbmPreset)
         functions.MountUp()
         huntMark.Position.Y = huntMark.Position.Y + 50 -- offset to avoid ground collision
