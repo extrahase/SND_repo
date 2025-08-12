@@ -327,7 +327,9 @@ function functions.SearchAndDestroy(huntMarkName, VbmPreset)
         yield("/echo Distance to " .. huntMark.Name .. ": " .. math.floor(distance))
         yield("/vbm ar set " .. VbmPreset)
         functions.MountUp()
-        huntMark.Position.Y = huntMark.Position.Y + 50 -- offset to avoid ground collision
+        huntMark.Position.X = huntMark.Position.Y + 20
+        huntMark.Position.Y = huntMark.Position.Y + 20
+        huntMark.Position.Z = huntMark.Position.Y + 99 -- offset to avoid ground collision
         IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
         functions.WaitForVnav()
         huntMark:SetAsTarget()
