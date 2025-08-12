@@ -324,11 +324,11 @@ function functions.SearchAndDestroy(huntMarkName, VbmPreset)
     if huntMark ~= nil and huntMark.HealthPercent ~= 0 then
         local distance = huntMark.DistanceTo
         if distance > 100 then return end
-        yield("/echo Distance to " .. huntMark.Name .. ": " .. math.floor(distance))
+        --yield("/echo Distance to " .. huntMark.Name .. ": " .. math.floor(distance))
         yield("/vbm ar set " .. VbmPreset)
         functions.MountUp()
-        huntMark.Position.X = huntMark.Position.Y + 20
-        huntMark.Position.Y = huntMark.Position.Y + 20
+        huntMark.Position.X = huntMark.Position.Y + 10
+        huntMark.Position.Y = huntMark.Position.Y + 10
         huntMark.Position.Z = huntMark.Position.Y + 99 -- offset to avoid ground collision
         IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
         functions.WaitForVnav()
