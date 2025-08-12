@@ -885,8 +885,8 @@ FatesData = {
                 { fateName="Domo Arigato", continuationIsBoss=false }
             },
             blacklistedFates= {
-                "When It's So Salvage", -- terrain is terrible
-                "print('I hate snakes')"
+                --"When It's So Salvage", -- terrain is terrible
+                --"print('I hate snakes')"
             }
         }
     },
