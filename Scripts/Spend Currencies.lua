@@ -1,10 +1,11 @@
--- Spend Currencies
-
 -- ############
 -- ### DATA ###
 -- ############
 
 local functions = require("functions")
+
+ITEM_LIST = require("vac_lists").Item_List
+HOME_POINT = "Tuliyollal"
 
 DEBUG = true
 
@@ -16,13 +17,13 @@ ITEMS_TO_DESYNTH = {
     poetics = { },
     uncapped = { },
     nuts = {
-        { name = "Neo Kingdom Tulwar", shopCategory = ,},
-        { name = "Neo Kingdom Kite Shield"},
-        { name = "Neo Kingdom Halberd"},
-        { name = "Neo Kingdom Composite Bow"},
-        { name = "Neo Kingdom Index"},
-        { name = "Neo Kingdom Round Brush"},
-        { name = "Neo Kingdom Codex"},
+        { name = "Neo Kingdom Tulwar", shop = 2, category = 0, index = 0, price = 140 },
+        { name = "Neo Kingdom Kite Shield", shop = 2, category = 0, index = 1, price = 140 },
+        { name = "Neo Kingdom Halberd", shop = 2, category = 0, index = 2, price = 140 },
+        { name = "Neo Kingdom Composite Bow", shop = 2, category = 0, index = 3, price = 140 },
+        { name = "Neo Kingdom Index", shop = 3, category = 0, index = 0, price = 140 },
+        { name = "Neo Kingdom Round Brush", shop = 3, category = 0, index = 1, price = 140 },
+        { name = "Neo Kingdom Codex", shop = 3, category = 0, index = 2, price = 140 },
     }
 }
 
@@ -42,9 +43,12 @@ NUTS_VENDOR = {
     name = "Ryubool Ja",
     shopName = "ShopExchangeCurrency",
     zoneId = 1185,
+    shopList = {
+        "Sacks of Nuts Exchange",
+        "Neo Kingdom Gear (DoW, IL 700)",
+        "Neo Kingdom Gear (DoM, IL 700)",
+    }
 }
-
-ITEM_LIST = require("vac_lists").Item_List
 
 -- #################
 -- ### FUNCTIONS ###
@@ -52,8 +56,8 @@ ITEM_LIST = require("vac_lists").Item_List
 
 local function DesynthItems()
     for _, itemCategory in pairs(ITEMS_TO_DESYNTH) do
-        for _, itemName in pairs(itemCategory) do
-            local itemId = functions.FindItemID(itemName)
+        for _, item in pairs(itemCategory) do
+            local itemId = functions.FindItemID(item.name)
             if Inventory.GetItemCount(itemId) > 0 then
                 yield("/desynth "..itemId)
                 functions.WaitForReady()
@@ -124,48 +128,61 @@ local function SpendNuts()
     local shopName = NUTS_VENDOR.shopName
     local nutsAmount = Inventory.GetItemCount(26533)
 
+    functions.Echo("Checking if minimum Nuts treshold is met")
     if nutsAmount < MIN_NUTS then
         return
     end
 
+    functions.Echo("Teleporting to Tuliyollal if not already there")
+    if Svc.ClientState.TerritoryType ~= NUTS_VENDOR.zoneId then
+        functions.Return()
+        functions.WaitForZone(NUTS_VENDOR.zoneId)
+        IPC.Lifestream.AethernetTeleport("Bayside Bevy Marketplace")
+    end
+
+    functions.Echo("Navigating to vendor")
     functions.Lifestream("Nuts")
 
-    functions.Echo("Waiting for shop selection window")
-    functions.WaitForAddon("SelectIconString")
-
---#region saved Nut spenders
---[[
-    -- Desynth
-    functions.Echo("Starting buy/desynth loop")
-    while newNutsAmount >= 140 do
-        functions.Echo("Targeting and interacting with vendor")
-        Entity.GetEntityByName(vendorName):SetAsTarget()
-        Entity.Target:Interact()
-    
-        functions.Echo("Waiting for shop window")
-        functions.WaitForAddon(shopName)
-    
-        functions.Echo("Buying items from shop")
-        for _, item in pairs(itemsToBuy) do
-            if newNutsAmount >= 140 then
-                functions.BuyFromShop(shopName, item.a, item.b, item.c)
-                functions.Wait(1)
-                newNutsAmount = Inventory.GetItemCount(26533)
-            end
+    functions.Echo("Building table of shops to visit and determining max item price")
+    local shopsSet = { }
+    local shops = { }
+    local maxPrice = 0
+    for _, item in ipairs(ITEMS_TO_DESYNTH.nuts) do
+        if not shopsSet[item.shop] then
+            shopsSet[item.shop] = true
+            table.insert(shops, item.shop)
         end
+        if item.price > maxPrice then
+            maxPrice = item.price
+        end
+    end
 
-    -- Materia
-    functions.Echo("Navigating to correct list option")
-    functions.SelectListOption("SelectIconString", 0)
+    functions.Echo("Start of buy/desynth loop")
+    while nutsAmount >= maxPrice do
+        for _, shop in ipairs(shops) do
+            functions.Echo("Checking if shop selection window is open and ready")
+            while not Addons.GetAddon(shopName).Ready do
+                functions.Echo("Trying to interact with vendor: " .. vendorName .. " and waiting for shop selection window")
+                Entity.GetEntityByName(vendorName):SetAsTarget()
+                Entity.Target:Interact()
+                functions.WaitForAddon("SelectIconString")
+            end
 
-    functions.Echo("Buying items from shop")
-    local buyAmount = math.floor(nutsAmount / 400)
-    functions.BuyFromShop(shopName, 0, 9, buyAmount)
-]]
---#endregion
+            functions.Echo("Selecting shop with index: " .. (shop - 1))
+            functions.SelectListOption("SelectIconString", shop - 1)
+            functions.WaitForAddon(shopName)
 
-    functions.Echo("Closing shop")
-    functions.CloseShop(shopName)
+            functions.Echo("Buying items from shop")
+            for _, item in ipairs(ITEMS_TO_DESYNTH.nuts) do
+                if item.shop == shop then
+                    functions.BuyFromShop(shopName, item.category, item.index, 1)
+                end
+            end
+
+            functions.Echo("Closing shop")
+            functions.CloseShop(shopName)
+        end
+    end
 end
 
 -- ############
@@ -190,8 +207,8 @@ elseif Svc.ClientState.TerritoryType == NUTS_VENDOR.zoneId then
 end
 
 functions.Echo("Initiating all spend functions")
-SpendPoetics()
-SpendUncapped()
+-- SpendPoetics()
+-- SpendUncapped()
 SpendNuts()
 
 functions.Echo("Last Desynth before script end")
