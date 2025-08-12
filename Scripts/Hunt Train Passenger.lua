@@ -12,7 +12,7 @@ ZONE_LIST = require("vac_lists").Zone_List
 
 local functions = require("functions")
 
-DEBUG = true
+DEBUG = false
 MOUNT_SPEED = 20.6
 TP_DELAY = 7
 VBM_PRESET = "A Ranks"

@@ -177,17 +177,22 @@ functions.Echo("Starting script!")
 functions.Echo("Disabling YesAlready")
 IPC.YesAlready.SetPluginEnabled(false)
 
+functions.Echo("Checking if already in correct zone for one of the vendors")
 if Svc.ClientState.TerritoryType == POETICS_VENDOR.zoneId then
+    functions.Echo("In Poetics vendor zone, spending Poetics")
     SpendPoetics()
 elseif Svc.ClientState.TerritoryType == UNCAPPED_VENDOR.zoneId then
+    functions.Echo("In Uncapped vendor zone, spending Uncapped")
     SpendUncapped()
 elseif Svc.ClientState.TerritoryType == NUTS_VENDOR.zoneId then
-    SpendNuts()
-else
-    SpendPoetics()
-    SpendUncapped()
+    functions.Echo("In Nuts vendor zone, spending Nuts")
     SpendNuts()
 end
+
+functions.Echo("Initiating all spend functions")
+SpendPoetics()
+SpendUncapped()
+SpendNuts()
 
 functions.Echo("Last Desynth before script end")
 DesynthItems()
