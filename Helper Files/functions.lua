@@ -132,9 +132,6 @@ function functions.Lifestream(command)
     functions.WaitForOutOfCombat()
     functions.WaitForReady()
     yield("/li " .. command)
-    functions.WaitForBusy()
-    functions.WaitForReady()
-    functions.WaitForVnav()
 end
 
 ---Uses the Return action if not on cooldown, otherwise uses Teleport to the HOME_POINT.
