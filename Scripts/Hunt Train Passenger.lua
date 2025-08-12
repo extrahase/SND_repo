@@ -51,6 +51,7 @@ else -- flag is in same zone
     end
 end
 functions.Echo("We arrived in the right zone and instance, continuing with TP/flight check")
+functions.Wait(1)
 
 -- determines if (flying) or (teleporting, then flying) is better and starts travel
 local etaTp, closestAetheryteId = functions.CalculateEtaTp3()

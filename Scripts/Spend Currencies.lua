@@ -8,7 +8,23 @@ local functions = require("functions")
 
 DEBUG = true
 
-ITEMS_TO_DESYNTH = { }
+MIN_POETICS = 1640
+MIN_UNCAPPED = 1720
+MIN_NUTS = 3440
+
+ITEMS_TO_DESYNTH = {
+    poetics = { },
+    uncapped = { },
+    nuts = {
+        { name = "Neo Kingdom Tulwar", shopCategory = ,},
+        { name = "Neo Kingdom Kite Shield"},
+        { name = "Neo Kingdom Halberd"},
+        { name = "Neo Kingdom Composite Bow"},
+        { name = "Neo Kingdom Index"},
+        { name = "Neo Kingdom Round Brush"},
+        { name = "Neo Kingdom Codex"},
+    }
+}
 
 POETICS_VENDOR = {
     name = "Rowena's Representative",
@@ -36,7 +52,7 @@ ITEM_LIST = require("vac_lists").Item_List
 
 local function DesynthItems()
     for _, itemCategory in pairs(ITEMS_TO_DESYNTH) do
-        for itemName, _ in pairs(itemCategory) do
+        for _, itemName in pairs(itemCategory) do
             local itemId = functions.FindItemID(itemName)
             if Inventory.GetItemCount(itemId) > 0 then
                 yield("/desynth "..itemId)
@@ -52,7 +68,7 @@ local function SpendPoetics()
     local shopName = POETICS_VENDOR.shopName
     local poeticsAmount = Inventory.GetItemCount(28)
 
-    if poeticsAmount < 1640 then
+    if poeticsAmount < MIN_POETICS then
         return
     end
 
@@ -78,7 +94,7 @@ local function SpendUncapped()
     local shopName = UNCAPPED_VENDOR.shopName
     local uncappedAmount = Inventory.GetItemCount(47)
 
-    if uncappedAmount < 1720 then
+    if uncappedAmount < MIN_UNCAPPED then
         return
     end
 
@@ -108,7 +124,7 @@ local function SpendNuts()
     local shopName = NUTS_VENDOR.shopName
     local nutsAmount = Inventory.GetItemCount(26533)
 
-    if nutsAmount < 3440 then
+    if nutsAmount < MIN_NUTS then
         return
     end
 
@@ -158,19 +174,25 @@ end
 
 functions.Echo("Starting script!")
 
+functions.Echo("Disabling YesAlready")
+IPC.YesAlready.SetPluginEnabled(false)
+
 if Svc.ClientState.TerritoryType == POETICS_VENDOR.zoneId then
-    functions.Echo("Poetics capped and already in vendor zone --> spending Poetics")
     SpendPoetics()
 elseif Svc.ClientState.TerritoryType == UNCAPPED_VENDOR.zoneId then
-    functions.Echo("Uncapped tomestones capped and already in vendor zone --> spending Uncapped tomestones")
     SpendUncapped()
 elseif Svc.ClientState.TerritoryType == NUTS_VENDOR.zoneId then
-    functions.Echo("Nuts capped and already in vendor zone --> spending Nuts")
     SpendNuts()
 else
     SpendPoetics()
     SpendUncapped()
     SpendNuts()
 end
+
+functions.Echo("Last Desynth before script end")
+DesynthItems()
+
+functions.Echo("Enabling YesAlready")
+IPC.YesAlready.SetPluginEnabled(true)
 
 functions.Echo("Script done!")
