@@ -1,6 +1,8 @@
 ---@class functions @provides various utility functions for SND scripts.
 local functions = {}
 
+--#region Utility functions
+
 ---Prints a message to the game chat using /echo (only if DEBUG is enabled).
 ---@param message string
 function functions.Echo(message)
@@ -8,6 +10,7 @@ function functions.Echo(message)
         yield("/echo " .. tostring(message))
     end
 end
+--#endregion
 
 --#region Wait functions
 
@@ -86,6 +89,8 @@ function functions.WaitForInstance(instanceId)
 end
 --#endregion
 
+--#region Travel and teleportation functions
+
 ---Mounts up using Mount Roulette if not already mounted.
 function functions.MountUp()
     if not Svc.Condition[4] and Player.CanMount then
@@ -104,38 +109,6 @@ function functions.Dismount()
     end
 end
 
----Executes a Lifestream command.
----@param command string
-function functions.Lifestream(command)
-    functions.Echo("Executing /li " .. command)
-    yield("/vnav stop")
-    functions.WaitForOutOfCombat()
-    functions.WaitForReady()
-    yield("/li " .. command)
-end
-
----Buys a single item from the Market Board and closes its menus afterwards.
----Caution: Item search only works with names that don't have spaces. For others, a workaround is needed.
----@param itemName string
-function functions.BuyItemFromMarketBoard(itemName)
-    functions.Echo("Buying item: " .. itemName)
-    functions.BuyItemFromMarketBoard(itemName)
-    functions.WaitForAddon("ItemSearch")
-    yield("/callback ItemSearch true 9 1 2 " .. itemName .. " " .. itemName .. " 5 6 7")
-    functions.Wait(1)
-    yield("/callback ItemSearch true 5 17")
-    functions.WaitForAddon("ItemSearchResult")
-    yield("/callback ItemSearchResult true 2 0")
-    functions.WaitForAddon("SelectYesno")
-    yield("/callback SelectYesno true 0")
-    functions.WaitForAddon("ItemSearchResult")
-    yield("/callback ItemSearchResult true -1")
-    functions.WaitForAddon("ItemSearch")
-    yield("/callback ItemSearch true -1")
-    --future function that closes addon and therefore waits until its no longer active
-    --WIP!
-end
-
 ---Mounts up and flies to the active map flag using vnav.
 function functions.FlyToFlag()
     functions.MountUp()
@@ -149,6 +122,48 @@ end
 ---@param z number
 function functions.MoveToCoordinates(x, y, z)
     yield("/vnav moveto " .. x .. " " .. y .. " " .. z)
+end
+
+---Executes a Lifestream command.
+---@param command string
+function functions.Lifestream(command)
+    functions.Echo("Executing /li " .. command)
+    yield("/vnav stop")
+    functions.WaitForOutOfCombat()
+    functions.WaitForReady()
+    yield("/li " .. command)
+    functions.WaitForBusy()
+    functions.WaitForReady()
+    functions.WaitForVnav()
+end
+
+---Uses the Return action if not on cooldown, otherwise uses Teleport to the HOME_POINT.
+function functions.Return()
+    functions.Echo("Using Return if not on cooldown; using Teleport otherwise")
+    if Actions.GetActionStatus(ActionType.GeneralAction, 8) == 0 then
+        functions.Echo("Using Return")
+        functions.WaitForOutOfCombat()
+        functions.WaitForReady()
+        Actions.ExecuteGeneralAction(8)
+        functions.WaitForBusy()
+        functions.WaitForReady()
+        functions.WaitForVnav()
+    else
+        functions.Echo("Using Teleport")
+        functions.Lifestream("tp " .. HOME_POINT)
+    end
+end
+
+---Teleports to the specified aetheryte by ID and waits for vnav to be ready.
+---@param aetheryteId number
+function functions.TpToAetheryte(aetheryteId)
+    functions.Echo("Teleporting to Aetheryte ID: " .. aetheryteId)
+    functions.WaitForOutOfCombat()
+    functions.WaitForReady()
+    Actions.Teleport(tonumber(aetheryteId))
+    functions.WaitForBusy()
+    functions.WaitForReady()
+    functions.WaitForVnav()
 end
 
 ---Calculates the distance between two 3D vector positions.
@@ -221,6 +236,69 @@ function functions.GetAetherytesInFlagZone()
     return aetherytePos
 end
 
+---Gets the zone name for a given territory ID.
+---@param territoryId number
+---@return string|nil zoneName
+function functions.FindZoneNameByTerritoryId(territoryId)
+    for id, zone in pairs(ZONE_LIST) do
+        if id == tostring(territoryId) then
+            return zone.Zone
+        end
+    end
+end
+
+---Retrieves hunt positions for a given territory ID.
+---@param territoryId number
+---@return table|nil huntPositions
+function functions.GetZoneHuntLocations(territoryId)
+    for _, expansion in pairs(HUNT_LOCATIONS) do
+        for _, zone in ipairs(expansion) do
+            if zone.mapId == territoryId then
+                return zone.positions
+            end
+        end
+    end
+end
+
+---Converts map coordinates to real in-world coordinates.
+---@param territoryId number
+---@param x number
+---@param y number
+---@return number territoryId
+---@return number newX
+---@return number newY
+function functions.ConvertToRealCoordinates(territoryId, x, y)
+    local mapScale = (territoryId >= 397 and territoryId <= 402) and 95 or 100
+    local newX = 50 * (x - 1 - (2048 / mapScale))
+    local newY = 50 * (y - 1 - (2048 / mapScale))
+    return territoryId, newX, newY
+end
+--#endregion
+
+--#region Item and shop functions
+
+---Buys a single item from the Market Board and closes its menus afterwards.
+---Caution: Item search only works with names that don't have spaces. For others, a workaround is needed.
+---@param itemName string
+function functions.BuyItemFromMarketBoard(itemName)
+    functions.Echo("Buying item: " .. itemName)
+    functions.BuyItemFromMarketBoard(itemName)
+    functions.WaitForAddon("ItemSearch")
+    yield("/callback ItemSearch true 9 1 2 " .. itemName .. " " .. itemName .. " 5 6 7")
+    functions.Wait(1)
+    yield("/callback ItemSearch true 5 17")
+    functions.WaitForAddon("ItemSearchResult")
+    yield("/callback ItemSearchResult true 2 0")
+    functions.WaitForAddon("SelectYesno")
+    yield("/callback SelectYesno true 0")
+    functions.WaitForAddon("ItemSearchResult")
+    yield("/callback ItemSearchResult true -1")
+    functions.WaitForAddon("ItemSearch")
+    yield("/callback ItemSearch true -1")
+    --future function that closes addon and therefore waits until its no longer active
+    --WIP!
+end
+
 ---Buys an item from a shop via callback.
 ---@param shopName string
 ---@param a number
@@ -277,44 +355,7 @@ function functions.FindItemID(item_to_find)
     end
     return nil
 end
-
----Gets the zone name for a given territory ID.
----@param territoryId number
----@return string|nil zoneName
-function functions.FindZoneNameByTerritoryId(territoryId)
-    for id, zone in pairs(ZONE_LIST) do
-        if id == tostring(territoryId) then
-            return zone.Zone
-        end
-    end
-end
-
----Retrieves hunt positions for a given territory ID.
----@param territoryId number
----@return table|nil huntPositions
-function functions.GetZoneHuntLocations(territoryId)
-    for _, expansion in pairs(HUNT_LOCATIONS) do
-        for _, zone in ipairs(expansion) do
-            if zone.mapId == territoryId then
-                return zone.positions
-            end
-        end
-    end
-end
-
----Converts map coordinates to real in-world coordinates.
----@param territoryId number
----@param x number
----@param y number
----@return number territoryId
----@return number newX
----@return number newY
-function functions.ConvertToRealCoordinates(territoryId, x, y)
-    local mapScale = (territoryId >= 397 and territoryId <= 402) and 95 or 100
-    local newX = 50 * (x - 1 - (2048 / mapScale))
-    local newY = 50 * (y - 1 - (2048 / mapScale))
-    return territoryId, newX, newY
-end
+--#endregion
 
 ---Searches for a hunt mark by name, moves to it, engages, and waits for combat to end.
 ---@param huntMarkName string
@@ -354,17 +395,6 @@ function functions.FlyAndDestroyToFlag(huntMarks, VbmPreset)
         end
         functions.Wait(0.1)
     end
-end
-
----Teleports to the specified aetheryte by ID and waits for vnav to be ready.
----@param aetheryteId number
-function functions.TpToAetheryte(aetheryteId)
-    functions.WaitForOutOfCombat()
-    functions.WaitForReady()
-    Actions.Teleport(tonumber(aetheryteId))
-    functions.WaitForBusy()
-    functions.WaitForReady()
-    functions.WaitForVnav()
 end
 
 return functions

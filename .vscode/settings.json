@@ -14,7 +14,8 @@
         "InstancedContent",
         "FateState",
         "Fates",
-        "Config"
+        "Config",
+        "ActionType"
     ],
     "Lua.workspace.library": [
         "${workspaceFolder}/.vscode"
