@@ -6,11 +6,12 @@ local functions = require("functions")
 
 ITEM_LIST = require("vac_lists").Item_List
 HOME_POINT = "Tuliyollal"
+FREE_DESTINATION = "New Gridania"
 
 DEBUG = true
 
 MIN_POETICS = 1640
-MIN_UNCAPPED = 1720
+MIN_UNCAPPED = 0
 MIN_NUTS = 3440
 
 ITEMS_TO_DESYNTH = {
@@ -73,24 +74,36 @@ local function SpendPoetics()
     local shopName = POETICS_VENDOR.shopName
     local poeticsAmount = Inventory.GetItemCount(28)
 
+    functions.Echo("Checking if minimum Poetics treshold is met")
     if poeticsAmount < MIN_POETICS then
         return
     end
 
-    functions.Lifestream("Poetics")
+    functions.Echo("Teleporting to " .. FREE_DESTINATION .. " if not already there")
+        if Svc.ClientState.TerritoryType ~= POETICS_VENDOR.zoneId then
+            functions.Lifestream("tp " .. FREE_DESTINATION)
+            functions.WaitForZone(POETICS_VENDOR.zoneId)
+        end
 
-    functions.Echo("Waiting for shop window")
+    functions.Echo("Navigating to vendor")
+    functions.MoveToCoordinates(37.52, -1.69, 57.55)
+
+    functions.Echo("Interacting with " .. vendorName)
+    Entity.GetEntityByName(vendorName):SetAsTarget()
+    Entity.Target:Interact()
+    functions.Echo("Waiting for " .. shopName .. " window")
     functions.WaitForAddon(shopName)
 
-    functions.Echo("Navigating to correct category")
+    functions.Echo("Navigating to Combat Supplies > Special Arms Materials")
     functions.NavigateToShopCategory(shopName, 12, 7)
     functions.NavigateToShopCategory(shopName, 13, 1)
 
-    functions.Echo("Buying items from shop")
+    functions.Echo("Buying " .. math.floor(poeticsAmount / 150) .. " Unidentifiable Shells")
     local buyAmount = math.floor(poeticsAmount / 150)
     functions.BuyFromShop(shopName, 14, 6, buyAmount)
 
     functions.Echo("Closing shop")
+    functions.Wait(0.5) -- wait for last purchase to be processed
     functions.CloseAddon(shopName)
 end
 
@@ -134,7 +147,7 @@ local function SpendNuts()
         return
     end
 
-    functions.Echo("Teleporting to Tuliyollal if not already there")
+    functions.Echo("Teleporting to " .. HOME_POINT .. " if not already there")
     if Svc.ClientState.TerritoryType ~= NUTS_VENDOR.zoneId then
         functions.Return()
         functions.WaitForZone(NUTS_VENDOR.zoneId)
@@ -215,8 +228,8 @@ elseif Svc.ClientState.TerritoryType == NUTS_VENDOR.zoneId then
 end
 
 functions.Echo("Initiating all spend functions")
--- SpendPoetics()
--- SpendUncapped()
+SpendPoetics()
+SpendUncapped()
 SpendNuts()
 
 functions.Echo("Last Desynth before script end")
