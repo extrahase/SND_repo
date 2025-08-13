@@ -174,7 +174,7 @@ function functions.Lifestream(command)
     functions.WaitForLifestream()
     functions.WaitForOutOfCombat()
     functions.WaitForReady()
-    yield("/li " .. command)
+    IPC.Lifestream.ExecuteCommand(command)
     functions.WaitForLifestream()
 end
 
