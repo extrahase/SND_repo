@@ -76,6 +76,13 @@ function functions.WaitForVnav()
     end
 end
 
+---Waits for Lifestream to finish its current operation.
+function functions.WaitForLifestream()
+    while IPC.Lifestream.IsBusy() do
+        functions.Wait(0.1)
+    end
+end
+
 ---Waits until a specific addon is visible and ready.
 ---@param addonName string
 function functions.WaitForAddon(addonName)
@@ -155,14 +162,16 @@ function functions.MoveToCoordinates(x, y, z)
     functions.WaitForVnav()
 end
 
----Executes a Lifestream command.
+---Executes a Lifestream command and waits until it has finished.
 ---@param command string
 function functions.Lifestream(command)
     functions.Echo("Executing /li " .. command)
     yield("/vnav stop")
+    functions.WaitForLifestream()
     functions.WaitForOutOfCombat()
     functions.WaitForReady()
     yield("/li " .. command)
+    functions.WaitForLifestream()
 end
 
 ---Uses the Return action if not on cooldown, otherwise uses Teleport to the HOME_POINT.
