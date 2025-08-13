@@ -342,12 +342,12 @@ end
 
 ---Buys an item from shop via callback; stays in shop menu afterwards.
 ---@param shopName string
----@param a number
----@param b number
----@param c number
-function functions.BuyFromShop(shopName, a, b, c)
+---@param category number
+---@param index number
+---@param amount number
+function functions.BuyFromShop(shopName, category, index, amount)
     functions.WaitForAddon(shopName)
-    yield("/callback " .. shopName .. " true " .. a .. " " .. b .. " " .. c)
+    yield("/callback " .. shopName .. " true " .. category .. " " .. index .. " " .. amount)
     repeat -- account for potentially multiple confirmation dialogues
         yield("/callback SelectYesno true 0") -- not CloseAddon because it could result in infinite Wait loop
         functions.Wait(0.1)
