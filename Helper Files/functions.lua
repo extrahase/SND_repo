@@ -340,7 +340,7 @@ function functions.BuyItemFromMarketBoard(itemName)
     --WIP!
 end
 
----Buys an item from a shop via callback.
+---Buys an item from shop via callback; stays in shop menu afterwards.
 ---@param shopName string
 ---@param a number
 ---@param b number
@@ -348,7 +348,7 @@ end
 function functions.BuyFromShop(shopName, a, b, c)
     functions.WaitForAddon(shopName)
     yield("/callback " .. shopName .. " true " .. a .. " " .. b .. " " .. c)
-    repeat
+    repeat -- account for potentially multiple confirmation dialogues
         yield("/callback SelectYesno true 0") -- not CloseAddon because it could result in infinite Wait loop
         functions.Wait(0.1)
     until not Addons.GetAddon("SelectYesno").Exists
@@ -361,15 +361,16 @@ end
 ---@param b number
 function functions.NavigateToShopCategory(shopName, a, b)
     yield("/callback " .. shopName .. " true " .. a .. " " .. b)
-    functions.Wait(1)
+    functions.Wait(0.1)
 end
 
----Selects a list option in an addon window via callback.
+---Waits for addon to be visible and ready, then selects a list option via callback, then waits for the addon to close.
 ---@param addonName string
 ---@param a number
 function functions.SelectListOption(addonName, a)
+    functions.WaitForAddon(addonName)
     yield("/callback " .. addonName .. " true " .. a)
-    functions.Wait(1)
+    functions.WaitForAddonClose(addonName)
 end
 
 ---Finds an item ID by item name from ITEM_LIST.
