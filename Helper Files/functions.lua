@@ -56,12 +56,10 @@ function functions.WaitForVnav()
 end
 
 ---Waits until a specific UI addon is ready.
----@param name string
-function functions.WaitForAddon(name)
-    for i = 1, 10 do
-        if not Addons.GetAddon(name).Ready then
+---@param addonName string
+function functions.WaitForAddon(addonName)
+    while not Addons.GetAddon(addonName).Ready do
         functions.Wait(0.1)
-        end
     end
 end
 
