@@ -107,6 +107,7 @@ function functions.WaitForZone(territoryId)
     end
     functions.WaitForReady()
     functions.WaitForVnav()
+    functions.Wait(1) -- additional wait to ensure everything is settled
 end
 
 ---Waits for HTA to change to the specified instance if any exist, then waits for player to be ready and vnav to build its mesh.
@@ -119,6 +120,7 @@ function functions.WaitForInstance(instanceId)
         end
         functions.WaitForReady()
         functions.WaitForVnav()
+        functions.Wait(1) -- additional wait to ensure everything is settled
     end
 end
 --#endregion
