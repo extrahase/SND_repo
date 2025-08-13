@@ -346,12 +346,13 @@ end
 ---@param b number
 ---@param c number
 function functions.BuyFromShop(shopName, a, b, c)
+    functions.WaitForAddon(shopName)
     yield("/callback " .. shopName .. " true " .. a .. " " .. b .. " " .. c)
-    while not Addons.GetAddon("SelectYesno").Ready do
-            functions.Wait(0.1)
-    end
-    yield("/callback SelectYesno true 0")
-    functions.Wait(1)
+    repeat
+        yield("/callback SelectYesno true 0") -- not CloseAddon because it could result in infinite Wait loop
+        functions.Wait(0.1)
+    until not Addons.GetAddon("SelectYesno").Exists
+    functions.WaitForAddon(shopName)
 end
 
 ---Navigates to a specific category in a shop UI.
