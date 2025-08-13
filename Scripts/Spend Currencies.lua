@@ -7,11 +7,12 @@ local functions = require("functions")
 ITEM_LIST = require("vac_lists").Item_List
 HOME_POINT = "Tuliyollal"
 FREE_DESTINATION = "New Gridania"
+UNCAPPED_DESTINATION = "Solution Nine"
 
-DEBUG = true
+DEBUG = false
 
 MIN_POETICS = 1640
-MIN_UNCAPPED = 0
+MIN_UNCAPPED = 1720
 MIN_NUTS = 3440
 
 ITEMS_TO_DESYNTH = {
@@ -91,6 +92,7 @@ local function SpendPoetics()
     functions.Echo("Interacting with " .. vendorName)
     Entity.GetEntityByName(vendorName):SetAsTarget()
     Entity.Target:Interact()
+
     functions.Echo("Waiting for " .. shopName .. " window")
     functions.WaitForAddon(shopName)
 
@@ -112,16 +114,27 @@ local function SpendUncapped()
     local shopName = UNCAPPED_VENDOR.shopName
     local uncappedAmount = Inventory.GetItemCount(47)
 
+    functions.Echo("Checking if minimum Uncapped treshold is met")
     if uncappedAmount < MIN_UNCAPPED then
         return
     end
 
-    functions.Lifestream("Uncapped")
+    functions.Echo("Teleporting to " .. UNCAPPED_DESTINATION .. " if not already there")
+        if Svc.ClientState.TerritoryType ~= UNCAPPED_VENDOR.zoneId then
+            functions.Lifestream("tp " .. UNCAPPED_DESTINATION)
+            functions.WaitForZone(UNCAPPED_VENDOR.zoneId)
+            IPC.Lifestream.AethernetTeleport("Nexus Arcade")
+            functions.WaitForLifestream()
+        end
 
-    functions.Echo("Waiting for shop selection window")
-    functions.WaitForAddon("SelectIconString")
+    functions.Echo("Navigating to vendor")
+    functions.MoveToCoordinates(-185.25, 0.66, -28.00)
 
-    functions.Echo("Navigating to correct list option")
+    functions.Echo("Interacting with " .. vendorName)
+    Entity.GetEntityByName(vendorName):SetAsTarget()
+    Entity.Target:Interact()
+
+    functions.Echo("Selecting shop: Allagan Tomestones of Heliometry (Other)")
     functions.SelectListOption("SelectIconString", 3)
 
     functions.Echo("Buying items from shop")
@@ -134,6 +147,7 @@ local function SpendUncapped()
     functions.BuyFromShop(shopName, 0, 5, buyAmount)
 
     functions.Echo("Closing shop")
+    functions.Wait(0.5) -- wait for last purchase to be processed
     functions.CloseAddon(shopName)
 end
 
