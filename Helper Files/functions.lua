@@ -148,7 +148,11 @@ end
 ---@param y number
 ---@param z number
 function functions.MoveToCoordinates(x, y, z)
+    yield("/vnav stop")
+    functions.WaitForReady()
+    functions.WaitForVnav()
     yield("/vnav moveto " .. x .. " " .. y .. " " .. z)
+    functions.WaitForVnav()
 end
 
 ---Executes a Lifestream command.
