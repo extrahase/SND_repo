@@ -11,7 +11,7 @@ DEBUG = true
 
 MIN_POETICS = 1640
 MIN_UNCAPPED = 1720
-MIN_NUTS = 0
+MIN_NUTS = 3440
 
 ITEMS_TO_DESYNTH = {
     poetics = { },
@@ -139,6 +139,7 @@ local function SpendNuts()
         functions.Return()
         functions.WaitForZone(NUTS_VENDOR.zoneId)
         IPC.Lifestream.AethernetTeleport("Bayside Bevy Marketplace")
+        functions.WaitForLifestream()
     end
 
     functions.Echo("Navigating to vendor")
@@ -167,12 +168,11 @@ local function SpendNuts()
                 functions.Echo("Interacting with " .. vendorName .. " and waiting for shop selection window")
                 Entity.GetEntityByName(vendorName):SetAsTarget()
                 Entity.Target:Interact()
-                functions.WaitForAddon("SelectIconString")
+                functions.Wait(0.1)
             end
 
             functions.Echo("Selecting shop with index: " .. (shop - 1))
             functions.SelectListOption("SelectIconString", shop - 1)
-            functions.WaitForAddon(shopName)
 
             functions.Echo("Buying items from shop")
             for _, item in ipairs(ITEMS_TO_DESYNTH.nuts) do
@@ -184,6 +184,7 @@ local function SpendNuts()
             end
 
             functions.Echo("Closing shop")
+            functions.Wait(0.5) -- wait for last purchase to be processed
             functions.CloseAddon(shopName)
         end
 
