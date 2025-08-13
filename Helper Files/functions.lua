@@ -351,6 +351,7 @@ function functions.BuyFromShop(shopName, category, index, amount)
     functions.WaitForAddon(shopName)
     yield("/callback " .. shopName .. " true " .. category .. " " .. index .. " " .. amount)
     repeat -- account for potentially multiple confirmation dialogues
+        functions.Wait(0.1)
         yield("/callback SelectYesno true 0") -- not CloseAddon because it could result in infinite Wait loop
         yield("/callback ShopExchangeItemDialog true 0") -- dialogue for Poetics vendor
         functions.Wait(0.1)
