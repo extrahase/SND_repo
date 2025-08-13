@@ -11,19 +11,19 @@ DEBUG = true
 
 MIN_POETICS = 1640
 MIN_UNCAPPED = 1720
-MIN_NUTS = 3440
+MIN_NUTS = 0
 
 ITEMS_TO_DESYNTH = {
     poetics = { },
     uncapped = { },
     nuts = {
         { name = "Neo Kingdom Tulwar", shop = 2, category = 0, index = 0, price = 140 },
-        { name = "Neo Kingdom Kite Shield", shop = 2, category = 0, index = 1, price = 140 },
-        { name = "Neo Kingdom Halberd", shop = 2, category = 0, index = 2, price = 140 },
-        { name = "Neo Kingdom Composite Bow", shop = 2, category = 0, index = 3, price = 140 },
-        { name = "Neo Kingdom Index", shop = 3, category = 0, index = 0, price = 140 },
-        { name = "Neo Kingdom Round Brush", shop = 3, category = 0, index = 1, price = 140 },
-        { name = "Neo Kingdom Codex", shop = 3, category = 0, index = 2, price = 140 },
+        { name = "Neo Kingdom Kite Shield", shop = 2, category = 0, index = 0, price = 140 },
+        { name = "Neo Kingdom Halberd", shop = 2, category = 0, index = 4, price = 140 },
+        { name = "Neo Kingdom Composite Bow", shop = 2, category = 0, index = 10, price = 140 },
+        { name = "Neo Kingdom Index", shop = 3, category = 0, index = 1, price = 140 },
+        { name = "Neo Kingdom Round Brush", shop = 3, category = 0, index = 3, price = 140 },
+        { name = "Neo Kingdom Codex", shop = 3, category = 0, index = 5, price = 140 },
     }
 }
 
@@ -62,6 +62,7 @@ local function DesynthItems()
                 yield("/desynth "..itemId)
                 functions.WaitForReady()
                 functions.Wait(1)
+                functions.CloseAddon("SalvageResult")
             end
         end
     end
@@ -90,7 +91,7 @@ local function SpendPoetics()
     functions.BuyFromShop(shopName, 14, 6, buyAmount)
 
     functions.Echo("Closing shop")
-    functions.CloseShop(shopName)
+    functions.CloseAddon(shopName)
 end
 
 local function SpendUncapped()
@@ -120,7 +121,7 @@ local function SpendUncapped()
     functions.BuyFromShop(shopName, 0, 5, buyAmount)
 
     functions.Echo("Closing shop")
-    functions.CloseShop(shopName)
+    functions.CloseAddon(shopName)
 end
 
 local function SpendNuts()
@@ -156,13 +157,14 @@ local function SpendNuts()
             maxPrice = item.price
         end
     end
+    functions.Echo("Shops to visit: " .. table.concat(shops, ", ") .. "; max price is " .. maxPrice)
 
     functions.Echo("Start of buy/desynth loop")
     while nutsAmount >= maxPrice do
         for _, shop in ipairs(shops) do
             functions.Echo("Checking if shop selection window is open and ready")
-            while not Addons.GetAddon(shopName).Ready do
-                functions.Echo("Trying to interact with vendor: " .. vendorName .. " and waiting for shop selection window")
+            while not Addons.GetAddon("SelectIconString").Ready do
+                functions.Echo("Interacting with " .. vendorName .. " and waiting for shop selection window")
                 Entity.GetEntityByName(vendorName):SetAsTarget()
                 Entity.Target:Interact()
                 functions.WaitForAddon("SelectIconString")
@@ -174,14 +176,19 @@ local function SpendNuts()
 
             functions.Echo("Buying items from shop")
             for _, item in ipairs(ITEMS_TO_DESYNTH.nuts) do
-                if item.shop == shop then
+                if item.shop == shop and item.price <= nutsAmount then
+                    functions.Echo("Buying " .. item.name .. " for " .. item.price .. " Nuts")
                     functions.BuyFromShop(shopName, item.category, item.index, 1)
+                    nutsAmount = Inventory.GetItemCount(26533)
                 end
             end
 
             functions.Echo("Closing shop")
-            functions.CloseShop(shopName)
+            functions.CloseAddon(shopName)
         end
+
+        functions.Echo("Desynthesizing items")
+        DesynthItems()
     end
 end
 

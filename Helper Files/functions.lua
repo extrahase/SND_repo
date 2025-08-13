@@ -301,22 +301,17 @@ end
 ---@param c number
 function functions.BuyFromShop(shopName, a, b, c)
     yield("/callback " .. shopName .. " true " .. a .. " " .. b .. " " .. c)
-
-    -- timed check in case SelectYesno is auto-confirmed by YesAlready
-    for i = 1, 10 do
-        if not Addons.GetAddon("SelectYesno").Ready then
+    while not Addons.GetAddon("SelectYesno").Ready do
             functions.Wait(0.1)
-        end
     end
-
     yield("/callback SelectYesno true 0")
     functions.Wait(1)
 end
 
 ---Closes the shop window via callback.
----@param shopName string
-function functions.CloseShop(shopName)
-    yield("/callback " .. shopName .. " true -1")
+---@param addonName string
+function functions.CloseAddon(addonName)
+    yield("/callback " .. addonName .. " true -1")
     functions.Wait(1)
 end
 
