@@ -141,7 +141,7 @@ local function SpendNuts()
     end
 
     functions.Echo("Navigating to vendor")
-    functions.Lifestream("Nuts")
+    functions.MoveToCoordinates(25.99, -14, 126.87)
 
     functions.Echo("Building table of shops to visit and determining max item price")
     local shopsSet = { }
