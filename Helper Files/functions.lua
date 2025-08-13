@@ -157,7 +157,7 @@ end
 ---@param y number
 ---@param z number
 function functions.MoveToCoordinates(x, y, z)
-    yield("/vnav stop")
+    IPC.vnavmesh.Stop()
     functions.WaitForReady()
     functions.WaitForVnav()
     yield("/vnav moveto " .. x .. " " .. y .. " " .. z)
@@ -168,7 +168,9 @@ end
 ---@param command string
 function functions.Lifestream(command)
     functions.Echo("Executing /li " .. command)
-    yield("/vnav stop")
+    IPC.vnavmesh.Stop()
+    IPC.Lifestream.Abort()
+    functions.WaitForVnav()
     functions.WaitForLifestream()
     functions.WaitForOutOfCombat()
     functions.WaitForReady()
