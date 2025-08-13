@@ -10,6 +10,27 @@ function functions.Echo(message)
         yield("/echo " .. tostring(message))
     end
 end
+
+---Closes an addon window via callback.
+---@param addonName string
+function functions.CloseAddon(addonName)
+    yield("/callback " .. addonName .. " true -1")
+    functions.WaitForAddonClose(addonName)
+end
+
+---Selects "Yes" in a confirmation dialog via callback.
+---@param addonName string
+function functions.SelectYes(addonName)
+    yield("/callback " .. addonName .. " true 0")
+    functions.WaitForAddonClose(addonName)
+end
+
+---Selects "No" in a confirmation dialog via callback.
+---@param addonName string
+function functions.SelectNo(addonName)
+    yield("/callback " .. addonName .. " true 1")
+    functions.WaitForAddonClose(addonName)
+end
 --#endregion
 
 --#region Wait functions
@@ -55,10 +76,18 @@ function functions.WaitForVnav()
     end
 end
 
----Waits until a specific UI addon is ready.
+---Waits until a specific addon is visible and ready.
 ---@param addonName string
 function functions.WaitForAddon(addonName)
     while not Addons.GetAddon(addonName).Ready do
+        functions.Wait(0.1)
+    end
+end
+
+---Waits until a specific addon doesn't exist anymore.
+---@param addonName string
+function functions.WaitForAddonClose(addonName)
+    while Addons.GetAddon(addonName).Exists do
         functions.Wait(0.1)
     end
 end
@@ -140,6 +169,8 @@ function functions.Return()
         functions.WaitForOutOfCombat()
         functions.WaitForReady()
         Actions.ExecuteGeneralAction(8)
+        functions.WaitForAddon("SelectYesno")
+
         functions.WaitForBusy()
         functions.WaitForReady()
         functions.WaitForVnav()
@@ -305,13 +336,6 @@ function functions.BuyFromShop(shopName, a, b, c)
             functions.Wait(0.1)
     end
     yield("/callback SelectYesno true 0")
-    functions.Wait(1)
-end
-
----Closes the shop window via callback.
----@param addonName string
-function functions.CloseAddon(addonName)
-    yield("/callback " .. addonName .. " true -1")
     functions.Wait(1)
 end
 
