@@ -170,7 +170,7 @@ function functions.Return()
         functions.WaitForReady()
         Actions.ExecuteGeneralAction(8)
         functions.WaitForAddon("SelectYesno")
-
+        functions.SelectYes("SelectYesno")
         functions.WaitForBusy()
         functions.WaitForReady()
         functions.WaitForVnav()
