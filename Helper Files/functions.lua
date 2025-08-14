@@ -330,9 +330,9 @@ function functions.BuyItemFromMarketBoard(itemName)
     functions.WaitForAddon("ItemSearch")
     yield('/callback ItemSearch true 9 1 2 "' .. itemName .. '" "' .. itemName .. '" 5 6 7')
     functions.Wait(1)
-    functions.NavigateToShopCategory("ItemSearch", 5, 0) -- clicks on the first item in the search results
+    functions.Callback2("ItemSearch", 5, 0) -- clicks on the first item in the search results
     functions.WaitForAddon("ItemSearchResult")
-    functions.NavigateToShopCategory("ItemSearchResult", 2, 0) -- clicks on the first item in the search results
+    functions.Callback2("ItemSearchResult", 2, 0) -- clicks on the first item in the search results
     functions.WaitForAddon("SelectYesno")
     functions.SelectYes("SelectYesno") -- confirms the purchase
     functions.CloseAddon("ItemSearchResult")
@@ -360,7 +360,7 @@ end
 ---@param shopName string
 ---@param a number
 ---@param b number
-function functions.NavigateToShopCategory(shopName, a, b)
+function functions.Callback2(shopName, a, b)
     yield("/callback " .. shopName .. " true " .. a .. " " .. b)
     functions.Wait(0.1)
 end

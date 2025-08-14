@@ -97,8 +97,8 @@ local function SpendPoetics()
     functions.WaitForAddon(shopName)
 
     functions.Echo("Navigating to Combat Supplies > Special Arms Materials")
-    functions.NavigateToShopCategory(shopName, 12, 7)
-    functions.NavigateToShopCategory(shopName, 13, 1)
+    functions.Callback2(shopName, 12, 7)
+    functions.Callback2(shopName, 13, 1)
 
     functions.Echo("Buying " .. math.floor(poeticsAmount / 150) .. " Unidentifiable Shells")
     local buyAmount = math.floor(poeticsAmount / 150)
