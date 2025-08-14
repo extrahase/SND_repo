@@ -325,21 +325,18 @@ end
 ---@param itemName string
 function functions.BuyItemFromMarketBoard(itemName)
     functions.Echo("Buying item: " .. itemName)
-    functions.BuyItemFromMarketBoard(itemName)
+    Entity.GetEntityByName("Market Board"):SetAsTarget()
+    Entity.GetEntityByName("Market Board"):Interact()
     functions.WaitForAddon("ItemSearch")
-    yield("/callback ItemSearch true 9 1 2 " .. itemName .. " " .. itemName .. " 5 6 7")
+    yield('/callback ItemSearch true 9 1 2 "' .. itemName .. '" "' .. itemName .. '" 5 6 7')
     functions.Wait(1)
-    yield("/callback ItemSearch true 5 17")
+    functions.NavigateToShopCategory("ItemSearch", 5, 0) -- clicks on the first item in the search results
     functions.WaitForAddon("ItemSearchResult")
-    yield("/callback ItemSearchResult true 2 0")
+    functions.NavigateToShopCategory("ItemSearchResult", 2, 0) -- clicks on the first item in the search results
     functions.WaitForAddon("SelectYesno")
-    yield("/callback SelectYesno true 0")
-    functions.WaitForAddon("ItemSearchResult")
-    yield("/callback ItemSearchResult true -1")
-    functions.WaitForAddon("ItemSearch")
-    yield("/callback ItemSearch true -1")
-    --future function that closes addon and therefore waits until its no longer active
-    --WIP!
+    functions.SelectYes("SelectYesno") -- confirms the purchase
+    functions.CloseAddon("ItemSearchResult")
+    functions.CloseAddon("ItemSearch")
 end
 
 ---Buys an item from shop via callback; stays in shop menu afterwards.
