@@ -6,7 +6,7 @@ local functions = require("functions")
 
 ITEM_LIST = require("vac_lists").Item_List
 
-MAP_NAME = "Timeworn Loboskin Map"
+MAP_NAME = "Timeworn Saigaskin Map"
 HOME_POINT = "Tuliyollal"
 HOME_POINT_TERRITORY_ID = 1185
 
