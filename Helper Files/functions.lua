@@ -412,6 +412,9 @@ function functions.StoreItemInSaddlebag(itemName)
     else
         functions.Error("No free space in saddlebags, cannot store " .. itemName)
     end
+
+    functions.Echo("Closing Chocobo Saddlebag")
+    functions.CloseAddon("InventoryBuddy")
 end
 --#endregion
 
