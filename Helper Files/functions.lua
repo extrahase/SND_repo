@@ -338,6 +338,7 @@ function functions.BuyItemFromMarketBoard(itemName)
     functions.Wait(1)
     functions.Callback2("ItemSearch", 5, 0) -- clicks on the first item in the search results
     functions.WaitForAddon("ItemSearchResult")
+    functions.Wait(0.5)
     functions.Callback2("ItemSearchResult", 2, 0) -- clicks on the first item in the search results
     functions.WaitForAddon("SelectYesno")
     functions.SelectYes("SelectYesno") -- confirms the purchase
