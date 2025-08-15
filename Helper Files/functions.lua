@@ -403,6 +403,7 @@ function functions.StoreItemInSaddlebag(itemName)
     functions.Echo("Opening Chocobo Saddlebag")
     yield("/send OEM_4")
     functions.WaitForAddon("InventoryBuddy")
+    functions.Wait(0.5)
 
     functions.Echo("Storing " .. itemName .. " in saddlebag")
     local itemId = functions.FindItemID(itemName)
@@ -415,7 +416,7 @@ function functions.StoreItemInSaddlebag(itemName)
     else
         functions.Error("No free space in saddlebags, cannot store " .. itemName)
     end
-    functions.Wait(0.5) -- wait for the item to be moved
+    functions.Wait(0.5)
 
     functions.Echo("Closing Chocobo Saddlebag")
     functions.CloseAddon("InventoryBuddy")
