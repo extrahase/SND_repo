@@ -335,14 +335,15 @@ function functions.BuyItemFromMarketBoard(itemName)
     Entity.GetEntityByName("Market Board"):Interact()
     functions.WaitForAddon("ItemSearch")
     yield('/callback ItemSearch true 9 1 2 "' .. itemName .. '" "' .. itemName .. '" 5 6 7')
-    functions.Wait(1)
+    functions.Wait(0.5)
     functions.Callback2("ItemSearch", 5, 0) -- clicks on the first item in the search results
     functions.WaitForAddon("ItemSearchResult")
     functions.Wait(0.5)
     functions.Callback2("ItemSearchResult", 2, 0) -- clicks on the first item in the search results
     functions.WaitForAddon("SelectYesno")
+    functions.Wait(0.5)
     functions.SelectYes("SelectYesno") -- confirms the purchase
-    functions.Wait(0.5) -- wait for the purchase to be processed
+    functions.Wait(0.5)
     functions.CloseAddon("ItemSearchResult")
     functions.CloseAddon("ItemSearch")
 end
