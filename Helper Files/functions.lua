@@ -341,6 +341,7 @@ function functions.BuyItemFromMarketBoard(itemName)
     functions.Callback2("ItemSearchResult", 2, 0) -- clicks on the first item in the search results
     functions.WaitForAddon("SelectYesno")
     functions.SelectYes("SelectYesno") -- confirms the purchase
+    functions.Wait(0.5) -- wait for the purchase to be processed
     functions.CloseAddon("ItemSearchResult")
     functions.CloseAddon("ItemSearch")
 end
@@ -412,6 +413,7 @@ function functions.StoreItemInSaddlebag(itemName)
     else
         functions.Error("No free space in saddlebags, cannot store " .. itemName)
     end
+    functions.Wait(0.5) -- wait for the item to be moved
 
     functions.Echo("Closing Chocobo Saddlebag")
     functions.CloseAddon("InventoryBuddy")
