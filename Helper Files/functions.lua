@@ -397,6 +397,10 @@ end
 ---Stores an item in the saddlebag by its name.
 ---@param itemName string
 function functions.StoreItemInSaddlebag(itemName)
+    functions.Echo("Opening Chocobo Saddlebag")
+    yield("/send OEM_4")
+    functions.WaitForAddon("InventoryBuddy")
+
     functions.Echo("Storing " .. itemName .. " in saddlebag")
     local itemId = functions.FindItemID(itemName)
     if Inventory.GetInventoryContainer(InventoryType.SaddleBag1).FreeSlots > 0 then
