@@ -15,7 +15,8 @@
         "FateState",
         "Fates",
         "Config",
-        "ActionType"
+        "ActionType",
+        "InventoryType"
     ],
     "Lua.workspace.library": [
         "${workspaceFolder}/.vscode"

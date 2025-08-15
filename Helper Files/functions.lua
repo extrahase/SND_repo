@@ -4,11 +4,17 @@ local functions = {}
 --#region Utility functions
 
 ---Prints a message to the game chat using /echo (only if DEBUG is enabled).
----@param message string
+---@param message any
 function functions.Echo(message)
     if DEBUG then
         yield("/echo " .. tostring(message))
     end
+end
+
+---Prints an error message to the game chat using /echo.
+---@param message any
+function functions.Error(message)
+     yield("/echo " .. tostring(message))
 end
 
 ---Closes an addon window via callback.
@@ -386,6 +392,22 @@ function functions.FindItemID(item_to_find)
         end
     end
     return nil
+end
+
+---Stores an item in the saddlebag by its name.
+---@param itemName string
+function functions.StoreItemInSaddlebag(itemName)
+    functions.Echo("Storing " .. itemName .. " in saddlebag")
+    local itemId = functions.FindItemID(itemName)
+    if Inventory.GetInventoryContainer(InventoryType.SaddleBag1).FreeSlots > 0 then
+        functions.Echo("Saddlebag 1 has free space, moving " .. itemName)
+        Inventory.GetInventoryItem(itemId):MoveItemSlot(InventoryType.SaddleBag1)
+    elseif Inventory.GetInventoryContainer(InventoryType.SaddleBag2).FreeSlots > 0 then
+        functions.Echo("Saddlebag 2 has free space, moving " .. itemName)
+        Inventory.GetInventoryItem(itemId):MoveItemSlot(InventoryType.SaddleBag2)
+    else
+        functions.Error("No free space in saddlebags, cannot store " .. itemName)
+    end
 end
 --#endregion
 
