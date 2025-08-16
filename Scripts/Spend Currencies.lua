@@ -107,6 +107,9 @@ local function SpendPoetics()
     functions.Echo("Closing shop")
     functions.Wait(0.5) -- wait for last purchase to be processed
     functions.CloseAddon(shopName)
+
+    functions.Echo("Moving back to line up with Aetheryte lmao")
+    functions.MoveToCoordinates(45.64, -1.63, 55.19)
 end
 
 local function SpendUncapped()
