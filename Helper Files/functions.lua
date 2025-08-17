@@ -449,13 +449,16 @@ end
 ---@param huntMarks table<string> List of hunt mark names
 ---@param VbmPreset string VBM preset to use during engagement
 function f.FlyAndDestroyToFlag(huntMarks, VbmPreset)
+    f.Echo("Mounting and initiating flight to flag")
     f.MountUp()
     yield("/vnav flyflag")
+    f.WaitForVnavBusy()
 
+    f.Echo("Starting Search & Destroy loop")
     while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
         for _, huntMarkName in pairs(huntMarks) do
-            --functions.Echo("Searching for " .. huntMarkName)
             f.SearchAndDestroy(huntMarkName, VbmPreset)
+            f.Wait(0.1)
         end
         f.Wait(0.1)
     end
