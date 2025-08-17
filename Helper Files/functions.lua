@@ -423,23 +423,26 @@ function functions.StoreItemInSaddlebag(itemName)
 end
 --#endregion
 
----Searches for a hunt mark by name, moves to it, engages, and waits for combat to end.
----@param huntMarkName string
+---Searches for an enemy by name, moves to it, engages, and waits for combat to end.
+---@param enemyName string
 ---@param VbmPreset string
-function functions.SearchAndDestroy(huntMarkName, VbmPreset)
-    local huntMark = Entity.GetEntityByName(huntMarkName)
-    if huntMark ~= nil and huntMark.HealthPercent ~= 0 then
-        local distance = huntMark.DistanceTo
-        if distance > 100 then return end
-        --yield("/echo Distance to " .. huntMark.Name .. ": " .. math.floor(distance))
+function functions.SearchAndDestroy(enemyName, VbmPreset)
+    local enemy = Entity.GetEntityByName(enemyName)
+    if enemy ~= nil and enemy.HealthPercent > 0 then -- proceed if enemy exists and is alive
+        -- avoid targetting Hunt Marks that aren't supposed to be engaged yet
+        if enemy.DistanceTo > 100 then
+            return
+        end
+
+        -- calculates and moves to a position 20 units away from the enemy towards the player
+        local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
+        direction = direction / direction:Length() -- normalize to length 1
+        local newPosition = enemy + direction * 20 -- move 20 units toward playerPos
+        IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
+
         yield("/vbm ar set " .. VbmPreset)
-        functions.MountUp()
-        huntMark.Position.X = huntMark.Position.Y + 10
-        huntMark.Position.Y = huntMark.Position.Y + 10
-        huntMark.Position.Z = huntMark.Position.Y + 99 -- offset to avoid ground collision
-        IPC.vnavmesh.PathfindAndMoveTo(huntMark.Position, true)
         functions.WaitForVnav()
-        huntMark:SetAsTarget()
+        enemy:SetAsTarget()
         functions.Dismount()
         functions.Wait(5)
         functions.WaitForOutOfCombat()
