@@ -139,7 +139,7 @@ function f.MountUp()
         f.WaitForOutOfCombat()
         f.WaitForReady()
         yield('/gaction "Mount Roulette"')
-        f.Wait(1)
+        f.Wait(0.5)
     end
 end
 
@@ -147,7 +147,7 @@ end
 function f.Dismount()
     while Svc.Condition[4] do
         yield('/gaction "Mount Roulette"')
-        f.Wait(1)
+        f.Wait(0.5)
     end
 end
 
