@@ -2,7 +2,7 @@
 -- ### DATA ###
 -- ############
 
-local functions = require("functions")
+local f = require("functions")
 
 ITEM_LIST = require("vac_lists").Item_List
 
@@ -17,48 +17,48 @@ DEBUG = true
 -- #################
 
 function DecipherMap(mapName)
-    functions.WaitForReady()
+    f.WaitForReady()
     yield("/item " .. mapName)
-    functions.WaitForBusy()
-    functions.WaitForReady()
+    f.WaitForBusy()
+    f.WaitForReady()
 end
 
 -- ############
 -- ### MAIN ###
 -- ############
 
-functions.Echo("Starting script!")
+f.Echo("Starting script!")
 
-functions.Echo("Disabling YesAlready")
+f.Echo("Disabling YesAlready")
 IPC.YesAlready.SetPluginEnabled(false)
 
-functions.Echo("Teleporting to " .. HOME_POINT .. " if not already there")
+f.Echo("Teleporting to " .. HOME_POINT .. " if not already there")
 if Svc.ClientState.TerritoryType ~= HOME_POINT_TERRITORY_ID then
-    functions.Return()
-    functions.WaitForZone(HOME_POINT_TERRITORY_ID)
+    f.Return()
+    f.WaitForZone(HOME_POINT_TERRITORY_ID)
     IPC.Lifestream.AethernetTeleport("Bayside Bevy Marketplace")
-    functions.WaitForLifestream()
+    f.WaitForLifestream()
 end
 
-functions.Echo("Moving to Market Board")
-functions.MoveToCoordinates(3.91, -14.00, 133.84)
+f.Echo("Moving to Market Board")
+f.MoveToCoordinates(3.91, -14.00, 133.84)
 
-functions.Echo("Buying first " .. MAP_NAME .. " from Market Board")
-functions.BuyItemFromMarketBoard(MAP_NAME)
+f.Echo("Buying first " .. MAP_NAME .. " from Market Board")
+f.BuyItemFromMarketBoard(MAP_NAME)
 
-functions.Echo("Deciphering first " .. MAP_NAME)
+f.Echo("Deciphering first " .. MAP_NAME)
 DecipherMap(MAP_NAME)
 
-functions.Echo("Buying second " .. MAP_NAME .. " from Market Board")
-functions.BuyItemFromMarketBoard(MAP_NAME)
+f.Echo("Buying second " .. MAP_NAME .. " from Market Board")
+f.BuyItemFromMarketBoard(MAP_NAME)
 
-functions.Echo("Storing second " .. MAP_NAME .. " in saddlebag")
-functions.StoreItemInSaddlebag(MAP_NAME)
+f.Echo("Storing second " .. MAP_NAME .. " in saddlebag")
+f.StoreItemInSaddlebag(MAP_NAME)
 
-functions.Echo("Buying third " .. MAP_NAME .. " from Market Board")
-functions.BuyItemFromMarketBoard(MAP_NAME)
+f.Echo("Buying third " .. MAP_NAME .. " from Market Board")
+f.BuyItemFromMarketBoard(MAP_NAME)
 
-functions.Echo("Enabling YesAlready")
+f.Echo("Enabling YesAlready")
 IPC.YesAlready.SetPluginEnabled(true)
 
-functions.Echo("Script done!")
+f.Echo("Script done!")
