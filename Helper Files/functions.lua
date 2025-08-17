@@ -317,18 +317,18 @@ function f.FindZoneNameByTerritoryId(territoryId)
     end
 end
 
----Retrieves hunt positions for a given territory ID.
----@param territoryId number
----@return table|nil huntPositions
-function f.GetZoneHuntLocations(territoryId)
-    for _, expansion in pairs(HUNT_LOCATIONS) do
-        for _, zone in ipairs(expansion) do
-            if zone.mapId == territoryId then
-                return zone.positions
-            end
-        end
-    end
-end
+-- ---Retrieves hunt positions for a given territory ID.
+-- ---@param territoryId number
+-- ---@return table|nil huntPositions
+-- function f.GetZoneHuntLocations(territoryId)
+--     for _, expansion in pairs(HUNT_LOCATIONS) do
+--         for _, zone in ipairs(expansion) do
+--             if zone.mapId == territoryId then
+--                 return zone.positions
+--             end
+--         end
+--     end
+-- end
 
 ---Converts map coordinates to real in-world coordinates.
 ---@param territoryId number
