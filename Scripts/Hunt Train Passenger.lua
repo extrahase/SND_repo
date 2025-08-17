@@ -62,14 +62,14 @@ if etaTp <= etaFlight then
     end
 end
 
--- construct table with Hunt Marks for current zone
+f.Echo("Constructing table with Hunt Marks for current zone")
 local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
 local huntMarks = { }
 for _, expansion in pairs(HUNT_MARKS) do
     if expansion[HUNT_RANK] then
         for _, mark in ipairs(expansion[HUNT_RANK]) do
             if mark.zone == zoneName then
-                f.Echo("Adding "..mark.name.." to hunt marks")
+                f.Echo("Adding " .. mark.name .. " to hunt marks")
                 table.insert(huntMarks, mark.name)
             end
         end
