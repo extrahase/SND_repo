@@ -51,7 +51,7 @@ else -- flag is in same zone
     end
 end
 f.Echo("We arrived in the right zone and instance, continuing with TP/flight check")
-f.Wait(1)
+f.Wait(1) -- sometimes player position wouldn't be accessible yet after teleporting, so we wait a bit
 
 -- determines if (flying) or (teleporting, then flying) is better and starts travel
 local etaTp, closestAetheryteId = f.CalculateEtaTp3()
@@ -78,7 +78,7 @@ for _, expansion in pairs(HUNT_MARKS) do
 end
 
 f.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
-f.Wait(0.5)
+f.Wait(0.5) -- to make it appear less bot-like
 f.MountUp()
 
 f.Echo("Script done!")
