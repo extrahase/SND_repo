@@ -436,16 +436,23 @@ function f.SearchAndDestroy(enemyName, VbmPreset)
             return
         end
 
-        -- calculates and moves to a position 20 units away from the enemy towards the player
+        -- calculate and move to a position 20 units away from the enemy towards the player
         local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
         direction = direction / direction:Length() -- normalize to length 1
         local newPosition = enemy.Position + direction * 20 -- move 20 units toward playerPos
-        IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
+
+        -- select ground spot to land on so the end point is not in the air
+        local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 3) -- 3-unit search radius
+        if groundedPos then
+            IPC.vnavmesh.PathfindAndMoveTo(groundedPos, Entity.Player.IsMounted)
+        else
+            IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted) -- fallback if no ground found
+        end
 
         yield("/vbm ar set " .. VbmPreset)
         f.WaitForVnav()
-        enemy:SetAsTarget()
         f.Dismount()
+        enemy:SetAsTarget()
         f.Wait(5)
         f.WaitForOutOfCombat()
         yield("/vbm ar clear")
