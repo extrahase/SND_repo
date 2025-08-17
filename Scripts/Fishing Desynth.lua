@@ -225,27 +225,27 @@ ITEM_LIST = require("vac_lists").Item_List
 
 DEBUG = true
 
-local functions = require("functions")
+local f = require("functions")
 
 local function DesynthFish()
     for _, fish in ipairs(FISH_TO_DESYNTH) do
-        local fishId = functions.FindItemID(fish)
+        local fishId = f.FindItemID(fish)
         if fishId ~= nil then
             local fishAmount = Inventory.GetItemCount(fishId)
             if fishAmount > 0 then
-                functions.Echo("Desynthing: "..fish)
+                f.Echo("Desynthing: "..fish)
                 for i = 1, fishAmount do
                     yield("/desynth "..fishId)
-                    functions.WaitForReady()
-                    functions.Wait(1)
+                    f.WaitForReady()
+                    f.Wait(1)
                 end
             end
         else
-            functions.Echo("Fish not found: "..fish)
+            f.Echo("Fish not found: "..fish)
         end
     end
 end
 
-functions.Echo("Script started: Fish Desynth")
+f.Echo("Script started: Fish Desynth")
 DesynthFish()
-functions.Echo("Script finished: Fish Desynth")
+f.Echo("Script finished: Fish Desynth")

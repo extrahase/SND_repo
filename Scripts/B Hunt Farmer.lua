@@ -10,7 +10,7 @@ import("System.Numerics")
 --HUNT_MARKS = require("huntMarks")
 --ZONE_LIST = require("vac_lists").Zone_List
 
-local functions = require("functions")
+local f = require("functions")
 
 DEBUG = false
 --MOUNT_SPEED = 20.6
@@ -22,7 +22,7 @@ HUNT_RANK = "B"
 -- ### MAIN ###
 -- ############
 
-functions.Echo("Script started!")
+f.Echo("Script started!")
 
 -- local huntMarksByRank = { }
 
@@ -34,9 +34,9 @@ functions.Echo("Script started!")
 --     end
 -- end
 
-functions.WaitForOutOfCombat()
+f.WaitForOutOfCombat()
 yield("/vbm ar clear")
-functions.MountUp()
+f.MountUp()
 
 -- build list of flags for current zone
 local zoneHuntLocations = {
@@ -49,10 +49,10 @@ local zoneHuntLocations = {
 -- loop through each flag, place it and start the hunt
 while true do
     for _, position in ipairs(zoneHuntLocations) do
-            Instances.Map.Flag:SetFlagMapMarker(functions.ConvertToRealCoordinates(Svc.ClientState.TerritoryType, position.x, position.y))
+            Instances.Map.Flag:SetFlagMapMarker(f.ConvertToRealCoordinates(Svc.ClientState.TerritoryType, position.x, position.y))
             local huntMarks = { "Flame Sergeant Dalvag" }
-            functions.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
+            f.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
     end
 end
 
-functions.Echo("Script done!")
+f.Echo("Script done!")

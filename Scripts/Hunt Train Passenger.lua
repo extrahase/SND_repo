@@ -10,7 +10,7 @@ HUNT_LOCATIONS = require("huntLocations")
 HUNT_MARKS = require("huntMarks")
 ZONE_LIST = require("vac_lists").Zone_List
 
-local functions = require("functions")
+local f = require("functions")
 
 DEBUG = false
 MOUNT_SPEED = 20.6
@@ -22,63 +22,63 @@ HUNT_RANK = "A"
 -- ### MAIN ###
 -- ############
 
-functions.WaitForOutOfCombat()
+f.WaitForOutOfCombat()
 yield("/vbm ar clear")
 
 -- if flag in different zone: waits for HTA to do its thing
 -- if flag in same zone: tries to account for HTA instance switching
-functions.Echo("Checking if flag is in different zone or same zone")
+f.Echo("Checking if flag is in different zone or same zone")
 if Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType then -- flag is in different zone
-    functions.Echo("Flag in different zone --> waiting for HTA to change zones")
-    functions.WaitForZone(Instances.Map.Flag.TerritoryId)
-    functions.WaitForInstance(1) -- account for switching instances
+    f.Echo("Flag in different zone --> waiting for HTA to change zones")
+    f.WaitForZone(Instances.Map.Flag.TerritoryId)
+    f.WaitForInstance(1) -- account for switching instances
 else -- flag is in same zone
-    functions.Echo("Flag in same zone --> checking for instance switching")
+    f.Echo("Flag in same zone --> checking for instance switching")
     local numberOfInstances = IPC.Lifestream.GetNumberOfInstances()
     if numberOfInstances ~= 0 then -- checks if zone has instances
-        functions.Echo("Zone has instances, checking current instance")
+        f.Echo("Zone has instances, checking current instance")
         local currentInstance = IPC.Lifestream.GetCurrentInstance()
         if currentInstance == numberOfInstances then
-            functions.Echo("Already in the last instance, no need to wait")
+            f.Echo("Already in the last instance, no need to wait")
         else
-            functions.Echo("Possible HTA instance switching detected, waiting 2s")
-            functions.Wait(2)
+            f.Echo("Possible HTA instance switching detected, waiting 2s")
+            f.Wait(2)
             if Player.IsBusy then -- if player is busy, HTA must be active
-                functions.Echo("Player is busy, HTA must be active, waiting for it to finish")
-                functions.WaitForInstance(currentInstance + 1)
+                f.Echo("Player is busy, HTA must be active, waiting for it to finish")
+                f.WaitForInstance(currentInstance + 1)
             end
         end
     end
 end
-functions.Echo("We arrived in the right zone and instance, continuing with TP/flight check")
-functions.Wait(1)
+f.Echo("We arrived in the right zone and instance, continuing with TP/flight check")
+f.Wait(1)
 
 -- determines if (flying) or (teleporting, then flying) is better and starts travel
-local etaTp, closestAetheryteId = functions.CalculateEtaTp3()
-local etaFlight = functions.CalculateEtaFlight3()
+local etaTp, closestAetheryteId = f.CalculateEtaTp3()
+local etaFlight = f.CalculateEtaFlight3()
 
 if etaTp <= etaFlight then
     if closestAetheryteId ~= 148 and closestAetheryteId ~= 173 and closestAetheryteId ~= 175 then
-    functions.TpToAetheryte(closestAetheryteId)
+    f.TpToAetheryte(closestAetheryteId)
     end
 end
 
 -- construct table with Hunt Marks for current zone
-local zoneName = functions.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
+local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
 local huntMarks = { }
 for _, expansion in pairs(HUNT_MARKS) do
     if expansion[HUNT_RANK] then
         for _, mark in ipairs(expansion[HUNT_RANK]) do
             if mark.zone == zoneName then
-                functions.Echo("Adding "..mark.name.." to hunt marks")
+                f.Echo("Adding "..mark.name.." to hunt marks")
                 table.insert(huntMarks, mark.name)
             end
         end
     end
 end
 
-functions.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
+f.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
 
-functions.MountUp()
+f.MountUp()
 
-functions.Echo("Script done!")
+f.Echo("Script done!")

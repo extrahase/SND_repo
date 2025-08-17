@@ -2,7 +2,7 @@
 -- ### DATA ###
 -- ############
 
-local functions = require("functions")
+local f = require("functions")
 
 ITEM_LIST = require("vac_lists").Item_List
 HOME_POINT = "Tuliyollal"
@@ -59,12 +59,12 @@ NUTS_VENDOR = {
 local function DesynthItems()
     for _, itemCategory in pairs(ITEMS_TO_DESYNTH) do
         for _, item in pairs(itemCategory) do
-            local itemId = functions.FindItemID(item.name)
+            local itemId = f.FindItemID(item.name)
             if Inventory.GetItemCount(itemId) > 0 then
                 yield("/desynth "..itemId)
-                functions.WaitForReady()
-                functions.Wait(1)
-                functions.CloseAddon("SalvageResult")
+                f.WaitForReady()
+                f.Wait(1)
+                f.CloseAddon("SalvageResult")
             end
         end
     end
@@ -75,41 +75,41 @@ local function SpendPoetics()
     local shopName = POETICS_VENDOR.shopName
     local poeticsAmount = Inventory.GetItemCount(28)
 
-    functions.Echo("Checking if minimum Poetics treshold is met")
+    f.Echo("Checking if minimum Poetics treshold is met")
     if poeticsAmount < MIN_POETICS then
         return
     end
 
-    functions.Echo("Teleporting to " .. FREE_DESTINATION .. " if not already there")
+    f.Echo("Teleporting to " .. FREE_DESTINATION .. " if not already there")
         if Svc.ClientState.TerritoryType ~= POETICS_VENDOR.zoneId then
-            functions.Lifestream("tp " .. FREE_DESTINATION)
-            functions.WaitForZone(POETICS_VENDOR.zoneId)
+            f.Lifestream("tp " .. FREE_DESTINATION)
+            f.WaitForZone(POETICS_VENDOR.zoneId)
         end
 
-    functions.Echo("Navigating to vendor")
-    functions.MoveToCoordinates(37.52, -1.69, 57.55)
+    f.Echo("Navigating to vendor")
+    f.MoveToCoordinates(37.52, -1.69, 57.55)
 
-    functions.Echo("Interacting with " .. vendorName)
+    f.Echo("Interacting with " .. vendorName)
     Entity.GetEntityByName(vendorName):SetAsTarget()
     Entity.Target:Interact()
 
-    functions.Echo("Waiting for " .. shopName .. " window")
-    functions.WaitForAddon(shopName)
+    f.Echo("Waiting for " .. shopName .. " window")
+    f.WaitForAddon(shopName)
 
-    functions.Echo("Navigating to Combat Supplies > Special Arms Materials")
-    functions.Callback2(shopName, 12, 7)
-    functions.Callback2(shopName, 13, 1)
+    f.Echo("Navigating to Combat Supplies > Special Arms Materials")
+    f.Callback2(shopName, 12, 7)
+    f.Callback2(shopName, 13, 1)
 
-    functions.Echo("Buying " .. math.floor(poeticsAmount / 150) .. " Unidentifiable Shells")
+    f.Echo("Buying " .. math.floor(poeticsAmount / 150) .. " Unidentifiable Shells")
     local buyAmount = math.floor(poeticsAmount / 150)
-    functions.BuyFromShop(shopName, 14, 6, buyAmount)
+    f.BuyFromShop(shopName, 14, 6, buyAmount)
 
-    functions.Echo("Closing shop")
-    functions.Wait(0.5) -- wait for last purchase to be processed
-    functions.CloseAddon(shopName)
+    f.Echo("Closing shop")
+    f.Wait(0.5) -- wait for last purchase to be processed
+    f.CloseAddon(shopName)
 
-    functions.Echo("Moving back to line up with Aetheryte lmao")
-    functions.MoveToCoordinates(45.64, -1.63, 55.19)
+    f.Echo("Moving back to line up with Aetheryte lmao")
+    f.MoveToCoordinates(45.64, -1.63, 55.19)
 end
 
 local function SpendUncapped()
@@ -117,41 +117,41 @@ local function SpendUncapped()
     local shopName = UNCAPPED_VENDOR.shopName
     local uncappedAmount = Inventory.GetItemCount(47)
 
-    functions.Echo("Checking if minimum Uncapped treshold is met")
+    f.Echo("Checking if minimum Uncapped treshold is met")
     if uncappedAmount < MIN_UNCAPPED then
         return
     end
 
-    functions.Echo("Teleporting to " .. UNCAPPED_DESTINATION .. " if not already there")
+    f.Echo("Teleporting to " .. UNCAPPED_DESTINATION .. " if not already there")
         if Svc.ClientState.TerritoryType ~= UNCAPPED_VENDOR.zoneId then
-            functions.Lifestream("tp " .. UNCAPPED_DESTINATION)
-            functions.WaitForZone(UNCAPPED_VENDOR.zoneId)
+            f.Lifestream("tp " .. UNCAPPED_DESTINATION)
+            f.WaitForZone(UNCAPPED_VENDOR.zoneId)
             IPC.Lifestream.AethernetTeleport("Nexus Arcade")
-            functions.WaitForLifestream()
+            f.WaitForLifestream()
         end
 
-    functions.Echo("Navigating to vendor")
-    functions.MoveToCoordinates(-185.25, 0.66, -28.00)
+    f.Echo("Navigating to vendor")
+    f.MoveToCoordinates(-185.25, 0.66, -28.00)
 
-    functions.Echo("Interacting with " .. vendorName)
+    f.Echo("Interacting with " .. vendorName)
     Entity.GetEntityByName(vendorName):SetAsTarget()
     Entity.Target:Interact()
 
-    functions.Echo("Selecting shop: Allagan Tomestones of Heliometry (Other)")
-    functions.SelectListOption("SelectIconString", 3)
+    f.Echo("Selecting shop: Allagan Tomestones of Heliometry (Other)")
+    f.SelectListOption("SelectIconString", 3)
 
-    functions.Echo("Buying items from shop")
+    f.Echo("Buying items from shop")
     local buyAmount = math.floor(uncappedAmount / 6 / 20)
-    functions.BuyFromShop(shopName, 0, 0, buyAmount)
-    functions.BuyFromShop(shopName, 0, 1, buyAmount)
-    functions.BuyFromShop(shopName, 0, 2, buyAmount)
-    functions.BuyFromShop(shopName, 0, 3, buyAmount)
-    functions.BuyFromShop(shopName, 0, 4, buyAmount)
-    functions.BuyFromShop(shopName, 0, 5, buyAmount)
+    f.BuyFromShop(shopName, 0, 0, buyAmount)
+    f.BuyFromShop(shopName, 0, 1, buyAmount)
+    f.BuyFromShop(shopName, 0, 2, buyAmount)
+    f.BuyFromShop(shopName, 0, 3, buyAmount)
+    f.BuyFromShop(shopName, 0, 4, buyAmount)
+    f.BuyFromShop(shopName, 0, 5, buyAmount)
 
-    functions.Echo("Closing shop")
-    functions.Wait(0.5) -- wait for last purchase to be processed
-    functions.CloseAddon(shopName)
+    f.Echo("Closing shop")
+    f.Wait(0.5) -- wait for last purchase to be processed
+    f.CloseAddon(shopName)
 end
 
 local function SpendNuts()
@@ -159,23 +159,23 @@ local function SpendNuts()
     local shopName = NUTS_VENDOR.shopName
     local nutsAmount = Inventory.GetItemCount(26533)
 
-    functions.Echo("Checking if minimum Nuts treshold is met")
+    f.Echo("Checking if minimum Nuts treshold is met")
     if nutsAmount < MIN_NUTS then
         return
     end
 
-    functions.Echo("Teleporting to " .. HOME_POINT .. " if not already there")
+    f.Echo("Teleporting to " .. HOME_POINT .. " if not already there")
     if Svc.ClientState.TerritoryType ~= NUTS_VENDOR.zoneId then
-        functions.Return()
-        functions.WaitForZone(NUTS_VENDOR.zoneId)
+        f.Return()
+        f.WaitForZone(NUTS_VENDOR.zoneId)
         IPC.Lifestream.AethernetTeleport("Bayside Bevy Marketplace")
-        functions.WaitForLifestream()
+        f.WaitForLifestream()
     end
 
-    functions.Echo("Navigating to vendor")
-    functions.MoveToCoordinates(25.99, -14, 126.87)
+    f.Echo("Navigating to vendor")
+    f.MoveToCoordinates(25.99, -14, 126.87)
 
-    functions.Echo("Building table of shops to visit and determining max item price")
+    f.Echo("Building table of shops to visit and determining max item price")
     local shopsSet = { }
     local shops = { }
     local maxPrice = 0
@@ -188,37 +188,37 @@ local function SpendNuts()
             maxPrice = item.price
         end
     end
-    functions.Echo("Shops to visit: " .. table.concat(shops, ", ") .. "; max price is " .. maxPrice)
+    f.Echo("Shops to visit: " .. table.concat(shops, ", ") .. "; max price is " .. maxPrice)
 
-    functions.Echo("Start of buy/desynth loop")
+    f.Echo("Start of buy/desynth loop")
     while nutsAmount >= maxPrice do
         for _, shop in ipairs(shops) do
-            functions.Echo("Checking if shop selection window is open and ready")
+            f.Echo("Checking if shop selection window is open and ready")
             while not Addons.GetAddon("SelectIconString").Ready do
-                functions.Echo("Interacting with " .. vendorName .. " and waiting for shop selection window")
+                f.Echo("Interacting with " .. vendorName .. " and waiting for shop selection window")
                 Entity.GetEntityByName(vendorName):SetAsTarget()
                 Entity.Target:Interact()
-                functions.Wait(0.1)
+                f.Wait(0.1)
             end
 
-            functions.Echo("Selecting shop with index: " .. (shop - 1))
-            functions.SelectListOption("SelectIconString", shop - 1)
+            f.Echo("Selecting shop with index: " .. (shop - 1))
+            f.SelectListOption("SelectIconString", shop - 1)
 
-            functions.Echo("Buying items from shop")
+            f.Echo("Buying items from shop")
             for _, item in ipairs(ITEMS_TO_DESYNTH.nuts) do
                 if item.shop == shop and item.price <= nutsAmount then
-                    functions.Echo("Buying " .. item.name .. " for " .. item.price .. " Nuts")
-                    functions.BuyFromShop(shopName, item.category, item.index, 1)
+                    f.Echo("Buying " .. item.name .. " for " .. item.price .. " Nuts")
+                    f.BuyFromShop(shopName, item.category, item.index, 1)
                     nutsAmount = Inventory.GetItemCount(26533)
                 end
             end
 
-            functions.Echo("Closing shop")
-            functions.Wait(0.5) -- wait for last purchase to be processed
-            functions.CloseAddon(shopName)
+            f.Echo("Closing shop")
+            f.Wait(0.5) -- wait for last purchase to be processed
+            f.CloseAddon(shopName)
         end
 
-        functions.Echo("Desynthesizing items")
+        f.Echo("Desynthesizing items")
         DesynthItems()
     end
 end
@@ -227,32 +227,32 @@ end
 -- ### MAIN ###
 -- ############
 
-functions.Echo("Starting script!")
+f.Echo("Starting script!")
 
-functions.Echo("Disabling YesAlready")
+f.Echo("Disabling YesAlready")
 IPC.YesAlready.SetPluginEnabled(false)
 
-functions.Echo("Checking if already in correct zone for one of the vendors")
+f.Echo("Checking if already in correct zone for one of the vendors")
 if Svc.ClientState.TerritoryType == POETICS_VENDOR.zoneId then
-    functions.Echo("In Poetics vendor zone, spending Poetics")
+    f.Echo("In Poetics vendor zone, spending Poetics")
     SpendPoetics()
 elseif Svc.ClientState.TerritoryType == UNCAPPED_VENDOR.zoneId then
-    functions.Echo("In Uncapped vendor zone, spending Uncapped")
+    f.Echo("In Uncapped vendor zone, spending Uncapped")
     SpendUncapped()
 elseif Svc.ClientState.TerritoryType == NUTS_VENDOR.zoneId then
-    functions.Echo("In Nuts vendor zone, spending Nuts")
+    f.Echo("In Nuts vendor zone, spending Nuts")
     SpendNuts()
 end
 
-functions.Echo("Initiating all spend functions")
+f.Echo("Initiating all spend functions")
 SpendPoetics()
 SpendUncapped()
 SpendNuts()
 
-functions.Echo("Last Desynth before script end")
+f.Echo("Last Desynth before script end")
 DesynthItems()
 
-functions.Echo("Enabling YesAlready")
+f.Echo("Enabling YesAlready")
 IPC.YesAlready.SetPluginEnabled(true)
 
-functions.Echo("Script done!")
+f.Echo("Script done!")
