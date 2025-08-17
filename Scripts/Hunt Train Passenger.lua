@@ -76,6 +76,7 @@ for _, expansion in pairs(HUNT_MARKS) do
     end
 end
 
+f.Echo("Searching for " .. HUNT_RANK .. " Ranks")
 f.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
 f.Wait(0.5) -- to make it appear less bot-like
 f.MountUp()
