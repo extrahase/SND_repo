@@ -397,29 +397,31 @@ function functions.FindItemID(item_to_find)
     return nil
 end
 
----Stores an item in the saddlebag by its name.
+---Stores an item in the Saddlebag by its name.
 ---@param itemName string
 function functions.StoreItemInSaddlebag(itemName)
     functions.Echo("Opening Chocobo Saddlebag")
     yield("/send OEM_4")
     functions.WaitForAddon("InventoryBuddy")
-    functions.Wait(0.5)
+    functions.Error("Waiting for manual close of Saddlebag")
+    functions.WaitForAddonClose("InventoryBuddy")
 
-    functions.Echo("Storing " .. itemName .. " in saddlebag")
-    local itemId = functions.FindItemID(itemName)
-    if Inventory.GetInventoryContainer(InventoryType.SaddleBag1).FreeSlots > 0 then
-        functions.Echo("Saddlebag 1 has free space, moving " .. itemName)
-        Inventory.GetInventoryItem(itemId):MoveItemSlot(InventoryType.SaddleBag1)
-    elseif Inventory.GetInventoryContainer(InventoryType.SaddleBag2).FreeSlots > 0 then
-        functions.Echo("Saddlebag 2 has free space, moving " .. itemName)
-        Inventory.GetInventoryItem(itemId):MoveItemSlot(InventoryType.SaddleBag2)
-    else
-        functions.Error("No free space in saddlebags, cannot store " .. itemName)
-    end
-    functions.Wait(0.5)
+    -- moving an item to the Saddlebag doesn't work with the current API, so this is commented out
+    -- functions.Echo("Storing " .. itemName .. " in saddlebag")
+    -- local itemId = functions.FindItemID(itemName)
+    -- if Inventory.GetInventoryContainer(InventoryType.SaddleBag1).FreeSlots > 0 then
+    --     functions.Echo("Saddlebag 1 has free space, moving " .. itemName)
+    --     Inventory.GetInventoryItem(itemId):MoveItemSlot(InventoryType.SaddleBag1)
+    -- elseif Inventory.GetInventoryContainer(InventoryType.SaddleBag2).FreeSlots > 0 then
+    --     functions.Echo("Saddlebag 2 has free space, moving " .. itemName)
+    --     Inventory.GetInventoryItem(itemId):MoveItemSlot(InventoryType.SaddleBag2)
+    -- else
+    --     functions.Error("No free space in saddlebags, cannot store " .. itemName)
+    -- end
+    -- functions.Wait(0.5)
 
-    functions.Echo("Closing Chocobo Saddlebag")
-    functions.CloseAddon("InventoryBuddy")
+    -- functions.Echo("Closing Chocobo Saddlebag")
+    -- functions.CloseAddon("InventoryBuddy")
 end
 --#endregion
 
