@@ -6,7 +6,6 @@
 
 import("System.Numerics")
 
-HUNT_LOCATIONS = require("huntLocations")
 HUNT_MARKS = require("huntMarks")
 ZONE_LIST = require("vac_lists").Zone_List
 
