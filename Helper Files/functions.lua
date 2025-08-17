@@ -82,6 +82,13 @@ function f.WaitForVnav()
     end
 end
 
+---Waits for vnav to be busy with pathfinding or navigating to target.
+function f.WaitForVnavBusy()
+    while not IPC.vnavmesh.PathfindInProgress() or not IPC.vnavmesh.IsRunning() do
+        f.Wait(0.1)
+    end
+end
+
 ---Waits until the player is distance or less away from the target vector, or until vnav is finished.
 ---@param targetVector3 Vector3
 ---@param distance number
