@@ -1,11 +1,11 @@
----@class functions @provides various utility functions for SND scripts.
-local functions = {}
+---@class f @provides various utility functions for SND scripts.
+local f = {}
 
 --#region Utility functions
 
 ---Prints a message to the game chat using /echo (only if DEBUG is enabled).
 ---@param message any
-function functions.Echo(message)
+function f.Echo(message)
     if DEBUG then
         yield("/echo " .. tostring(message))
     end
@@ -13,29 +13,29 @@ end
 
 ---Prints an error message to the game chat using /echo.
 ---@param message any
-function functions.Error(message)
+function f.Error(message)
      yield("/echo " .. tostring(message))
 end
 
 ---Closes an addon window via callback.
 ---@param addonName string
-function functions.CloseAddon(addonName)
+function f.CloseAddon(addonName)
     yield("/callback " .. addonName .. " true -1")
-    functions.WaitForAddonClose(addonName)
+    f.WaitForAddonClose(addonName)
 end
 
 ---Selects "Yes" in a confirmation dialog via callback.
 ---@param addonName string
-function functions.SelectYes(addonName)
+function f.SelectYes(addonName)
     yield("/callback " .. addonName .. " true 0")
-    functions.WaitForAddonClose(addonName)
+    f.WaitForAddonClose(addonName)
 end
 
 ---Selects "No" in a confirmation dialog via callback.
 ---@param addonName string
-function functions.SelectNo(addonName)
+function f.SelectNo(addonName)
     yield("/callback " .. addonName .. " true 1")
-    functions.WaitForAddonClose(addonName)
+    f.WaitForAddonClose(addonName)
 end
 --#endregion
 
@@ -43,90 +43,90 @@ end
 
 ---Waits the specified number of seconds.
 ---@param number number
-function functions.Wait(number)
+function f.Wait(number)
     yield("/wait " .. number)
 end
 
 ---Waits until the player is no longer busy.
-function functions.WaitForReady()
+function f.WaitForReady()
     while Player.IsBusy do
-        functions.Wait(0.1)
+        f.Wait(0.1)
     end
 end
 
 ---Waits until the player is busy.
-function functions.WaitForBusy()
+function f.WaitForBusy()
     while not Player.IsBusy do
-        functions.Wait(0.1)
+        f.Wait(0.1)
     end
 end
 
 ---Waits until the player exits combat.
-function functions.WaitForOutOfCombat()
+function f.WaitForOutOfCombat()
     while Player.Entity.IsInCombat do
-        functions.Wait(0.1)
+        f.Wait(0.1)
     end
 end
 
 ---Waits until the player enters combat.
-function functions.WaitForCombat()
+function f.WaitForCombat()
     while not Player.Entity.IsInCombat do
-        functions.Wait(0.1)
+        f.Wait(0.1)
     end
 end
 
 ---Waits for vnav to finish building its mesh, pathfinding and navigating to target.
-function functions.WaitForVnav()
+function f.WaitForVnav()
     while not IPC.vnavmesh.IsReady() or IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
-        functions.Wait(0.1)
+        f.Wait(0.1)
     end
 end
 
 ---Waits for Lifestream to finish its current operation.
-function functions.WaitForLifestream()
+function f.WaitForLifestream()
     while IPC.Lifestream.IsBusy() do
-        functions.Wait(0.1)
+        f.Wait(0.1)
     end
 end
 
 ---Waits until a specific addon is visible and ready.
 ---@param addonName string
-function functions.WaitForAddon(addonName)
+function f.WaitForAddon(addonName)
     while not Addons.GetAddon(addonName).Ready do
-        functions.Wait(0.1)
+        f.Wait(0.1)
     end
 end
 
 ---Waits until a specific addon doesn't exist anymore.
 ---@param addonName string
-function functions.WaitForAddonClose(addonName)
+function f.WaitForAddonClose(addonName)
     while Addons.GetAddon(addonName).Exists do
-        functions.Wait(0.1)
+        f.Wait(0.1)
     end
 end
 
 ---Waits until the zone ID matches the target territory ID, then waits for player to be ready and vnav to build its mesh.
 ---@param territoryId number
-function functions.WaitForZone(territoryId)
+function f.WaitForZone(territoryId)
     while territoryId ~= Svc.ClientState.TerritoryType do
-        functions.Wait(0.1)
+        f.Wait(0.1)
     end
-    functions.WaitForReady()
-    functions.WaitForVnav()
-    functions.Wait(1) -- additional wait to ensure everything is settled
+    f.WaitForReady()
+    f.WaitForVnav()
+    f.Wait(1) -- additional wait to ensure everything is settled
 end
 
 ---Waits for HTA to change to the specified instance if any exist, then waits for player to be ready and vnav to build its mesh.
 ---@param instanceId number
-function functions.WaitForInstance(instanceId)
+function f.WaitForInstance(instanceId)
     if IPC.Lifestream.GetNumberOfInstances() ~= 0 and IPC.Lifestream.GetCurrentInstance() ~= instanceId then
-        functions.Echo("Waiting for HTA to change instances")
+        f.Echo("Waiting for HTA to change instances")
         while IPC.Lifestream.GetCurrentInstance() ~= instanceId do
-            functions.Wait(0.1)
+            f.Wait(0.1)
         end
-        functions.WaitForReady()
-        functions.WaitForVnav()
-        functions.Wait(1) -- additional wait to ensure everything is settled
+        f.WaitForReady()
+        f.WaitForVnav()
+        f.Wait(1) -- additional wait to ensure everything is settled
     end
 end
 --#endregion
@@ -134,92 +134,92 @@ end
 --#region Travel and teleportation functions
 
 ---Mounts up using Mount Roulette if not already mounted.
-function functions.MountUp()
+function f.MountUp()
     if not Svc.Condition[4] and Player.CanMount then
-        functions.WaitForOutOfCombat()
-        functions.WaitForReady()
+        f.WaitForOutOfCombat()
+        f.WaitForReady()
         yield('/gaction "Mount Roulette"')
-        functions.Wait(1)
+        f.Wait(1)
     end
 end
 
 ---Dismounts if the player is mounted.
-function functions.Dismount()
+function f.Dismount()
     while Svc.Condition[4] do
         yield('/gaction "Mount Roulette"')
-        functions.Wait(1)
+        f.Wait(1)
     end
 end
 
 ---Mounts up and flies to the active map flag using vnav.
-function functions.FlyToFlag()
-    functions.MountUp()
+function f.FlyToFlag()
+    f.MountUp()
     yield("/vnav flyflag")
-    functions.WaitForVnav()
+    f.WaitForVnav()
 end
 
 ---Moves player to specified coordinates using vnav.
 ---@param x number
 ---@param y number
 ---@param z number
-function functions.MoveToCoordinates(x, y, z)
+function f.MoveToCoordinates(x, y, z)
     IPC.vnavmesh.Stop()
-    functions.WaitForReady()
-    functions.WaitForVnav()
+    f.WaitForReady()
+    f.WaitForVnav()
     yield("/vnav moveto " .. x .. " " .. y .. " " .. z)
-    functions.WaitForVnav()
+    f.WaitForVnav()
 end
 
 ---Executes a Lifestream command and waits until it has finished.
 ---@param command string
-function functions.Lifestream(command)
-    functions.Echo("Executing /li " .. command)
+function f.Lifestream(command)
+    f.Echo("Executing /li " .. command)
     IPC.vnavmesh.Stop()
     IPC.Lifestream.Abort()
-    functions.WaitForVnav()
-    functions.WaitForLifestream()
-    functions.WaitForOutOfCombat()
-    functions.WaitForReady()
+    f.WaitForVnav()
+    f.WaitForLifestream()
+    f.WaitForOutOfCombat()
+    f.WaitForReady()
     IPC.Lifestream.ExecuteCommand(command)
-    functions.WaitForLifestream()
+    f.WaitForLifestream()
 end
 
 ---Uses the Return action if not on cooldown, otherwise uses Teleport to the HOME_POINT.
-function functions.Return()
-    functions.Echo("Using Return if not on cooldown; using Teleport otherwise")
+function f.Return()
+    f.Echo("Using Return if not on cooldown; using Teleport otherwise")
     if Actions.GetActionStatus(ActionType.GeneralAction, 8) == 0 then
-        functions.Echo("Using Return")
-        functions.WaitForOutOfCombat()
-        functions.WaitForReady()
+        f.Echo("Using Return")
+        f.WaitForOutOfCombat()
+        f.WaitForReady()
         Actions.ExecuteGeneralAction(8)
-        functions.WaitForAddon("SelectYesno")
-        functions.SelectYes("SelectYesno")
-        functions.WaitForBusy()
-        functions.WaitForReady()
-        functions.WaitForVnav()
+        f.WaitForAddon("SelectYesno")
+        f.SelectYes("SelectYesno")
+        f.WaitForBusy()
+        f.WaitForReady()
+        f.WaitForVnav()
     else
-        functions.Echo("Using Teleport")
-        functions.Lifestream("tp " .. HOME_POINT)
+        f.Echo("Using Teleport")
+        f.Lifestream("tp " .. HOME_POINT)
     end
 end
 
 ---Teleports to the specified aetheryte by ID and waits for vnav to be ready.
 ---@param aetheryteId number
-function functions.TpToAetheryte(aetheryteId)
-    functions.Echo("Teleporting to Aetheryte ID: " .. aetheryteId)
-    functions.WaitForOutOfCombat()
-    functions.WaitForReady()
+function f.TpToAetheryte(aetheryteId)
+    f.Echo("Teleporting to Aetheryte ID: " .. aetheryteId)
+    f.WaitForOutOfCombat()
+    f.WaitForReady()
     Actions.Teleport(tonumber(aetheryteId))
-    functions.WaitForBusy()
-    functions.WaitForReady()
-    functions.WaitForVnav()
+    f.WaitForBusy()
+    f.WaitForReady()
+    f.WaitForVnav()
 end
 
 ---Calculates the distance between two 3D vector positions.
 ---@param vectorA Vector3
 ---@param vectorB Vector3
 ---@return number distance
-function functions.DistanceBetweenVectors(vectorA, vectorB)
+function f.DistanceBetweenVectors(vectorA, vectorB)
     local distance = math.sqrt(
         (vectorB.X - vectorA.X)^2 +
         (vectorB.Y - vectorA.Y)^2 +
@@ -230,11 +230,11 @@ end
 
 ---Estimates ETA to the map flag while flying.
 ---@return number eta
-function functions.CalculateEtaFlight3()
+function f.CalculateEtaFlight3()
     local playerPos = Player.Entity.Position
     playerPos.Y = 0
     local flagPos = Instances.Map.Flag.Vector3
-    local distance = functions.DistanceBetweenVectors(playerPos, flagPos)
+    local distance = f.DistanceBetweenVectors(playerPos, flagPos)
     local eta = distance / MOUNT_SPEED
     return eta
 end
@@ -242,8 +242,8 @@ end
 ---Estimates ETA to the map flag via teleportation and flight.
 ---@return number eta
 ---@return number|nil closestAetheryteId
-function functions.CalculateEtaTp3()
-    local aetherytePos = functions.GetAetherytesInFlagZone()
+function f.CalculateEtaTp3()
+    local aetherytePos = f.GetAetherytesInFlagZone()
     local flagPos = Instances.Map.Flag.Vector3
 
     local shortestDistance = math.huge
@@ -252,7 +252,7 @@ function functions.CalculateEtaTp3()
     for _, entry in ipairs(aetherytePos) do
         local pos = entry.position
         local id = entry.id
-        local distance = functions.DistanceBetweenVectors(flagPos, pos)
+        local distance = f.DistanceBetweenVectors(flagPos, pos)
         if distance < shortestDistance then
             shortestDistance = distance
             closestAetheryteId = id
@@ -265,7 +265,7 @@ end
 
 ---Returns a list of aetherytes (id and position) in the flag’s zone.
 ---@return table aetherytePos
-function functions.GetAetherytesInFlagZone()
+function f.GetAetherytesInFlagZone()
     local flagZoneId = Instances.Map.Flag.TerritoryId
     local flagZone = ZONE_LIST[tostring(flagZoneId)]
     local aetherytePos = {}
@@ -288,7 +288,7 @@ end
 ---Gets the zone name for a given territory ID.
 ---@param territoryId number
 ---@return string|nil zoneName
-function functions.FindZoneNameByTerritoryId(territoryId)
+function f.FindZoneNameByTerritoryId(territoryId)
     for id, zone in pairs(ZONE_LIST) do
         if id == tostring(territoryId) then
             return zone.Zone
@@ -299,7 +299,7 @@ end
 ---Retrieves hunt positions for a given territory ID.
 ---@param territoryId number
 ---@return table|nil huntPositions
-function functions.GetZoneHuntLocations(territoryId)
+function f.GetZoneHuntLocations(territoryId)
     for _, expansion in pairs(HUNT_LOCATIONS) do
         for _, zone in ipairs(expansion) do
             if zone.mapId == territoryId then
@@ -316,7 +316,7 @@ end
 ---@return number territoryId
 ---@return number newX
 ---@return number newY
-function functions.ConvertToRealCoordinates(territoryId, x, y)
+function f.ConvertToRealCoordinates(territoryId, x, y)
     local mapScale = (territoryId >= 397 and territoryId <= 402) and 95 or 100
     local newX = 50 * (x - 1 - (2048 / mapScale))
     local newY = 50 * (y - 1 - (2048 / mapScale))
@@ -329,23 +329,23 @@ end
 ---Buys a single item from the Market Board and closes its menus afterwards.
 ---Caution: Item search only works with names that don't have spaces. For others, a workaround is needed.
 ---@param itemName string
-function functions.BuyItemFromMarketBoard(itemName)
-    functions.Echo("Buying item: " .. itemName)
+function f.BuyItemFromMarketBoard(itemName)
+    f.Echo("Buying item: " .. itemName)
     Entity.GetEntityByName("Market Board"):SetAsTarget()
     Entity.GetEntityByName("Market Board"):Interact()
-    functions.WaitForAddon("ItemSearch")
+    f.WaitForAddon("ItemSearch")
     yield('/callback ItemSearch true 9 1 2 "' .. itemName .. '" "' .. itemName .. '" 5 6 7')
-    functions.Wait(0.5)
-    functions.Callback2("ItemSearch", 5, 0) -- clicks on the first item in the search results
-    functions.WaitForAddon("ItemSearchResult")
-    functions.Wait(0.5)
-    functions.Callback2("ItemSearchResult", 2, 0) -- clicks on the first item in the search results
-    functions.WaitForAddon("SelectYesno")
-    functions.Wait(0.5)
-    functions.SelectYes("SelectYesno") -- confirms the purchase
-    functions.Wait(0.5)
-    functions.CloseAddon("ItemSearchResult")
-    functions.CloseAddon("ItemSearch")
+    f.Wait(0.5)
+    f.Callback2("ItemSearch", 5, 0) -- clicks on the first item in the search results
+    f.WaitForAddon("ItemSearchResult")
+    f.Wait(0.5)
+    f.Callback2("ItemSearchResult", 2, 0) -- clicks on the first item in the search results
+    f.WaitForAddon("SelectYesno")
+    f.Wait(0.5)
+    f.SelectYes("SelectYesno") -- confirms the purchase
+    f.Wait(0.5)
+    f.CloseAddon("ItemSearchResult")
+    f.CloseAddon("ItemSearch")
 end
 
 ---Buys an item from shop via callback; stays in shop menu afterwards.
@@ -353,40 +353,40 @@ end
 ---@param category number
 ---@param index number
 ---@param amount number
-function functions.BuyFromShop(shopName, category, index, amount)
-    functions.WaitForAddon(shopName)
+function f.BuyFromShop(shopName, category, index, amount)
+    f.WaitForAddon(shopName)
     yield("/callback " .. shopName .. " true " .. category .. " " .. index .. " " .. amount)
     repeat -- account for potentially multiple confirmation dialogues
-        functions.Wait(0.1)
+        f.Wait(0.1)
         yield("/callback SelectYesno true 0") -- not CloseAddon because it could result in infinite Wait loop
         yield("/callback ShopExchangeItemDialog true 0") -- dialogue for Poetics vendor
-        functions.Wait(0.1)
+        f.Wait(0.1)
     until not Addons.GetAddon("SelectYesno").Exists and not Addons.GetAddon("ShopExchangeItemDialog").Exists
-    functions.WaitForAddon(shopName)
+    f.WaitForAddon(shopName)
 end
 
 ---Navigates to a specific category in a shop UI.
 ---@param shopName string
 ---@param a number
 ---@param b number
-function functions.Callback2(shopName, a, b)
+function f.Callback2(shopName, a, b)
     yield("/callback " .. shopName .. " true " .. a .. " " .. b)
-    functions.Wait(0.1)
+    f.Wait(0.1)
 end
 
 ---Waits for addon to be visible and ready, then selects a list option via callback, then waits for the addon to close.
 ---@param addonName string
 ---@param a number
-function functions.SelectListOption(addonName, a)
-    functions.WaitForAddon(addonName)
+function f.SelectListOption(addonName, a)
+    f.WaitForAddon(addonName)
     yield("/callback " .. addonName .. " true " .. a)
-    functions.WaitForAddonClose(addonName)
+    f.WaitForAddonClose(addonName)
 end
 
 ---Finds an item ID by item name from ITEM_LIST.
 ---@param item_to_find string
 ---@return number|nil itemId
-function functions.FindItemID(item_to_find)
+function f.FindItemID(item_to_find)
     local search_term = string.lower(item_to_find)
     for key, item in pairs(ITEM_LIST) do
         local item_name = string.lower(item['Name'])
@@ -399,12 +399,12 @@ end
 
 ---Stores an item in the Saddlebag by its name.
 ---@param itemName string
-function functions.StoreItemInSaddlebag(itemName)
-    functions.Echo("Opening Chocobo Saddlebag")
+function f.StoreItemInSaddlebag(itemName)
+    f.Echo("Opening Chocobo Saddlebag")
     yield("/send OEM_4")
-    functions.WaitForAddon("InventoryBuddy")
-    functions.Error("Waiting for manual close of Saddlebag")
-    functions.WaitForAddonClose("InventoryBuddy")
+    f.WaitForAddon("InventoryBuddy")
+    f.Error("Waiting for manual close of Saddlebag")
+    f.WaitForAddonClose("InventoryBuddy")
 
     -- moving an item to the Saddlebag doesn't work with the current API, so this is commented out
     -- functions.Echo("Storing " .. itemName .. " in saddlebag")
@@ -428,7 +428,7 @@ end
 ---Searches for an enemy by name, moves to it, engages, and waits for combat to end.
 ---@param enemyName string
 ---@param VbmPreset string
-function functions.SearchAndDestroy(enemyName, VbmPreset)
+function f.SearchAndDestroy(enemyName, VbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     if enemy ~= nil and enemy.HealthPercent > 0 then -- proceed if enemy exists and is alive
         -- avoid targetting Hunt Marks that aren't supposed to be engaged yet
@@ -443,11 +443,11 @@ function functions.SearchAndDestroy(enemyName, VbmPreset)
         IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
 
         yield("/vbm ar set " .. VbmPreset)
-        functions.WaitForVnav()
+        f.WaitForVnav()
         enemy:SetAsTarget()
-        functions.Dismount()
-        functions.Wait(5)
-        functions.WaitForOutOfCombat()
+        f.Dismount()
+        f.Wait(5)
+        f.WaitForOutOfCombat()
         yield("/vbm ar clear")
     end
 end
@@ -455,17 +455,17 @@ end
 ---Flies toward the map flag while scanning for and engaging hunt marks.
 ---@param huntMarks table<string> List of hunt mark names
 ---@param VbmPreset string VBM preset to use during engagement
-function functions.FlyAndDestroyToFlag(huntMarks, VbmPreset)
-    functions.MountUp()
+function f.FlyAndDestroyToFlag(huntMarks, VbmPreset)
+    f.MountUp()
     yield("/vnav flyflag")
 
     while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
         for _, huntMarkName in pairs(huntMarks) do
             --functions.Echo("Searching for " .. huntMarkName)
-            functions.SearchAndDestroy(huntMarkName, VbmPreset)
+            f.SearchAndDestroy(huntMarkName, VbmPreset)
         end
-        functions.Wait(0.1)
+        f.Wait(0.1)
     end
 end
 
-return functions
+return f
