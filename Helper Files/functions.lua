@@ -444,6 +444,7 @@ function f.SearchAndDestroy(enemyName, VbmPreset)
         -- select ground spot to land on so the end point is not in the air
         local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 3) -- 3-unit search radius
         if groundedPos then
+            groundedPos = groundedPos + Vector3(0, 1, 0) -- increase target point's height slightly to avoid clipping into the ground
             IPC.vnavmesh.PathfindAndMoveTo(groundedPos, Entity.Player.IsMounted)
         else
             IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted) -- fallback if no ground found
