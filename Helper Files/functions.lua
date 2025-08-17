@@ -481,7 +481,7 @@ function f.SearchAndDestroy(enemyName, vbmPreset)
         direction = direction / direction:Length() -- normalize to length 1
         local newPosition = enemy.Position + direction * offset -- move offset units toward playerPos
         -- select ground spot to land on so the end point is not in the air
-        local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 5) -- 5-yard search radius
+        local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 2) -- 2-yard search radius
         if groundedPos then
             newPosition = groundedPos
         end
