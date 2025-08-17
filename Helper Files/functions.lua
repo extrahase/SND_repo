@@ -430,7 +430,7 @@ function functions.SearchAndDestroy(enemyName, VbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     if enemy ~= nil and enemy.HealthPercent > 0 then -- proceed if enemy exists and is alive
         -- avoid targetting Hunt Marks that aren't supposed to be engaged yet
-        if enemy.DistanceTo > 100 then
+        if enemy.DistanceTo < 100 then
             return
         end
 
