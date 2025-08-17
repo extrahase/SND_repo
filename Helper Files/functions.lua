@@ -82,6 +82,19 @@ function f.WaitForVnav()
     end
 end
 
+---Waits until the player is distance or less away from the target vector, or until vnav is finished.
+---@param targetVector3 Vector3
+---@param distance number
+function f.WaitForVnavDistance(targetVector3, distance)
+    while not IPC.vnavmesh.IsReady() or IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
+        local dist = (targetVector3 - Entity.Player.Position):Length()
+        if dist <= distance then
+            return
+        end
+        f.Wait(0.1)
+    end
+end
+
 ---Waits for Lifestream to finish its current operation.
 function f.WaitForLifestream()
     while IPC.Lifestream.IsBusy() do
