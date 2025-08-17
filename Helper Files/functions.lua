@@ -475,9 +475,9 @@ function f.SearchAndDestroy(enemyName, VbmPreset)
         -- calculate and move to a position 20 units away from the enemy towards the player
         local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
         direction = direction / direction:Length() -- normalize to length 1
-        local newPosition = enemy.Position + direction * 10 -- move 10 units toward playerPos
+        local newPosition = enemy.Position + direction * 20 -- move 20 units toward playerPos
         -- select ground spot to land on so the end point is not in the air
-        local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 3) -- 3-yard search radius
+        local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 5) -- 5-yard search radius
         if groundedPos then
             newPosition = groundedPos
         end
@@ -501,9 +501,12 @@ end
 function f.SearchAndDestroySRank(enemyName, VbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     if enemy ~= nil and enemy.HealthPercent > 0 then
-        if enemy.DistanceTo > 100 then
-            return
-        end
+        if enemy.HealthPercent > 80 then
+            f.Echo(enemyName .. " has " .. enemy.HealthPercent .. "% HP, waiting until below 80%")
+            -- until enemy.HealthPercent < 80 do
+            --     f.Wait(0.1)
+            --     enemy = Entity.GetEntityByName(enemyName)
+            -- end
 
         f.Echo("Found " .. enemyName .. " alive and within range, flying to position 20y away")
         -- calculate and move to a position 20 units away from the enemy towards the player
@@ -526,6 +529,7 @@ function f.SearchAndDestroySRank(enemyName, VbmPreset)
         f.Wait(5)
         f.WaitForOutOfCombat()
         yield("/vbm ar clear")
+    end
     end
 end
 
