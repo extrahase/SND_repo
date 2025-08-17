@@ -483,7 +483,7 @@ function f.SearchAndDestroy(enemyName, VbmPreset)
         end
         IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
 
-        f.Echo("Waiting until we are close enough to " .. enemyName)
+        f.Echo("Waiting until we are close enough to position")
         f.WaitForVnavDistance(newPosition, 5)
         f.Echo(enemyName .. " is close enough, activating preset and dismounting")
         yield("/vbm ar set " .. VbmPreset)
