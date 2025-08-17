@@ -1,3 +1,19 @@
+--[=====[
+[[SND Metadata]]
+author: shufti
+version: 7
+plugin_dependencies:
+- Lifestream
+- vnavmesh
+plugins_to_disable:
+- YesAlready
+configs:
+    Map Name:
+        description: Enter the name of the map, without "Timeworn" and "Map". E.g. "Saigaskin"
+        type: string
+[[End Metadata]]
+--]=====]
+
 -- ############
 -- ### DATA ###
 -- ############
@@ -6,11 +22,10 @@ local f = require("functions")
 
 ITEM_LIST = require("vac_lists").Item_List
 
-MAP_NAME = "Timeworn Saigaskin Map"
 HOME_POINT = "Tuliyollal"
 HOME_POINT_TERRITORY_ID = 1185
 
-DEBUG = true
+DEBUG = false
 
 -- #################
 -- ### FUNCTIONS ###
@@ -28,9 +43,7 @@ end
 -- ############
 
 f.Echo("Starting script!")
-
-f.Echo("Disabling YesAlready")
-IPC.YesAlready.SetPluginEnabled(false)
+local mapName = "Timeworn " .. Config.Get("Map Name") .. " Map"
 
 f.Echo("Teleporting to " .. HOME_POINT .. " if not already there")
 if Svc.ClientState.TerritoryType ~= HOME_POINT_TERRITORY_ID then
@@ -43,22 +56,19 @@ end
 f.Echo("Moving to Market Board")
 f.MoveToCoordinates(3.91, -14.00, 133.84)
 
-f.Echo("Buying first " .. MAP_NAME .. " from Market Board")
-f.BuyItemFromMarketBoard(MAP_NAME)
+f.Echo("Buying first " .. mapName .. " from Market Board")
+f.BuyItemFromMarketBoard(mapName)
 
-f.Echo("Deciphering first " .. MAP_NAME)
-DecipherMap(MAP_NAME)
+f.Echo("Deciphering first " .. mapName)
+DecipherMap(mapName)
 
-f.Echo("Buying second " .. MAP_NAME .. " from Market Board")
-f.BuyItemFromMarketBoard(MAP_NAME)
+f.Echo("Buying second " .. mapName .. " from Market Board")
+f.BuyItemFromMarketBoard(mapName)
 
-f.Echo("Storing second " .. MAP_NAME .. " in saddlebag")
-f.StoreItemInSaddlebag(MAP_NAME)
+f.Echo("Storing second " .. mapName .. " in saddlebag")
+f.StoreItemInSaddlebag(mapName)
 
-f.Echo("Buying third " .. MAP_NAME .. " from Market Board")
-f.BuyItemFromMarketBoard(MAP_NAME)
-
-f.Echo("Enabling YesAlready")
-IPC.YesAlready.SetPluginEnabled(true)
+f.Echo("Buying third " .. mapName .. " from Market Board")
+f.BuyItemFromMarketBoard(mapName)
 
 f.Echo("Script done!")
