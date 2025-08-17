@@ -462,8 +462,8 @@ function f.SearchAndDestroy(enemyName, VbmPreset)
         end
         IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
 
-        yield("/vbm ar set " .. VbmPreset)
         f.WaitForVnavDistance(newPosition, 5) -- wait until we are close enough
+        yield("/vbm ar set " .. VbmPreset)
         f.Dismount()
         enemy:SetAsTarget()
         f.Wait(5)
