@@ -17,7 +17,8 @@
         "Config",
         "ActionType",
         "InventoryType",
-        "System"
+        "System",
+        "Engines"
     ],
     "Lua.workspace.library": [
         "${workspaceFolder}/.vscode"
