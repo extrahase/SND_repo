@@ -89,6 +89,7 @@ function f.WaitForVnavDistance(targetVector3, distance)
     while not IPC.vnavmesh.IsReady() or IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
         local dist = (targetVector3 - Entity.Player.Position):Length()
         if dist <= distance then
+            IPC.vnavmesh.Stop()
             return
         end
         f.Wait(0.1)
