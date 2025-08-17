@@ -430,14 +430,14 @@ function functions.SearchAndDestroy(enemyName, VbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     if enemy ~= nil and enemy.HealthPercent > 0 then -- proceed if enemy exists and is alive
         -- avoid targetting Hunt Marks that aren't supposed to be engaged yet
-        if enemy.DistanceTo < 100 then
+        if enemy.DistanceTo > 100 then
             return
         end
 
         -- calculates and moves to a position 20 units away from the enemy towards the player
         local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
         direction = direction / direction:Length() -- normalize to length 1
-        local newPosition = enemy + direction * 20 -- move 20 units toward playerPos
+        local newPosition = enemy.Position + direction * 20 -- move 20 units toward playerPos
         IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
 
         yield("/vbm ar set " .. VbmPreset)
