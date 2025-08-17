@@ -78,7 +78,7 @@ for _, expansion in pairs(HUNT_MARKS) do
 end
 
 f.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
-
+f.Wait(0.5)
 f.MountUp()
 
 f.Echo("Script done!")
