@@ -455,16 +455,14 @@ function f.SearchAndDestroy(enemyName, VbmPreset)
         local newPosition = enemy.Position + direction * 20 -- move 20 units toward playerPos
 
         -- select ground spot to land on so the end point is not in the air
-        local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 3) -- 3-unit search radius
+        local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 3) -- 3-yard search radius
         if groundedPos then
-            groundedPos = groundedPos + Vector3(0, 1, 0) -- increase target point's height slightly to avoid clipping into the ground
-            IPC.vnavmesh.PathfindAndMoveTo(groundedPos, Entity.Player.IsMounted)
-        else
-            IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted) -- fallback if no ground found
+            newPosition = groundedPos
         end
+        IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
 
         yield("/vbm ar set " .. VbmPreset)
-        f.WaitForVnav()
+        f.WaitForVnavDistance(newPosition, 5) -- wait until we are close enough
         f.Dismount()
         enemy:SetAsTarget()
         f.Wait(5)
