@@ -4,6 +4,14 @@
 
 local f = require("functions")
 
+HUNT_MARKS = require("huntMarks")
+ZONE_LIST = require("vac_lists").Zone_List
+
+HUNT_RANK = "S"
+VBM_PRESET = "A Ranks"
+MOUNT_SPEED = 20.6
+TP_DELAY = 7
+
 DEBUG = true
 
 -- #################
@@ -16,40 +24,50 @@ DEBUG = true
 -- ### MAIN ###
 -- ############
 
-local text = System.GetClipboardText() or ""
+f.Echo("Starting script!")
 
--- normalize spacing (replace weird unicode spaces with normal ones)
-text = text:gsub("[   ]", " "):gsub("%s+", " ")
+f.Echo("Parsing clipboard for S Rank data")
+local clipboard = System.GetClipboardText() or ""
 
--- extract world (after 🌎)
-local world = text:match("🌎%s*([%a%-]+)")
+-- remove emojis and weird spaces first, then remove spaces
+clipboard = clipboard:gsub("[%z\1-\31\127\194-\244][\128-\191]*", "")
+clipboard = clipboard:gsub("%s+", "")
 
--- extract aetheryte (after :aetheryte:)
-local aetheryte = text:match(":aetheryte:%s*([%w' %-]+)")
+-- World = first word before :smob:
+local worldName = clipboard:match("(.-):smob:")
+-- Aetheryte = after :aetheryte:
+local aetheryteName = clipboard:match(":aetheryte:%s*([^%d,]+)")
+-- coords = last number pair
+local mapX, mapY = clipboard:match("([%d%.]+)%s*,%s*([%d%.]+)")
+f.Echo("World: " .. (worldName or "nil") .. ", Aetheryte: " .. (aetheryteName or "nil") .. ", Coords: (" .. (mapX or "nil") .. ", " .. (mapY or "nil") .. ")")
 
--- extract coords (after 🚩)
-local x, y = text:match("🚩%s*([%d%.]+)%s*,%s*([%d%.]+)")
+f.Echo("Moving to " .. worldName .. ", " .. aetheryteName)
+f.Lifestream(worldName .. ", tp " .. aetheryteName)
 
--- safe defaults if missing
-if not world then world = nil end
-if not aetheryte then aetheryte = nil end
-if not x or not y then x, y = nil, nil end
+f.Echo("Moving to coordinates (" .. mapX .. ", " .. mapY .. ")")
+yield("/snd run Fly to Flag")
 
--- Output via f.Echo
-if world then
-    f.Echo("World: " .. world)
-else
-    f.Echo("World: N/A")
+f.Echo("Constructing table with Hunt Marks for current zone")
+local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
+local huntMarks = { }
+for _, expansion in pairs(HUNT_MARKS) do
+    if expansion[HUNT_RANK] then
+        for _, mark in ipairs(expansion[HUNT_RANK]) do
+            if mark.zone == zoneName or mark.zone == "all" then
+                f.Echo("Adding " .. mark.name .. " to hunt marks")
+                table.insert(huntMarks, mark.name)
+            end
+        end
+    end
 end
 
-if aetheryte then
-    f.Echo("Aetheryte: " .. aetheryte)
-else
-    f.Echo("Aetheryte: N/A")
+f.Echo("Searching for " .. HUNT_RANK .. " Ranks")
+f.WaitForVnavBusy()
+while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
+    for _, huntMarkName in pairs(huntMarks) do
+        f.SearchAndDestroySRank(huntMarkName, VBM_PRESET)
+    end
+    f.Wait(0.1)
 end
 
-if x and y then
-    f.Echo(string.format("Coords: %s, %s", x, y))
-else
-    f.Echo("Coords: N/A")
-end
+f.Echo("Script done!")
