@@ -21,6 +21,8 @@ HUNT_RANK = "A"
 -- ### MAIN ###
 -- ############
 
+f.Echo("Starting script!")
+
 f.WaitForOutOfCombat()
 yield("/vbm ar clear")
 
