@@ -84,7 +84,7 @@ end
 
 ---Waits for vnav to be busy with pathfinding or navigating to target.
 function f.WaitForVnavBusy()
-    while not IPC.vnavmesh.PathfindInProgress() or not IPC.vnavmesh.IsRunning() do
+    while not IPC.vnavmesh.PathfindInProgress() and not IPC.vnavmesh.IsRunning() do
         f.Wait(0.1)
     end
 end
@@ -93,14 +93,13 @@ end
 ---@param targetVector3 Vector3
 ---@param distance number
 function f.WaitForVnavDistance(targetVector3, distance)
-    while not IPC.vnavmesh.IsReady() or IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
-        local dist = (targetVector3 - Entity.Player.Position):Length()
-        if dist <= distance then
-            IPC.vnavmesh.Stop()
-            return
-        end
+    f.WaitForVnavBusy()
+    local dist = (targetVector3 - Entity.Player.Position):Length()
+    while dist > distance do
         f.Wait(0.1)
+        dist = (targetVector3 - Entity.Player.Position):Length()
     end
+    IPC.vnavmesh.Stop()
 end
 
 ---Waits for Lifestream to finish its current operation.
@@ -446,10 +445,60 @@ function f.StoreItemInSaddlebag(itemName)
 end
 --#endregion
 
+---Flies toward the map flag while scanning for and engaging hunt marks.
+---@param huntMarks table<string> List of hunt mark names
+---@param VbmPreset string VBM preset to use during engagement
+function f.FlyAndDestroyToFlag(huntMarks, VbmPreset)
+    f.MountUp()
+    yield("/vnav flyflag")
+
+    while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
+        for _, huntMarkName in pairs(huntMarks) do
+            --functions.Echo("Searching for " .. huntMarkName)
+            f.SearchAndDestroy(huntMarkName, VbmPreset)
+        end
+        f.Wait(0.1)
+    end
+end
+
 ---Searches for an enemy by name, moves to it, engages, and waits for combat to end.
 ---@param enemyName string
 ---@param VbmPreset string
 function f.SearchAndDestroy(enemyName, VbmPreset)
+    local enemy = Entity.GetEntityByName(enemyName)
+    if enemy ~= nil and enemy.HealthPercent > 0 then
+        if enemy.DistanceTo > 100 then
+            return
+        end
+
+        f.Echo("Found " .. enemyName .. " alive and within range, flying to position 20y away")
+        -- calculate and move to a position 20 units away from the enemy towards the player
+        local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
+        direction = direction / direction:Length() -- normalize to length 1
+        local newPosition = enemy.Position + direction * 20 -- move 20 units toward playerPos
+        -- select ground spot to land on so the end point is not in the air
+        local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 3) -- 3-yard search radius
+        if groundedPos then
+            newPosition = groundedPos
+        end
+        IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
+
+        f.Echo("Waiting until we are close enough to " .. enemyName)
+        f.WaitForVnavDistance(newPosition, 5)
+        f.Echo(enemyName .. " is close enough, activating preset and dismounting")
+        yield("/vbm ar set " .. VbmPreset)
+        f.Dismount()
+        enemy:SetAsTarget()
+        f.Wait(5)
+        f.WaitForOutOfCombat()
+        yield("/vbm ar clear")
+    end
+end
+
+---Searches for an enemy by name, moves to it, engages, and waits for combat to end.
+---@param enemyName string
+---@param VbmPreset string
+function f.SearchAndDestroySRank(enemyName, VbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     if enemy ~= nil and enemy.HealthPercent > 0 then -- proceed if enemy exists and is alive
         -- avoid targetting Hunt Marks that aren't supposed to be engaged yet
@@ -476,22 +525,6 @@ function f.SearchAndDestroy(enemyName, VbmPreset)
         f.Wait(5)
         f.WaitForOutOfCombat()
         yield("/vbm ar clear")
-    end
-end
-
----Flies toward the map flag while scanning for and engaging hunt marks.
----@param huntMarks table<string> List of hunt mark names
----@param VbmPreset string VBM preset to use during engagement
-function f.FlyAndDestroyToFlag(huntMarks, VbmPreset)
-    f.MountUp()
-    yield("/vnav flyflag")
-
-    while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
-        for _, huntMarkName in pairs(huntMarks) do
-            --functions.Echo("Searching for " .. huntMarkName)
-            f.SearchAndDestroy(huntMarkName, VbmPreset)
-        end
-        f.Wait(0.1)
     end
 end
 
