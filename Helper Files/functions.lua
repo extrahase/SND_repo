@@ -471,11 +471,11 @@ function f.SearchAndDestroy(enemyName, VbmPreset)
             return
         end
 
-        f.Echo("Found " .. enemyName .. " alive and within range, flying to position 20y away")
+        f.Echo("Found " .. enemyName .. " alive and within range, flying to position 10y away")
         -- calculate and move to a position 20 units away from the enemy towards the player
         local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
         direction = direction / direction:Length() -- normalize to length 1
-        local newPosition = enemy.Position + direction * 20 -- move 20 units toward playerPos
+        local newPosition = enemy.Position + direction * 10 -- move 10 units toward playerPos
         -- select ground spot to land on so the end point is not in the air
         local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 3) -- 3-yard search radius
         if groundedPos then
@@ -495,22 +495,21 @@ function f.SearchAndDestroy(enemyName, VbmPreset)
     end
 end
 
----Searches for an enemy by name, moves to it, engages, and waits for combat to end.
+---Searches for an enemy by name, moves ??yards above it, waits until its HP is below ??%, then engages.
 ---@param enemyName string
 ---@param VbmPreset string
 function f.SearchAndDestroySRank(enemyName, VbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
-    if enemy ~= nil and enemy.HealthPercent > 0 then -- proceed if enemy exists and is alive
-        -- avoid targetting Hunt Marks that aren't supposed to be engaged yet
+    if enemy ~= nil and enemy.HealthPercent > 0 then
         if enemy.DistanceTo > 100 then
             return
         end
 
+        f.Echo("Found " .. enemyName .. " alive and within range, flying to position 20y away")
         -- calculate and move to a position 20 units away from the enemy towards the player
         local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
         direction = direction / direction:Length() -- normalize to length 1
         local newPosition = enemy.Position + direction * 20 -- move 20 units toward playerPos
-
         -- select ground spot to land on so the end point is not in the air
         local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 3) -- 3-yard search radius
         if groundedPos then
@@ -518,7 +517,9 @@ function f.SearchAndDestroySRank(enemyName, VbmPreset)
         end
         IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
 
-        f.WaitForVnavDistance(newPosition, 5) -- wait until we are close enough
+        f.Echo("Waiting until we are close enough to " .. enemyName)
+        f.WaitForVnavDistance(newPosition, 5)
+        f.Echo(enemyName .. " is close enough, activating preset and dismounting")
         yield("/vbm ar set " .. VbmPreset)
         f.Dismount()
         enemy:SetAsTarget()
