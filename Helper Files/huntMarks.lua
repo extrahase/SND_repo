@@ -170,7 +170,7 @@
             { name = "Tarchia", zone = "Amh Araeng" },
             { name = "Ixtab", zone = "The Rak'tika Greatwood" },
             { name = "Gunitt", zone = "The Tempest" },
-            { name = "Forgiven Rebellion", zone = "" },
+            { name = "Forgiven Rebellion", zone = "all" },
         },
     },
     EW = {
@@ -209,7 +209,7 @@
             { name = "Ruminator", zone = "Mare Lamentorum" },
             { name = "Ophioneus", zone = "Elpis" },
             { name = "Narrow-rift", zone = "Ultima Thule" },
-            { name = "Ker", zone = "" },
+            { name = "Ker", zone = "all" },
         },
     },
     DT = {
@@ -248,7 +248,7 @@
             { name = "Sansheya", zone = "Shaaloani" },
             { name = "Atticus the Primogenitor", zone = "Heritage Found" },
             { name = "The Forecaster", zone = "Living Memory" },
-            { name = "Arch Aethereater", zone = "" },
+            { name = "Arch Aethereater", zone = "all" },
         },
     },
 }
