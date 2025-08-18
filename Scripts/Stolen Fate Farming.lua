@@ -1,7 +1,7 @@
 --[=====[
 [[SND Metadata]]
-author: shufti
-version: 6
+author: pot0to
+version: 7
 plugin_dependencies:
 - Lifestream
 - vnavmesh
@@ -105,68 +105,11 @@ configs:
 
 [[End Metadata]]
 --]=====]
---[[
-
-********************************************************************************
-*                                  Changelog                                   *
-********************************************************************************
-
-    -> 3.0.9    By Allison.
-                Fix standing in place after fate finishes bug.
-                Add config options for Rotation Plugin and Dodging Plugin (Fixed bug when multiple solvers present at once)
-                Update description to more accurately reflect script. 
-                Cleaned up metadata + changed description to more accurately reflect script.
-                Small change to combat related distance to target checks to more accurately reflect how FFXIV determines if abilities are usable (no height). Hopefully fixes some max distance checks during combat.
-                Small Bugfixes.
-    -> 3.0.6    Adding metadata
-    -> 3.0.5    Fixed repair function
-    -> 3.0.4    Remove noisy logging
-    -> 3.0.2    Fixed HasPlugin check
-    -> 3.0.1    Fixed typo causing it to crash
-    -> 3.0.0    Updated for SND2
-
-********************************************************************************
-*                               Required Plugins                               *
-********************************************************************************
-
-Plugins that are needed for it to work:
-
-    -> Something Need Doing [Expanded Edition] : (Main Plugin for everything to work)   https://puni.sh/api/repository/croizat
-    -> VNavmesh :   (for Pathing/Moving)    https://puni.sh/api/repository/veyn
-    -> Some form of rotation plugin for attacking enemies. Options are:
-        -> RotationSolver Reborn: https://raw.githubusercontent.com/FFXIV-CombatReborn/CombatRebornRepo/main/pluginmaster.json       
-        -> BossMod Reborn: https://raw.githubusercontent.com/FFXIV-CombatReborn/CombatRebornRepo/main/pluginmaster.json
-        -> Veyn's BossMod: https://puni.sh/api/repository/veyn
-        -> Wrath Combo: https://love.puni.sh/ment.json
-    -> Some form of AI dodging. Options are: 
-        -> BossMod Reborn: https://raw.githubusercontent.com/FFXIV-CombatReborn/CombatRebornRepo/main/pluginmaster.json
-        -> Veyn's BossMod: https://puni.sh/api/repository/veyn
-    -> TextAdvance: (for interacting with Fate NPCs) https://github.com/NightmareXIV/MyDalamudPlugins/raw/main/pluginmaster.json
-    -> Lifestream :  (for changing Instances [ChangeInstance][Exchange]) https://raw.githubusercontent.com/NightmareXIV/MyDalamudPlugins/main/pluginmaster.json
-
-********************************************************************************
-*                                Optional Plugins                              *
-********************************************************************************
-
-This Plugins are Optional and not needed unless you have it enabled in the settings:
-
-    -> AutoRetainer : (for Retainers [Retainers])   https://love.puni.sh/ment.json
-    -> Deliveroo : (for gc turn ins [TurnIn])   https://plugins.carvel.li/
-    -> YesAlready : (for extracting materia)
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------
-]]
-
---[[
-********************************************************************************
-*           Code: Don't touch this unless you know what you're doing           *
-********************************************************************************
-]]
 
 import("System.Numerics")
 
 --#region Data
-
+--#region Character Data
 CharacterCondition = {
     dead=2,
     mounted=4,
@@ -223,9 +166,9 @@ ClassList =
     vpr = { classId=41, className="Viper", isMelee=true, isTank=false },
     pct = { classId=42, className="Pictomancer", isMelee=false, isTank=false }
 }
+--#endregion
 
-BicolorExchangeData =
-{
+BicolorExchangeData = {
     {
         shopKeepName = "Gadfrid",
         zoneName = "Old Sharlayan",
@@ -2004,7 +1947,7 @@ function CollectionsFateTurnIn()
             MoveToNPC()
         end
     else
-        if Inventory.GetItemCount(CurrentFate.fateObject.EventItem) >= 7 then
+        if Inventory.GetItemCount(CurrentFate.fateObject.EventItem) >= 20 then
             GotCollectionsFullCredit = true
         end
 
