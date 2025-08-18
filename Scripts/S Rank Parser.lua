@@ -29,51 +29,32 @@ f.Echo("Starting script!")
 f.Echo("Parsing clipboard for S Rank data")
 local clipboard = System.GetClipboardText() or ""
 
--- 0) Normalize line breaks early (keep one line for simple matching)
-clipboard = clipboard:gsub("\r\n", "\n"):gsub("\r", "\n")
+-- normalize spaces but keep line breaks
+clipboard = clipboard:gsub("[   ]", " ")
+clipboard = clipboard:gsub(" +", " ")
 
--- 1) Remove bracketed localizations BEFORE nuking non-ASCII
--- ASCII brackets:
-clipboard = clipboard:gsub("%b[]", "")
--- Full-width brackets ［ … ］ (U+FF3B/U+FF3D) by UTF-8 bytes:
-local LB = string.char(0xEF, 0xBC, 0xBB) -- '［'
-local RB = string.char(0xEF, 0xBC, 0xBD) -- '］'
-clipboard = clipboard:gsub(LB .. ".-" .. RB, "")
+-- World = last term before :smob:
+local worldName = clipboard:match("(%S+)%s*:smob:")
 
--- 2) Strip non-ASCII (emojis, arrows, accents) – safe for SND editor
-clipboard = clipboard:gsub("[%z\1-\31\127\194-\244][\128-\191]*", "")
-
--- 3) Normalize whitespace
-clipboard = clipboard:gsub("[\n]+", " "):gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
-
--- 4) Extract fields
--- World = token before :smob:
-local worldName = clipboard:match("([%w%-%']+)%s*:smob:")
-
--- Aetheryte = text after :aetheryte: up to coords; trim it
-local aetheryteName
-do
-  local startA, endA = clipboard:find(":aetheryte:%s*")
-  if startA then
-    -- From end of ':aetheryte:' up to the start of the coordinate pair
-    local cStart = clipboard:find("%d+%.%d+%s*,%s*%d+%.%d+")
-    local segment = clipboard:sub(endA + 1, (cStart or (#clipboard + 1)) - 1)
-    -- extra safety: collapse spaces, trim
-    segment = (segment:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", ""))
-    aetheryteName = (#segment > 0) and segment or nil
-  end
+-- Zone = cut at first bracket or newline, then trim spaces
+local zoneName = clipboard:match("🗺%s*([^\n%[%]［］]+)")
+if zoneName then
+    zoneName = zoneName:gsub("^%s+", ""):gsub("%s+$", "")
 end
 
--- Coords = last number pair
+-- Coords
 local mapX, mapY = clipboard:match("([%d%.]+)%s*,%s*([%d%.]+)")
 
 f.Echo("World: " .. (worldName or "nil"))
-f.Echo("Aetheryte: " .. (aetheryteName or "nil"))
+f.Echo("Zone: " .. (zoneName or "nil"))
 f.Echo("Map coordinates: " .. (mapX or "nil") .. ", " .. (mapY or "nil"))
 --#endregion
 
-f.Echo("Moving to " .. worldName .. ", " .. aetheryteName)
-f.Lifestream(worldName .. ", tp " .. aetheryteName)
+f.Echo("Moving to " .. worldName)
+f.Lifestream(worldName)
+
+f.Echo("Moving to " .. zoneName)
+
 
 f.Echo("Moving to map coordinates (" .. mapX .. ", " .. mapY .. ")")
 Instances.Map.Flag:SetFlagMapMarker(f.ConvertToRealCoordinates(Svc.ClientState.TerritoryType, mapX, mapY))
