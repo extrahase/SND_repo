@@ -29,25 +29,25 @@ f.Echo("Starting script!")
 f.Echo("Parsing clipboard for S Rank data")
 local clipboard = System.GetClipboardText() or ""
 
--- normalize spaces but keep line breaks
-clipboard = clipboard:gsub("[   ]", " ")
+-- normalize spacing but keep line breaks
+clipboard = clipboard:gsub("\r\n", "\n"):gsub("\r", "\n")
 clipboard = clipboard:gsub(" +", " ")
 
--- World = last term before :smob:
+-- World = first token before :smob:
 local worldName = clipboard:match("(%S+)%s*:smob:")
 
--- Zone = cut at first bracket or newline, then trim spaces
-local zoneName = clipboard:match("🗺%s*([^\n%[%]［］]+)")
-if zoneName then
-    zoneName = zoneName:gsub("^%s+", ""):gsub("%s+$", "")
-end
+-- Zone = line after :smob:, up to translations
+local zoneName = clipboard:match(":smob:[^\n]*\n%s*([^\n%[%]［］]+)")
+zoneName = zoneName:gsub("^[^%w%p]+", "") -- strip leading non-alphanum/punct
+zoneName = zoneName:gsub("[^%w%p]+$", "") -- strip trailing non-alphanum/punct
+zoneName = zoneName:match("^%s*(.-)%s*$") -- final trim for safety
 
--- Coords
+-- map coordinates = number pair
 local mapX, mapY = clipboard:match("([%d%.]+)%s*,%s*([%d%.]+)")
 
 f.Echo("World: " .. (worldName or "nil"))
 f.Echo("Zone: " .. (zoneName or "nil"))
-f.Echo("Map coordinates: " .. (mapX or "nil") .. ", " .. (mapY or "nil"))
+f.Echo("X: " .. (mapX or "nil") .. ", Y: " .. (mapY or "nil"))
 --#endregion
 
 f.Echo("Moving to " .. worldName)
