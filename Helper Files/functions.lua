@@ -133,7 +133,7 @@ function f.WaitForZone(territoryId)
     end
     f.WaitForReady()
     f.WaitForVnav()
-    f.Wait(1) -- additional wait to ensure everything is settled
+    f.WaitForPlayerPosition()
 end
 
 ---Waits for HTA to change to the specified instance if any exist, then waits for player to be ready and vnav to build its mesh.
@@ -146,7 +146,14 @@ function f.WaitForInstance(instanceId)
         end
         f.WaitForReady()
         f.WaitForVnav()
-        f.Wait(1) -- additional wait to ensure everything is settled
+        f.WaitForPlayerPosition()
+    end
+end
+
+---Waits until the player position is available. Implemented as an additional check after teleporting or changing zones in lieu of Wait(1).
+function f.WaitForPlayerPosition()
+    while not Player.Entity.Position do
+        f.Wait(0.1)
     end
 end
 --#endregion

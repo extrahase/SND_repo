@@ -1,5 +1,3 @@
--- Hunt Train Passenger
-
 -- ############
 -- ### DATA ###
 -- ############
@@ -24,20 +22,21 @@ HUNT_RANK = "A"
 
 f.Echo("Starting script!")
 
+f.Echo("Waiting until out of combat")
 f.WaitForOutOfCombat()
+
+f.Echo("Out of combat, clearing VBM")
 yield("/vbm ar clear")
 
--- if flag in different zone: waits for HTA to do its thing
--- if flag in same zone: tries to account for HTA instance switching
 f.Echo("Checking if flag is in different zone or same zone")
-if Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType then -- flag is in different zone
+if Instances.Map.Flag.TerritoryId ~= Svc.ClientState.TerritoryType then
     f.Echo("Flag in different zone --> waiting for HTA to change zones")
     f.WaitForZone(Instances.Map.Flag.TerritoryId)
-    f.WaitForInstance(1) -- account for switching instances
-else -- flag is in same zone
+    f.WaitForInstance(1)
+else
     f.Echo("Flag in same zone --> checking for instance switching")
     local numberOfInstances = IPC.Lifestream.GetNumberOfInstances()
-    if numberOfInstances ~= 0 then -- checks if zone has instances
+    if numberOfInstances ~= 0 then
         f.Echo("Zone has instances, checking current instance")
         local currentInstance = IPC.Lifestream.GetCurrentInstance()
         if currentInstance == numberOfInstances then
@@ -45,20 +44,17 @@ else -- flag is in same zone
         else
             f.Echo("Possible HTA instance switching detected, waiting 2s")
             f.Wait(2)
-            if Player.IsBusy then -- if player is busy, HTA must be active
+            if Player.IsBusy then
                 f.Echo("Player is busy, HTA must be active, waiting for it to finish")
                 f.WaitForInstance(currentInstance + 1)
             end
         end
     end
 end
-f.Echo("We arrived in the right zone and instance, continuing with TP/flight check")
-f.Wait(1) -- sometimes player position wouldn't be accessible yet after teleporting, so we wait a bit
 
--- determines if (flying) or (teleporting, then flying) is better and starts travel
+f.Echo("We arrived in the right zone and instance, continuing with TP/flight check")
 local etaTp, closestAetheryteId = f.CalculateEtaTp3()
 local etaFlight = f.CalculateEtaFlight3()
-
 if etaTp <= etaFlight then
     if closestAetheryteId ~= 148 and closestAetheryteId ~= 173 and closestAetheryteId ~= 175 then
     f.TpToAetheryte(closestAetheryteId)
