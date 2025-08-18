@@ -19,8 +19,6 @@ DEBUG = true
 -- ### FUNCTIONS ###
 -- #################
 
-
-
 -- ############
 -- ### MAIN ###
 -- ############
@@ -28,19 +26,31 @@ DEBUG = true
 f.Echo("Starting script!")
 
 f.Echo("Parsing clipboard for S Rank data")
+
 local clipboard = System.GetClipboardText() or ""
 
--- remove emojis and weird spaces first, then remove spaces
+-- 1. Strip emojis
 clipboard = clipboard:gsub("[%z\1-\31\127\194-\244][\128-\191]*", "")
-clipboard = clipboard:gsub("%s+", "")
 
+-- 2. Normalize line breaks and spaces
+clipboard = clipboard:gsub("[\r\n]+", " ")  -- flatten to single line
+clipboard = clipboard:gsub("[   ]", " ")    -- weird spaces → normal space
+clipboard = clipboard:gsub("%s+", " ")      -- collapse runs of spaces
+
+-- 3. Extract fields
 -- World = first word before :smob:
-local worldName = clipboard:match("(.-):smob:")
--- Aetheryte = after :aetheryte:
-local aetheryteName = clipboard:match(":aetheryte:%s*([^%d,]+)")
--- coords = last number pair
+local worldName = clipboard:match("(%S+)%s*:smob:")
+-- Aetheryte = after :aetheryte:, up until a bracket or coords
+local aetheryteName = clipboard:match(":aetheryte:%s*([^%[%d,]+)")
+-- Coords = last number pair
 local mapX, mapY = clipboard:match("([%d%.]+)%s*,%s*([%d%.]+)")
-f.Echo("World: " .. (worldName or "nil") .. ", Aetheryte: " .. (aetheryteName or "nil") .. ", Coords: (" .. (mapX or "nil") .. ", " .. (mapY or "nil") .. ")")
+
+-- 4. Trim any stray spaces
+if aetheryteName then aetheryteName = aetheryteName:match("^%s*(.-)%s*$") end
+
+f.Echo("World: " .. (worldName or "nil") ..
+       ", Aetheryte: " .. (aetheryteName or "nil") ..
+       ", Coords: (" .. (mapX or "nil") .. ", " .. (mapY or "nil") .. ")")
 
 f.Echo("Moving to " .. worldName .. ", " .. aetheryteName)
 f.Lifestream(worldName .. ", tp " .. aetheryteName)
