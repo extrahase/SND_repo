@@ -79,5 +79,6 @@ f.Echo("Searching for " .. HUNT_RANK .. " Ranks")
 f.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
 f.Wait(0.5) -- to make it appear less bot-like
 f.MountUp()
+f.FlyToCoordinates(Player.Entity.Position.X, Player.Entity.Position.Y + 20, Player.Entity.Position.Z)
 
 f.Echo("Script done!")
