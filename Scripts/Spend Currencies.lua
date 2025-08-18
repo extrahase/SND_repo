@@ -23,9 +23,9 @@ ITEMS_TO_DESYNTH = {
         { name = "Neo Kingdom Kite Shield", shop = 2, category = 0, index = 0, price = 140 },
         { name = "Neo Kingdom Halberd", shop = 2, category = 0, index = 4, price = 140 },
         { name = "Neo Kingdom Composite Bow", shop = 2, category = 0, index = 10, price = 140 },
-        { name = "Neo Kingdom Index", shop = 3, category = 0, index = 1, price = 140 },
-        { name = "Neo Kingdom Round Brush", shop = 3, category = 0, index = 3, price = 140 },
-        { name = "Neo Kingdom Codex", shop = 3, category = 0, index = 5, price = 140 },
+        -- { name = "Neo Kingdom Index", shop = 3, category = 0, index = 1, price = 140 },
+        -- { name = "Neo Kingdom Round Brush", shop = 3, category = 0, index = 3, price = 140 },
+        -- { name = "Neo Kingdom Codex", shop = 3, category = 0, index = 5, price = 140 },
     }
 }
 
@@ -216,6 +216,7 @@ local function SpendNuts()
             f.Echo("Closing shop")
             f.Wait(0.5) -- wait for last purchase to be processed
             f.CloseAddon(shopName)
+            nutsAmount = Inventory.GetItemCount(26533)
         end
 
         f.Echo("Desynthesizing items")
