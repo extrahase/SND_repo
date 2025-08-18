@@ -501,7 +501,7 @@ end
 ---@param vbmPreset string
 function f.SearchAndDestroy(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
-    local offset = 20
+    local offset = 15
     if enemy ~= nil and enemy.HealthPercent > 0 then
         if enemy.DistanceTo > 100 then
             return
