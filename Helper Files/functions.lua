@@ -178,7 +178,7 @@ function f.FlyToFlag()
     f.WaitForVnav()
 end
 
----Moves player to specified coordinates using vnav.
+---Moves player to specified coordinates on the ground using vnav.
 ---@param x number
 ---@param y number
 ---@param z number
@@ -187,6 +187,20 @@ function f.MoveToCoordinates(x, y, z)
     f.WaitForReady()
     f.WaitForVnav()
     yield("/vnav moveto " .. x .. " " .. y .. " " .. z)
+    f.WaitForVnavBusy()
+    f.WaitForVnav()
+end
+
+---Flies player to specified coordinates using vnav.
+---@param x number
+---@param y number
+---@param z number
+function f.FlyToCoordinates(x, y, z)
+    IPC.vnavmesh.Stop()
+    f.WaitForReady()
+    f.WaitForVnav()
+    yield("/vnav flyto " .. x .. " " .. y .. " " .. z)
+    f.WaitForVnavBusy()
     f.WaitForVnav()
 end
 
@@ -508,7 +522,7 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
         if enemy.HealthPercent > 80 then
             f.Echo(enemyName .. " has " .. enemy.HealthPercent .. "% HP, moving to waiting position until below 80%")
             f.MountUp()
-            IPC.vnavmesh.PathfindAndMoveTo(enemy.Position + Vector3(0, 100, 0), true)
+            f.FlyToCoordinates(enemy.Position.X, enemy.Position.Y + 50, enemy.Position.Z) -- move above the enemy
             repeat
                 f.Wait(0.1)
                 enemy = Entity.GetEntityByName(enemyName)
@@ -518,13 +532,17 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
         f.Echo(enemyName .. " is below 80% HP, moving to engagement position")
         enemy = Entity.GetEntityByName(enemyName)
         local groundPos = IPC.vnavmesh.PointOnFloor(enemy.Position, false, 20)
-        IPC.vnavmesh.PathfindAndMoveTo(groundPos, Player.IsMounted)
+        if not groundPos then
+            f.Error("Could not resolve ground position for " .. enemyName)
+            return
+        end
+        IPC.vnavmesh.PathfindAndMoveTo(groundPos, true)
 
         f.Echo("Waiting until we are close enoughto engagement position")
         f.WaitForVnavDistance(groundPos, 5)
-        f.Echo("Close enough to engagement position, activating preset and dismounting")
-        yield("/vbm ar set " .. vbmPreset)
+        f.Echo("Close enough to engagement position, dismounting and activating preset")
         f.Dismount()
+        yield("/vbm ar set " .. vbmPreset)
         enemy:SetAsTarget()
         f.Wait(5)
         f.WaitForOutOfCombat()
