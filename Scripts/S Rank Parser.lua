@@ -29,23 +29,23 @@ f.Echo("Parsing clipboard for S Rank data")
 
 local clipboard = System.GetClipboardText() or ""
 
--- 1. Strip emojis
+-- strip emojis
 clipboard = clipboard:gsub("[%z\1-\31\127\194-\244][\128-\191]*", "")
 
--- 2. Normalize line breaks and spaces
+-- normalize line breaks and spaces
 clipboard = clipboard:gsub("[\r\n]+", " ")  -- flatten to single line
 clipboard = clipboard:gsub("[   ]", " ")    -- weird spaces → normal space
 clipboard = clipboard:gsub("%s+", " ")      -- collapse runs of spaces
 
--- 3. Extract fields
+-- extract fields
 -- World = first word before :smob:
 local worldName = clipboard:match("(%S+)%s*:smob:")
 -- Aetheryte = after :aetheryte:, up until a bracket or coords
 local aetheryteName = clipboard:match(":aetheryte:%s*([^%[%d,]+)")
--- Coords = last number pair
+-- coords = last number pair
 local mapX, mapY = clipboard:match("([%d%.]+)%s*,%s*([%d%.]+)")
 
--- 4. Trim any stray spaces
+-- trim any stray spaces
 if aetheryteName then aetheryteName = aetheryteName:match("^%s*(.-)%s*$") end
 
 f.Echo("World: " .. (worldName or "nil") ..
