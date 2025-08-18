@@ -502,7 +502,7 @@ function f.SearchAndDestroy(enemyName, vbmPreset)
         IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
 
         f.Echo("Waiting until we are close enough to position")
-        f.WaitForVnavDistance(newPosition, 5)
+        f.WaitForVnavDistance(newPosition, 1)
         f.Echo(enemyName .. " is close enough, dismounting and activating preset")
         f.Dismount()
         yield("/vbm ar set " .. vbmPreset)
@@ -519,14 +519,14 @@ end
 function f.SearchAndDestroySRank(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     if enemy ~= nil and enemy.HealthPercent > 0 then
-        if enemy.HealthPercent > 80 then
-            f.Echo(enemyName .. " has " .. enemy.HealthPercent .. "% HP, moving to waiting position until below 80%")
+        if enemy.HealthPercent > 90 then
+            f.Echo(enemyName .. " has " .. enemy.HealthPercent .. "% HP, moving to waiting position until below 90%")
             f.MountUp()
             f.FlyToCoordinates(enemy.Position.X, enemy.Position.Y + 50, enemy.Position.Z) -- move above the enemy
             repeat
                 f.Wait(0.1)
                 enemy = Entity.GetEntityByName(enemyName)
-            until enemy.HealthPercent < 80
+            until enemy.HealthPercent < 90
         end
 
         f.Echo(enemyName .. " is below 80% HP, moving to engagement position")
@@ -539,7 +539,7 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
         IPC.vnavmesh.PathfindAndMoveTo(groundPos, true)
 
         f.Echo("Waiting until we are close enoughto engagement position")
-        f.WaitForVnavDistance(groundPos, 5)
+        f.WaitForVnavDistance(groundPos, 1)
         f.Echo("Close enough to engagement position, dismounting and activating preset")
         f.Dismount()
         yield("/vbm ar set " .. vbmPreset)
