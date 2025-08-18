@@ -25,8 +25,8 @@ DEBUG = true
 
 f.Echo("Starting script!")
 
+--#region Data Extraction
 f.Echo("Parsing clipboard for S Rank data")
-
 local clipboard = System.GetClipboardText() or ""
 
 -- strip emojis
@@ -37,26 +37,29 @@ clipboard = clipboard:gsub("[\r\n]+", " ")  -- flatten to single line
 clipboard = clipboard:gsub("[   ]", " ")    -- weird spaces → normal space
 clipboard = clipboard:gsub("%s+", " ")      -- collapse runs of spaces
 
--- extract fields
 -- World = first word before :smob:
 local worldName = clipboard:match("(%S+)%s*:smob:")
--- Aetheryte = after :aetheryte:, up until a bracket or coords
-local aetheryteName = clipboard:match(":aetheryte:%s*([^%[%d,]+)")
+
+-- after :aetheryte:, capture up to a [ or ⇒ or digit
+local aetheryteName = clipboard:match(":aetheryte:%s*([^[%d⇒]+)")
+-- trim trailing spaces
+if aetheryteName then
+    aetheryteName = aetheryteName:match("^%s*(.-)%s*$")
+end
+
 -- coords = last number pair
 local mapX, mapY = clipboard:match("([%d%.]+)%s*,%s*([%d%.]+)")
 
--- trim any stray spaces
-if aetheryteName then aetheryteName = aetheryteName:match("^%s*(.-)%s*$") end
-
-f.Echo("World: " .. (worldName or "nil") ..
-       ", Aetheryte: " .. (aetheryteName or "nil") ..
-       ", Coords: (" .. (mapX or "nil") .. ", " .. (mapY or "nil") .. ")")
+f.Echo("World: " .. (worldName or "nil"))
+f.Echo("Aetheryte: " .. (aetheryteName or "nil"))
+f.Echo("Map coordinates: (" .. (mapX or "nil") .. ", " .. (mapY or "nil") .. ")")
+--#endregion
 
 f.Echo("Moving to " .. worldName .. ", " .. aetheryteName)
 f.Lifestream(worldName .. ", tp " .. aetheryteName)
 
-f.Echo("Moving to coordinates (" .. mapX .. ", " .. mapY .. ")")
-yield("/snd run Fly to Flag")
+f.Echo("Moving to map coordinates (" .. mapX .. ", " .. mapY .. ")")
+Instances.Map.Flag:SetFlagMapMarker(f.ConvertToRealCoordinates(Svc.ClientState.TerritoryType, mapX, mapY))
 
 f.Echo("Constructing table with Hunt Marks for current zone")
 local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
