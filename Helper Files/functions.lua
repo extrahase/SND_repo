@@ -513,23 +513,25 @@ function f.SearchAndDestroy(enemyName, vbmPreset)
     end
 end
 
----Searches for an enemy by name, moves ??yards above it, waits until its HP is below ??%, then engages.
+---Searches for an enemy by name, moves hoverHeight yards above it, waits until its HP is below hpTreshold%, then engages.
 ---@param enemyName string
 ---@param vbmPreset string
 function f.SearchAndDestroySRank(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
+    local hoverHeight = 50
+    local hpTresholdPercent = 90
     if enemy ~= nil and enemy.HealthPercent > 0 then
-        if enemy.HealthPercent > 90 then
-            f.Echo(enemyName .. " has " .. enemy.HealthPercent .. "% HP, moving to waiting position until below 90%")
+        if enemy.HealthPercent > hpTresholdPercent then
+            f.Echo(enemyName .. " has " .. enemy.HealthPercent .. "% HP, moving to waiting position until below " .. hpTresholdPercent .. "% HP")
             f.MountUp()
-            f.FlyToCoordinates(enemy.Position.X, enemy.Position.Y + 50, enemy.Position.Z) -- move above the enemy
+            f.FlyToCoordinates(enemy.Position.X, enemy.Position.Y + hoverHeight, enemy.Position.Z)
             repeat
                 f.Wait(0.1)
                 enemy = Entity.GetEntityByName(enemyName)
-            until enemy.HealthPercent < 90
+            until enemy.HealthPercent < hpTresholdPercent
         end
 
-        f.Echo(enemyName .. " is below 80% HP, moving to engagement position")
+        f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, moving to engagement position")
         enemy = Entity.GetEntityByName(enemyName)
         local groundPos = IPC.vnavmesh.PointOnFloor(enemy.Position, false, 20)
         if not groundPos then
