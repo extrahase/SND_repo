@@ -21,16 +21,16 @@ ITEMS_TO_DESYNTH = {
     nuts = {
         { name = "Neo Kingdom Tulwar", shop = 2, category = 0, index = 0, price = 140 },
         { name = "Neo Kingdom Kite Shield", shop = 2, category = 0, index = 0, price = 140 },
-        { name = "Neo Kingdom Hat of Casting",   shop = 3, category = 1, index = 0, price = 70 },
-        { name = "Neo Kingdom Hat of Healing",   shop = 3, category = 1, index = 1, price = 70 },
-        { name = "Neo Kingdom Coat of Casting",  shop = 3, category = 1, index = 2, price = 120 },
-        { name = "Neo Kingdom Coat of Healing",  shop = 3, category = 1, index = 3, price = 120 },
+        { name = "Neo Kingdom Hat of Casting", shop = 3, category = 1, index = 0, price = 70 },
+        { name = "Neo Kingdom Hat of Healing", shop = 3, category = 1, index = 1, price = 70 },
+        { name = "Neo Kingdom Coat of Casting", shop = 3, category = 1, index = 2, price = 120 },
+        { name = "Neo Kingdom Coat of Healing", shop = 3, category = 1, index = 3, price = 120 },
         { name = "Neo Kingdom Armlets of Casting", shop = 3, category = 1, index = 4, price = 70 },
         { name = "Neo Kingdom Armlets of Healing", shop = 3, category = 1, index = 5, price = 70 },
         { name = "Neo Kingdom Breeches of Casting", shop = 3, category = 1, index = 6, price = 120 },
         { name = "Neo Kingdom Breeches of Healing", shop = 3, category = 1, index = 7, price = 120 },
-        { name = "Neo Kingdom Boots of Casting",   shop = 3, category = 1, index = 8, price = 70 },
-        { name = "Neo Kingdom Boots of Healing",   shop = 3, category = 1, index = 9, price = 70 },
+        { name = "Neo Kingdom Boots of Casting", shop = 3, category = 1, index = 8, price = 70 },
+        { name = "Neo Kingdom Boots of Healing", shop = 3, category = 1, index = 9, price = 70 },
     }
 }
 
