@@ -6,8 +6,9 @@ local f = require("functions")
 ZONE_LIST = require("vac_lists").Zone_List
 
 DEBUG = false
-MOUNT_SPEED = 20.6
-TP_DELAY = 7
+MOUNT_SPEED = 20
+RUN_SPEED = 6
+TP_DELAY = 11
 
 local etaTp, closestAetheryteId = f.CalculateEtaTp3()
 

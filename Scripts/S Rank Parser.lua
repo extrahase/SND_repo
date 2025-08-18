@@ -9,8 +9,9 @@ ZONE_LIST = require("vac_lists").Zone_List
 
 HUNT_RANK = "S"
 VBM_PRESET = "A Ranks"
-MOUNT_SPEED = 20.6
-TP_DELAY = 7
+MOUNT_SPEED = 20
+RUN_SPEED = 6
+TP_DELAY = 11
 
 DEBUG = true
 
