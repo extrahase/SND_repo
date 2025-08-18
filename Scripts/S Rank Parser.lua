@@ -29,30 +29,47 @@ f.Echo("Starting script!")
 f.Echo("Parsing clipboard for S Rank data")
 local clipboard = System.GetClipboardText() or ""
 
--- strip emojis
+-- 0) Normalize line breaks early (keep one line for simple matching)
+clipboard = clipboard:gsub("\r\n", "\n"):gsub("\r", "\n")
+
+-- 1) Remove bracketed localizations BEFORE nuking non-ASCII
+-- ASCII brackets:
+clipboard = clipboard:gsub("%b[]", "")
+-- Full-width brackets ［ … ］ (U+FF3B/U+FF3D) by UTF-8 bytes:
+local LB = string.char(0xEF, 0xBC, 0xBB) -- '［'
+local RB = string.char(0xEF, 0xBC, 0xBD) -- '］'
+clipboard = clipboard:gsub(LB .. ".-" .. RB, "")
+
+-- 2) Strip non-ASCII (emojis, arrows, accents) – safe for SND editor
 clipboard = clipboard:gsub("[%z\1-\31\127\194-\244][\128-\191]*", "")
 
--- normalize line breaks and spaces
-clipboard = clipboard:gsub("[\r\n]+", " ")  -- flatten to single line
-clipboard = clipboard:gsub("[   ]", " ")    -- weird spaces → normal space
-clipboard = clipboard:gsub("%s+", " ")      -- collapse runs of spaces
+-- 3) Normalize whitespace
+clipboard = clipboard:gsub("[\n]+", " "):gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
 
--- World = first word before :smob:
-local worldName = clipboard:match("(%S+)%s*:smob:")
+-- 4) Extract fields
+-- World = token before :smob:
+local worldName = clipboard:match("([%w%-%']+)%s*:smob:")
 
--- after :aetheryte:, capture up to a [ or ⇒ or digit
-local aetheryteName = clipboard:match(":aetheryte:%s*([^[%d⇒]+)")
--- trim trailing spaces
-if aetheryteName then
-    aetheryteName = aetheryteName:match("^%s*(.-)%s*$")
+-- Aetheryte = text after :aetheryte: up to coords; trim it
+local aetheryteName
+do
+  local startA, endA = clipboard:find(":aetheryte:%s*")
+  if startA then
+    -- From end of ':aetheryte:' up to the start of the coordinate pair
+    local cStart = clipboard:find("%d+%.%d+%s*,%s*%d+%.%d+")
+    local segment = clipboard:sub(endA + 1, (cStart or (#clipboard + 1)) - 1)
+    -- extra safety: collapse spaces, trim
+    segment = (segment:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", ""))
+    aetheryteName = (#segment > 0) and segment or nil
+  end
 end
 
--- coords = last number pair
+-- Coords = last number pair
 local mapX, mapY = clipboard:match("([%d%.]+)%s*,%s*([%d%.]+)")
 
 f.Echo("World: " .. (worldName or "nil"))
 f.Echo("Aetheryte: " .. (aetheryteName or "nil"))
-f.Echo("Map coordinates: (" .. (mapX or "nil") .. ", " .. (mapY or "nil") .. ")")
+f.Echo("Map coordinates: " .. (mapX or "nil") .. ", " .. (mapY or "nil"))
 --#endregion
 
 f.Echo("Moving to " .. worldName .. ", " .. aetheryteName)
