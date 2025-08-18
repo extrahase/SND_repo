@@ -326,13 +326,24 @@ function f.GetAetherytesInFlagZone()
     return aetherytePos
 end
 
----Gets the zone name for a given territory ID.
+---Finds the zone name for a given territory ID.
 ---@param territoryId number
 ---@return string|nil zoneName
 function f.FindZoneNameByTerritoryId(territoryId)
     for id, zone in pairs(ZONE_LIST) do
-        if id == tostring(territoryId) then
+        if id == territoryId then
             return zone.Zone
+        end
+    end
+end
+
+---Finds the territory ID for a given zone name.
+---@param zoneName string
+---@return number|nil territoryId
+function f.FindTerritoryIdByZoneName(zoneName)
+    for territoryId, zone in pairs(ZONE_LIST) do
+        if zone.Zone == zoneName then
+            return tonumber(territoryId)
         end
     end
 end
