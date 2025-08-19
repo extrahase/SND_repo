@@ -369,6 +369,17 @@ function f.FindTerritoryIdByZoneName(zoneName)
     end
 end
 
+---Finds the territory ID for a given zone name.
+---@param worldName string
+---@return number|nil territoryId
+function f.FindWorldIdByWorldName(worldName)
+    for worldKey, world in pairs(WORLD_ID_LIST) do
+        if worldKey == worldName then
+            return world.ID
+        end
+    end
+end
+
 -- ---Retrieves hunt positions for a given territory ID.
 -- ---@param territoryId number
 -- ---@return table|nil huntPositions
