@@ -10,6 +10,7 @@ WORLD_ID_LIST = require("vac_lists").World_ID_List
 
 HUNT_RANK = "S"
 VBM_PRESET = "A Ranks"
+FREE_DESTINATION = "New Gridania"
 MOUNT_SPEED = 20
 RUN_SPEED = 6
 TP_DELAY = 11
@@ -127,10 +128,13 @@ end
 
 f.Echo("Searching for " .. HUNT_RANK .. " Ranks")
 while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
+    f.Wait(0.1)
     for _, huntMarkName in pairs(huntMarks) do
         f.SearchAndDestroySRank(huntMarkName, VBM_PRESET)
     end
-    f.Wait(0.1)
 end
+
+f.Wait(10)
+f.Lifestream("tp " .. FREE_DESTINATION)
 
 f.Echo("Script done!")
