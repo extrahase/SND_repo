@@ -70,7 +70,8 @@ for _, expansion in pairs(HUNT_MARKS) do
                 table.insert(huntMarks, mark.name)
             end
         end
-    elseif expansion["S"] then
+    end
+    if expansion["S"] then
         for _, mark in ipairs(expansion["S"]) do
             if mark.zone == zoneName then
                 f.Echo("Adding " .. mark.name .. " to hunt marks")
