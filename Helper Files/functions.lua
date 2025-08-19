@@ -620,45 +620,4 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
     end
 end
 
--- ---Searches for an enemy by name, moves hoverHeight yards above it, waits until its HP is below hpTreshold%, then engages.
--- ---@param enemyName string
--- ---@param vbmPreset string
--- function f.SearchAndDestroySRank(enemyName, vbmPreset)
---     local enemy = Entity.GetEntityByName(enemyName)
---     local hoverHeight = 50
---     local hpTresholdPercent = 95
---     local offset = 15
---     if enemy ~= nil and enemy.HealthPercent > 0 then
---         if enemy.HealthPercent > hpTresholdPercent then
---             f.Echo(enemyName .. " has " .. enemy.HealthPercent .. "% HP, moving to waiting position until below " .. hpTresholdPercent .. "% HP")
---             f.MountUp()
---             f.FlyToCoordinates(enemy.Position.X, enemy.Position.Y + hoverHeight, enemy.Position.Z)
---             repeat
---                 f.Wait(0.1)
---                 enemy = Entity.GetEntityByName(enemyName)
---             until enemy.HealthPercent < hpTresholdPercent
---         end
-
---         f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, moving to engagement position")
---         enemy = Entity.GetEntityByName(enemyName)
---         local groundPos = IPC.vnavmesh.PointOnFloor(enemy.Position, false, offset)
---         if not groundPos then
---             f.Error("Could not resolve ground position for " .. enemyName)
---             return
---         end
---         IPC.vnavmesh.PathfindAndMoveTo(groundPos, true)
-
---         f.Echo("Waiting until we are close enough to engagement position")
---         f.WaitForVnavDistance(groundPos, 1)
---         f.Echo("Close enough to engagement position, dismounting and activating preset")
---         f.Dismount()
---         yield("/vbm ar set " .. vbmPreset)
---         enemy:SetAsTarget()
---         f.Wait(5)
---         f.WaitForOutOfCombat()
---         yield("/vbm ar clear")
---     end
--- end
---#endregion
-
 return f
