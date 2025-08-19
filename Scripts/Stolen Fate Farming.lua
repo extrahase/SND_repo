@@ -710,7 +710,7 @@ FatesData = {
                 { fateName="Nature's Staunch Protector", npcName="Monoceros Monitor" },
             },
             fatesWithContinuations = {
-                "Grand Designs: Unknown Execution",
+                { fateName="Grand Designs: Unknown Execution", continuationIsBoss=true },
             },
             blacklistedFates= {}
         }
