@@ -182,6 +182,7 @@ end
 function f.FlyToFlag()
     f.MountUp()
     yield("/vnav flyflag")
+    f.WaitForVnavBusy()
     f.WaitForVnav()
 end
 
