@@ -87,9 +87,11 @@ local huntMarks = { }
 for _, expansion in pairs(HUNT_MARKS) do
     if expansion[HUNT_RANK] then
         for _, mark in ipairs(expansion[HUNT_RANK]) do
-            if mark.zone == zoneName or mark.zone == "all" then
+            if mark.zone == zoneName then
                 f.Echo("Adding " .. mark.name .. " to hunt marks")
                 table.insert(huntMarks, mark.name)
+                f.Echo("Adding " .. expansion["S"][7].name .. " to hunt marks")
+                table.insert(huntMarks, expansion["S"][7].name)
             end
         end
     end
