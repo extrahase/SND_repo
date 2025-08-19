@@ -67,12 +67,13 @@ f.WaitForVnavBusy()
 f.Echo("Constructing table with A and S Hunt Marks for current zone")
 local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
 local huntMarks = { }
+local sMarks = { }
 for _, expansion in pairs(HUNT_MARKS) do
     if expansion["A"] then
         for _, mark in ipairs(expansion["A"]) do
             if mark.zone == zoneName then
                 f.Echo("Adding " .. mark.name .. " to hunt marks")
-                table.insert(huntMarks["A"], mark.name)
+                table.insert(huntMarks, mark.name)
             end
         end
     end
@@ -82,7 +83,7 @@ for _, expansion in pairs(HUNT_MARKS) do
                 f.Echo("Adding " .. mark.name .. " to hunt marks")
                 table.insert(huntMarks, mark.name)
                 f.Echo("Adding " .. expansion["S"][7].name .. " to hunt marks")
-                table.insert(huntMarks["S"], expansion["S"][7].name)
+                table.insert(sMarks, expansion["S"][7].name)
             end
         end
     end
@@ -90,10 +91,10 @@ end
 
 f.Echo("Starting Search & Destroy loop")
 while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
-    for _, huntMarkName in pairs(huntMarks["A"]) do
+    for _, huntMarkName in pairs(huntMarks) do
         f.SearchAndDestroy(huntMarkName, VBM_PRESET)
     end
-    for _, huntMarkName in pairs(huntMarks["S"]) do
+    for _, huntMarkName in pairs(sMarks) do
         f.SearchAndDestroySRank(huntMarkName, VBM_PRESET)
     end
     f.Wait(0.1)
