@@ -70,8 +70,11 @@ f.Echo("X: " .. (mapX or "nil") .. ", Y: " .. (mapY or "nil"))
 local targetTerritoryId = f.FindTerritoryIdByZoneName(zoneName) or 0
 
 f.Echo("Moving to " .. worldName .. ", " .. zoneName .. ", " .. aetheryteName)
-f.Lifestream(worldName .. ", tp " .. aetheryteName)
-f.WaitForZone(targetTerritoryId)
+f.Lifestream(worldName)
+if Svc.ClientState.TerritoryType ~= targetTerritoryId then
+    f.Lifestream("tp " .. aetheryteName)
+    f.WaitForZone(targetTerritoryId)
+end
 
 f.Echo("Accounting for instances")
 local instance = IPC.Lifestream.GetCurrentInstance()
@@ -92,7 +95,6 @@ yield("/vnav flyflag")
 f.WaitForVnavBusy()
 
 f.Echo("Constructing table with Hunt Marks for current zone")
-local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
 local huntMarks = { }
 for _, expansion in pairs(HUNT_MARKS) do
     if expansion[HUNT_RANK] then
