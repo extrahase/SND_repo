@@ -128,13 +128,14 @@ end
 
 f.Echo("Searching for " .. HUNT_RANK .. " Ranks")
 while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
-    f.Wait(0.1)
     for _, huntMarkName in pairs(huntMarks) do
         f.SearchAndDestroySRank(huntMarkName, VBM_PRESET)
     end
+    f.Wait(0.1)
 end
 
 f.Wait(10)
 f.Lifestream("tp " .. FREE_DESTINATION)
+yield("/partycmd leave")
 
 f.Echo("Script done!")
