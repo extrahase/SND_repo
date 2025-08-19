@@ -564,7 +564,7 @@ end
 function f.SearchAndDestroySRank(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     local hpTresholdPercent = 95
-    local waitingPositionOffset = 40
+    local waitingPositionOffset = 50
     local combatOffset = 15
     if enemy ~= nil and enemy.HealthPercent > 0 then
         f.Echo("Found " .. enemyName)
