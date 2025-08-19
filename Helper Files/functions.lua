@@ -566,6 +566,7 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
         f.Echo("Found " .. enemyName)
         if enemy.HealthPercent > hpTresholdPercent then
             f.Echo(enemyName .. " is above " .. hpTresholdPercent .. "% HP, moving to waiting position")
+            f.Wait(1) -- sometimes character doesn't fly off the ground; this is to help with that (needs testing)
             f.MoveWithInDistanceTo(enemy.Position, waitingPositionOffset)
 
             f.Echo("Clearing target and activating preset")
