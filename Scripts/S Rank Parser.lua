@@ -68,6 +68,8 @@ f.Echo("Instance: " .. targetInstance)
 f.Echo("X: " .. (mapX or "nil") .. ", Y: " .. (mapY or "nil"))
 --#endregion
 
+--#region World/Zone/Instance Checks
+
 local targetTerritoryId = f.FindTerritoryIdByZoneName(zoneName) or 0
 local targetWorldId = f.FindWorldIdByWorldName(worldName) or 0
 
@@ -100,6 +102,7 @@ else
     IPC.Lifestream.ChangeInstance(targetInstance)
     f.WaitForInstance(targetInstance)
 end
+--#endregion
 
 f.Echo("Moving to map coordinates (" .. mapX .. ", " .. mapY .. ")")
 Instances.Map.Flag:SetFlagMapMarker(f.ConvertToRealCoordinates(targetTerritoryId, mapX, mapY))
