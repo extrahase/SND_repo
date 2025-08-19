@@ -59,6 +59,11 @@ if etaTp <= etaFlight then
     end
 end
 
+f.Echo("Mounting and initiating flight to flag")
+f.MountUp()
+yield("/vnav flyflag")
+f.WaitForVnavBusy()
+
 f.Echo("Constructing table with A and S Hunt Marks for current zone")
 local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
 local huntMarks = { }
@@ -82,11 +87,6 @@ for _, expansion in pairs(HUNT_MARKS) do
         end
     end
 end
-
-f.Echo("Mounting and initiating flight to flag")
-f.MountUp()
-yield("/vnav flyflag")
-f.WaitForVnavBusy()
 
 f.Echo("Starting Search & Destroy loop")
 while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
