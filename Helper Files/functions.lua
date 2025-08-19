@@ -541,11 +541,7 @@ end
 function f.SearchAndDestroy(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     local combatOffset = 20
-    if enemy ~= nil and enemy.HealthPercent > 0 then
-        if enemy.DistanceTo > 100 then
-            return
-        end
-
+    if enemy ~= nil and enemy.HealthPercent > 0 and enemy.DistanceTo < 100 then
         f.Echo("Found " .. enemyName .. " alive and within range, engaging")
         yield("/vbm ar set " .. vbmPreset)
         enemy = Entity.GetEntityByName(enemyName)
@@ -570,23 +566,20 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
         f.Echo("Found " .. enemyName)
         if enemy.HealthPercent > hpTresholdPercent then
             f.Echo(enemyName .. " is above " .. hpTresholdPercent .. "% HP, moving to waiting position")
-            local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
-            direction = direction / direction:Length() -- normalize to length 1
-            local waitingPos = enemy.Position + direction * waitingPositionOffset
-            IPC.vnavmesh.PathfindAndMoveTo(waitingPos, Entity.Player.IsMounted)
+            f.MoveWithInDistanceTo(enemy.Position, waitingPositionOffset)
 
             f.Echo("Clearing target and activating preset")
             Player.Entity:ClearTarget()
             yield("/vbm ar set " .. vbmPreset)
 
             f.Echo("Standing by and checking enemy HP periodically")
-            repeat
+            while enemy and enemy.HealthPercent > hpTresholdPercent do
                 enemy = Entity.GetEntityByName(enemyName)
                 f.Wait(0.1)
-            until enemy and enemy.HealthPercent < hpTresholdPercent
+            end
         end
 
-        f.Echo(enemyName .. "(" .. enemy.HealthPercent .. "%) is below " .. hpTresholdPercent .. "% HP, engaging")
+        f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, engaging")
         yield("/vbm ar set " .. vbmPreset)
         enemy = Entity.GetEntityByName(enemyName)
         enemy:SetAsTarget()
