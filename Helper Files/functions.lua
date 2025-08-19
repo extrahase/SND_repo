@@ -125,6 +125,17 @@ function f.WaitForAddonClose(addonName)
     end
 end
 
+---Waits until the current world ID matches the target world ID, then waits for player to be ready and vnav to build its mesh.
+---@param worldId number
+function f.WaitForWorld(worldId)
+    while Entity.Player.CurrentWorld ~= worldId do
+        f.Wait(0.1)
+    end
+    f.WaitForReady()
+    f.WaitForVnav()
+    f.WaitForPlayerPosition()
+end
+
 ---Waits until the current territory ID matches the target territory ID, then waits for player to be ready and vnav to build its mesh.
 ---@param territoryId number
 function f.WaitForZone(territoryId)
