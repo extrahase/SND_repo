@@ -36,6 +36,13 @@ clipboard = clipboard:gsub(" +", " ")
 -- World = first token before :smob:
 local worldName = clipboard:match("(%S+)%s*:smob:")
 
+-- Instance = optional number after mob name (before translations)
+local smob = clipboard:match(":smob:%s*([^\n%[%]［］]+)")
+local instance = 0
+if smob then
+    instance = tonumber(smob:match("(%d+)[^%d]*$")) or 0
+end
+
 -- Zone = line after :smob:, up to translations
 local zoneName = clipboard:match(":smob:[^\n]*\n%s*([^\n%[%]［］]+)")
 zoneName = zoneName:gsub("^[^%w%p]+", "") -- strip leading non-alphanum/punct
@@ -45,19 +52,22 @@ zoneName = zoneName:match("^%s*(.-)%s*$") -- final trim for safety
 -- map coordinates = number pair
 local mapX, mapY = clipboard:match("([%d%.]+)%s*,%s*([%d%.]+)")
 
+-- output
 f.Echo("World: " .. (worldName or "nil"))
+f.Echo("Instance: " .. instance)
 f.Echo("Zone: " .. (zoneName or "nil"))
 f.Echo("X: " .. (mapX or "nil") .. ", Y: " .. (mapY or "nil"))
 --#endregion
 
-f.Echo("Moving to " .. worldName)
-f.Lifestream(worldName)
+local targetTerritoryId = f.FindTerritoryIdByZoneName(zoneName) or 0
 
-f.Echo("Moving to " .. zoneName)
-
+f.Echo("Moving to " .. worldName .. ", " .. zoneName)
+f.Lifestream(worldName .. ", tp " .. zoneName)
+f.WaitForZone(targetTerritoryId)
 
 f.Echo("Moving to map coordinates (" .. mapX .. ", " .. mapY .. ")")
-Instances.Map.Flag:SetFlagMapMarker(f.ConvertToRealCoordinates(Svc.ClientState.TerritoryType, mapX, mapY))
+Instances.Map.Flag:SetFlagMapMarker(f.ConvertToRealCoordinates(targetTerritoryId, mapX, mapY))
+f.FlyToFlag()
 
 f.Echo("Constructing table with Hunt Marks for current zone")
 local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
@@ -74,7 +84,6 @@ for _, expansion in pairs(HUNT_MARKS) do
 end
 
 f.Echo("Searching for " .. HUNT_RANK .. " Ranks")
-f.WaitForVnavBusy()
 while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
     for _, huntMarkName in pairs(huntMarks) do
         f.SearchAndDestroySRank(huntMarkName, VBM_PRESET)
