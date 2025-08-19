@@ -7,13 +7,12 @@ local f = require("functions")
 HUNT_MARKS = require("huntMarks")
 ZONE_LIST = require("vac_lists").Zone_List
 
-HUNT_RANK = "A"
 VBM_PRESET = "A Ranks"
 MOUNT_SPEED = 20
 RUN_SPEED = 6
 TP_DELAY = 11
 
-DEBUG = false
+DEBUG = true
 
 -- ############
 -- ### MAIN ###
@@ -60,21 +59,47 @@ if etaTp <= etaFlight then
     end
 end
 
-f.Echo("Constructing table with Hunt Marks for current zone")
+f.Echo("Constructing table with A and S Hunt Marks for current zone")
 local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
 local huntMarks = { }
 for _, expansion in pairs(HUNT_MARKS) do
-    if expansion[HUNT_RANK] then
-        for _, mark in ipairs(expansion[HUNT_RANK]) do
+    if expansion["A"] then
+        for _, mark in ipairs(expansion["A"]) do
             if mark.zone == zoneName then
                 f.Echo("Adding " .. mark.name .. " to hunt marks")
                 table.insert(huntMarks, mark.name)
             end
         end
+    elseif expansion["S"] then
+        for _, mark in ipairs(expansion["S"]) do
+            if mark.zone == zoneName then
+                f.Echo("Adding " .. mark.name .. " to hunt marks")
+                table.insert(huntMarks, mark.name)
+                f.Echo("Adding " .. expansion["S"][7].name .. " to hunt marks")
+                table.insert(huntMarks, expansion["S"][7].name)
+            end
+        end
     end
 end
 
-f.Echo("Searching for " .. HUNT_RANK .. " Ranks")
+
+-- f.Echo("Constructing table with Hunt Marks for current zone")
+-- local huntMarks = { }
+-- for _, expansion in pairs(HUNT_MARKS) do
+--     if expansion["S"] then
+--         for _, mark in ipairs(expansion["S"]) do
+--             if mark.zone == zoneName then
+--                 f.Echo("Adding " .. mark.name .. " to hunt marks")
+--                 table.insert(huntMarks, mark.name)
+--                 f.Echo("Adding " .. expansion["S"][7].name .. " to hunt marks")
+--                 table.insert(huntMarks, expansion["S"][7].name)
+--             end
+--         end
+--     end
+-- end
+
+
+f.Echo("Searching for Hunt Marks")
 f.FlyAndDestroyToFlag(huntMarks, VBM_PRESET)
 f.Wait(0.5) -- to make it appear less bot-like
 f.MountUp()
