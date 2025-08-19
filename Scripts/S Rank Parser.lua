@@ -38,9 +38,9 @@ local worldName = clipboard:match("(%S+)%s*:smob:")
 
 -- Instance = optional number after mob name (before translations)
 local smob = clipboard:match(":smob:%s*([^\n%[%]［］]+)")
-local instance = 0
+local targetInstance = 0
 if smob then
-    instance = tonumber(smob:match("(%d+)[^%d]*$")) or 0
+    targetInstance = tonumber(smob:match("(%d+)[^%d]*$")) or 0
 end
 
 -- Zone = line after :smob:, up to translations
@@ -54,7 +54,7 @@ local mapX, mapY = clipboard:match("([%d%.]+)%s*,%s*([%d%.]+)")
 
 -- output
 f.Echo("World: " .. (worldName or "nil"))
-f.Echo("Instance: " .. instance)
+f.Echo("Instance: " .. targetInstance)
 f.Echo("Zone: " .. (zoneName or "nil"))
 f.Echo("X: " .. (mapX or "nil") .. ", Y: " .. (mapY or "nil"))
 --#endregion
@@ -64,6 +64,18 @@ local targetTerritoryId = f.FindTerritoryIdByZoneName(zoneName) or 0
 f.Echo("Moving to " .. worldName .. ", " .. zoneName)
 f.Lifestream(worldName .. ", tp " .. zoneName)
 f.WaitForZone(targetTerritoryId)
+
+f.Echo("Accounting for instances")
+local instance = IPC.Lifestream.GetCurrentInstance()
+if instance == 0 then
+    f.Echo("No instances detected, moving on")
+elseif instance == targetInstance then
+    f.Echo("Already in correct instance, moving on")
+else
+    f.Echo("Switching to instance " .. targetInstance)
+    IPC.Lifestream.ChangeInstance(targetInstance)
+    f.WaitForInstance(targetInstance)
+end
 
 f.Echo("Moving to map coordinates (" .. mapX .. ", " .. mapY .. ")")
 Instances.Map.Flag:SetFlagMapMarker(f.ConvertToRealCoordinates(targetTerritoryId, mapX, mapY))
