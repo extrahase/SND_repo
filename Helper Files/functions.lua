@@ -583,8 +583,8 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
         f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, engaging")
         yield("/vbm ar set " .. vbmPreset)
         enemy = Entity.GetEntityByName(enemyName)
-        enemy:SetAsTarget()
-        f.MoveWithInDistanceTo(enemy.Position, combatOffset)
+        enemy:SetAsTarget() --because entities can be sensed, but not targeted, from very far away
+        f.MoveWithInDistanceTo(enemy.Position, combatOffset) -- TODO: create a version that checks distance to entities
         f.Dismount()
         f.WaitForCombat()
         f.WaitForOutOfCombat()
