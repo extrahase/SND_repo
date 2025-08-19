@@ -49,20 +49,28 @@ zoneName = zoneName:gsub("^[^%w%p]+", "") -- strip leading non-alphanum/punct
 zoneName = zoneName:gsub("[^%w%p]+$", "") -- strip trailing non-alphanum/punct
 zoneName = zoneName:match("^%s*(.-)%s*$") -- final trim for safety
 
+-- Aetheryte = ASCII name after :aetheryte:, ignoring exotic spaces/emojis
+local aetheryteName = clipboard:match(":aetheryte:([^\n]*)")
+-- skip any ASCII spaces or non-ASCII bytes
+aetheryteName = aetheryteName:match("^[%s\128-\255]*([%w%p ]+)")
+-- grab the ASCII name chunk
+aetheryteName = aetheryteName:gsub("%s+", " "):match("^%s*(.-)%s*$")
+
 -- map coordinates = number pair
 local mapX, mapY = clipboard:match("([%d%.]+)%s*,%s*([%d%.]+)")
 
 -- output
 f.Echo("World: " .. (worldName or "nil"))
-f.Echo("Instance: " .. targetInstance)
 f.Echo("Zone: " .. (zoneName or "nil"))
+f.Echo("Aetheryte: " .. (aetheryteName or "nil"))
+f.Echo("Instance: " .. targetInstance)
 f.Echo("X: " .. (mapX or "nil") .. ", Y: " .. (mapY or "nil"))
 --#endregion
 
 local targetTerritoryId = f.FindTerritoryIdByZoneName(zoneName) or 0
 
-f.Echo("Moving to " .. worldName .. ", " .. zoneName)
-f.Lifestream(worldName .. ", tp " .. zoneName)
+f.Echo("Moving to " .. worldName .. ", " .. zoneName .. ", " .. aetheryteName)
+f.Lifestream(worldName .. ", tp " .. aetheryteName)
 f.WaitForZone(targetTerritoryId)
 
 f.Echo("Accounting for instances")
