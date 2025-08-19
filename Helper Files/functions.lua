@@ -125,10 +125,10 @@ function f.WaitForAddonClose(addonName)
     end
 end
 
----Waits until the zone ID matches the target territory ID, then waits for player to be ready and vnav to build its mesh.
+---Waits until the current territory ID matches the target territory ID, then waits for player to be ready and vnav to build its mesh.
 ---@param territoryId number
 function f.WaitForZone(territoryId)
-    while territoryId ~= Svc.ClientState.TerritoryType do
+    while Svc.ClientState.TerritoryType ~= territoryId do
         f.Wait(0.1)
     end
     f.WaitForReady()
@@ -136,18 +136,16 @@ function f.WaitForZone(territoryId)
     f.WaitForPlayerPosition()
 end
 
----Waits for HTA to change to the specified instance if any exist, then waits for player to be ready and vnav to build its mesh.
+---Waits until the current instance ID matches the target instance ID, then waits for player to be ready and vnav to build its mesh.
 ---@param instanceId number
 function f.WaitForInstance(instanceId)
-    if IPC.Lifestream.GetNumberOfInstances() ~= 0 and IPC.Lifestream.GetCurrentInstance() ~= instanceId then
-        f.Echo("Waiting for HTA to change instances")
-        while IPC.Lifestream.GetCurrentInstance() ~= instanceId do
-            f.Wait(0.1)
-        end
-        f.WaitForReady()
-        f.WaitForVnav()
-        f.WaitForPlayerPosition()
+    if IPC.Lifestream.GetNumberOfInstances() == 0 then return end -- no instances to wait for
+    while IPC.Lifestream.GetCurrentInstance() ~= instanceId do
+        f.Wait(0.1)
     end
+    f.WaitForReady()
+    f.WaitForVnav()
+    f.WaitForPlayerPosition()
 end
 
 ---Waits until the player position is available. Implemented as an additional check after teleporting or changing zones in lieu of Wait(1).
