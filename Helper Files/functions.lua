@@ -537,6 +537,7 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     local hoverHeight = 50
     local hpTresholdPercent = 90
+    local offset = 15
     if enemy ~= nil and enemy.HealthPercent > 0 then
         if enemy.HealthPercent > hpTresholdPercent then
             f.Echo(enemyName .. " has " .. enemy.HealthPercent .. "% HP, moving to waiting position until below " .. hpTresholdPercent .. "% HP")
@@ -550,7 +551,7 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
 
         f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, moving to engagement position")
         enemy = Entity.GetEntityByName(enemyName)
-        local groundPos = IPC.vnavmesh.PointOnFloor(enemy.Position, false, 20)
+        local groundPos = IPC.vnavmesh.PointOnFloor(enemy.Position, false, offset)
         if not groundPos then
             f.Error("Could not resolve ground position for " .. enemyName)
             return
