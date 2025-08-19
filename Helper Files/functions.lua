@@ -476,6 +476,13 @@ function f.StoreItemInSaddlebag(itemName)
 end
 --#endregion
 
+--#region Misc functions
+
+---Opens the Party Finder and joins a listing from The Hunt category. If there is no listing, it creates one.
+function f.JoinHuntGroup()
+
+end
+
 ---Flies toward the map flag while scanning for and engaging hunt marks.
 ---@param huntMarks table<string> List of hunt mark names
 ---@param VbmPreset string VBM preset to use during engagement
@@ -535,39 +542,112 @@ end
 ---@param vbmPreset string
 function f.SearchAndDestroySRank(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
-    local hoverHeight = 50
-    local hpTresholdPercent = 90
-    local offset = 15
+    local hpTresholdPercent = 95
+    local offset = 30
     if enemy ~= nil and enemy.HealthPercent > 0 then
+        f.Echo("Found " .. enemyName)
         if enemy.HealthPercent > hpTresholdPercent then
-            f.Echo(enemyName .. " has " .. enemy.HealthPercent .. "% HP, moving to waiting position until below " .. hpTresholdPercent .. "% HP")
-            f.MountUp()
-            f.FlyToCoordinates(enemy.Position.X, enemy.Position.Y + hoverHeight, enemy.Position.Z)
+            f.Echo(enemyName .. " is above " .. hpTresholdPercent .. "% HP, moving to waiting position")
+            local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
+            direction = direction / direction:Length() -- normalize to length 1
+            local waitingPos = enemy.Position + direction * offset
+            IPC.vnavmesh.PathfindAndMoveTo(waitingPos, Entity.Player.IsMounted)
+
+            f.Echo("Clearing target and activating preset")
+            Player.Entity:ClearTarget()
+            yield("/vbm ar set " .. vbmPreset)
+
+            f.Echo("Standing by and checking enemy HP periodically")
             repeat
-                f.Wait(0.1)
                 enemy = Entity.GetEntityByName(enemyName)
-            until enemy.HealthPercent < hpTresholdPercent
+                f.Wait(0.1)
+            until enemy and enemy.HealthPercent < hpTresholdPercent
         end
 
-        f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, moving to engagement position")
-        enemy = Entity.GetEntityByName(enemyName)
-        local groundPos = IPC.vnavmesh.PointOnFloor(enemy.Position, false, offset)
-        if not groundPos then
-            f.Error("Could not resolve ground position for " .. enemyName)
-            return
-        end
-        IPC.vnavmesh.PathfindAndMoveTo(groundPos, true)
-
-        f.Echo("Waiting until we are close enoughto engagement position")
-        f.WaitForVnavDistance(groundPos, 1)
-        f.Echo("Close enough to engagement position, dismounting and activating preset")
-        f.Dismount()
+        f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, engaging")
         yield("/vbm ar set " .. vbmPreset)
         enemy:SetAsTarget()
-        f.Wait(5)
+        f.Dismount()
+        f.WaitForCombat()
         f.WaitForOutOfCombat()
         yield("/vbm ar clear")
     end
 end
+
+-- ---Searches for an enemy by name, moves to it, engages, and waits for combat to end.
+-- ---@param enemyName string
+-- ---@param vbmPreset string
+-- function f.SearchAndDestroy(enemyName, vbmPreset)
+--     local enemy = Entity.GetEntityByName(enemyName)
+--     local offset = 15
+--     if enemy ~= nil and enemy.HealthPercent > 0 then
+--         if enemy.DistanceTo > 100 then
+--             return
+--         end
+
+--         f.Echo("Found " .. enemyName .. " alive and within range, flying to position " .. offset .. "y away")
+--         -- calculate and move to a position offset units away from the enemy towards the player
+--         local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
+--         direction = direction / direction:Length() -- normalize to length 1
+--         local newPosition = enemy.Position + direction * offset -- move offset units toward playerPos
+--         -- select ground spot to land on so the end point is not in the air
+--         local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 1) -- 1-yard search radius
+--         if groundedPos then
+--             newPosition = groundedPos
+--         end
+--         IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
+
+--         f.Echo("Waiting until we are close enough to position")
+--         f.WaitForVnavDistance(newPosition, 1)
+--         f.Echo(enemyName .. " is close enough, dismounting and activating preset")
+--         f.Dismount()
+--         yield("/vbm ar set " .. vbmPreset)
+--         enemy:SetAsTarget()
+--         f.Wait(5)
+--         f.WaitForOutOfCombat()
+--         yield("/vbm ar clear")
+--     end
+-- end
+
+-- ---Searches for an enemy by name, moves hoverHeight yards above it, waits until its HP is below hpTreshold%, then engages.
+-- ---@param enemyName string
+-- ---@param vbmPreset string
+-- function f.SearchAndDestroySRank(enemyName, vbmPreset)
+--     local enemy = Entity.GetEntityByName(enemyName)
+--     local hoverHeight = 50
+--     local hpTresholdPercent = 95
+--     local offset = 15
+--     if enemy ~= nil and enemy.HealthPercent > 0 then
+--         if enemy.HealthPercent > hpTresholdPercent then
+--             f.Echo(enemyName .. " has " .. enemy.HealthPercent .. "% HP, moving to waiting position until below " .. hpTresholdPercent .. "% HP")
+--             f.MountUp()
+--             f.FlyToCoordinates(enemy.Position.X, enemy.Position.Y + hoverHeight, enemy.Position.Z)
+--             repeat
+--                 f.Wait(0.1)
+--                 enemy = Entity.GetEntityByName(enemyName)
+--             until enemy.HealthPercent < hpTresholdPercent
+--         end
+
+--         f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, moving to engagement position")
+--         enemy = Entity.GetEntityByName(enemyName)
+--         local groundPos = IPC.vnavmesh.PointOnFloor(enemy.Position, false, offset)
+--         if not groundPos then
+--             f.Error("Could not resolve ground position for " .. enemyName)
+--             return
+--         end
+--         IPC.vnavmesh.PathfindAndMoveTo(groundPos, true)
+
+--         f.Echo("Waiting until we are close enough to engagement position")
+--         f.WaitForVnavDistance(groundPos, 1)
+--         f.Echo("Close enough to engagement position, dismounting and activating preset")
+--         f.Dismount()
+--         yield("/vbm ar set " .. vbmPreset)
+--         enemy:SetAsTarget()
+--         f.Wait(5)
+--         f.WaitForOutOfCombat()
+--         yield("/vbm ar clear")
+--     end
+-- end
+--#endregion
 
 return f
