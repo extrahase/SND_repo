@@ -518,31 +518,41 @@ end
 ---@param vbmPreset string
 function f.SearchAndDestroy(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
-    local offset = 15
+    local combatOffset = 20
     if enemy ~= nil and enemy.HealthPercent > 0 then
         if enemy.DistanceTo > 100 then
             return
         end
 
-        f.Echo("Found " .. enemyName .. " alive and within range, flying to position " .. offset .. "y away")
-        -- calculate and move to a position offset units away from the enemy towards the player
-        local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
-        direction = direction / direction:Length() -- normalize to length 1
-        local newPosition = enemy.Position + direction * offset -- move offset units toward playerPos
-        -- select ground spot to land on so the end point is not in the air
-        local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 1) -- 1-yard search radius
-        if groundedPos then
-            newPosition = groundedPos
-        end
-        IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
+        -- f.Echo("Found " .. enemyName .. " alive and within range, flying to position " .. offset .. "y away")
+        -- -- calculate and move to a position offset units away from the enemy towards the player
+        -- local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
+        -- direction = direction / direction:Length() -- normalize to length 1
+        -- local newPosition = enemy.Position + direction * offset -- move offset units toward playerPos
+        -- -- select ground spot to land on so the end point is not in the air
+        -- local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 1) -- 1-yard search radius
+        -- if groundedPos then
+        --     newPosition = groundedPos
+        -- end
+        -- IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
 
-        f.Echo("Waiting until we are close enough to position")
-        f.WaitForVnavDistance(newPosition, 1)
-        f.Echo(enemyName .. " is close enough, dismounting and activating preset")
-        f.Dismount()
+        -- f.Echo("Waiting until we are close enough to position")
+        -- f.WaitForVnavDistance(newPosition, 1)
+        -- f.Echo(enemyName .. " is close enough, dismounting and activating preset")
+        -- f.Dismount()
+        -- yield("/vbm ar set " .. vbmPreset)
+        -- enemy:SetAsTarget()
+        -- f.Wait(5)
+        -- f.WaitForOutOfCombat()
+        -- yield("/vbm ar clear")
+
+        f.Echo("Found " .. enemyName .. " alive and within range, engaging")
         yield("/vbm ar set " .. vbmPreset)
+        enemy = Entity.GetEntityByName(enemyName)
         enemy:SetAsTarget()
-        f.Wait(5)
+        f.MoveWithInDistanceTo(enemy.Position, combatOffset)
+        f.Dismount()
+        f.WaitForCombat()
         f.WaitForOutOfCombat()
         yield("/vbm ar clear")
     end
@@ -554,14 +564,15 @@ end
 function f.SearchAndDestroySRank(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     local hpTresholdPercent = 95
-    local offset = 40
+    local waitingPositionOffset = 40
+    local combatOffset = 15
     if enemy ~= nil and enemy.HealthPercent > 0 then
         f.Echo("Found " .. enemyName)
         if enemy.HealthPercent > hpTresholdPercent then
             f.Echo(enemyName .. " is above " .. hpTresholdPercent .. "% HP, moving to waiting position")
             local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
             direction = direction / direction:Length() -- normalize to length 1
-            local waitingPos = enemy.Position + direction * offset
+            local waitingPos = enemy.Position + direction * waitingPositionOffset
             IPC.vnavmesh.PathfindAndMoveTo(waitingPos, Entity.Player.IsMounted)
 
             f.Echo("Clearing target and activating preset")
@@ -575,11 +586,11 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
             until enemy and enemy.HealthPercent < hpTresholdPercent
         end
 
-        f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, engaging")
+        f.Echo(enemyName .. "(" .. enemy.HealthPercent .. "%) is below " .. hpTresholdPercent .. "% HP, engaging")
         yield("/vbm ar set " .. vbmPreset)
         enemy = Entity.GetEntityByName(enemyName)
         enemy:SetAsTarget()
-        f.MoveWithInDistanceTo(enemy.Position, 15)
+        f.MoveWithInDistanceTo(enemy.Position, combatOffset)
         f.Dismount()
         f.WaitForCombat()
         f.WaitForOutOfCombat()
