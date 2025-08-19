@@ -549,8 +549,8 @@ function f.SearchAndDestroy(enemyName, vbmPreset)
         f.Echo("Found " .. enemyName .. " alive and within range, engaging")
         yield("/vbm ar set " .. vbmPreset)
         enemy = Entity.GetEntityByName(enemyName)
-        enemy:SetAsTarget()
         f.MoveWithInDistanceTo(enemy.Position, combatOffset)
+        enemy:SetAsTarget()
         f.Dismount()
         f.WaitForCombat()
         f.WaitForOutOfCombat()
@@ -564,8 +564,8 @@ end
 function f.SearchAndDestroySRank(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     local hpTresholdPercent = 95
-    local waitingPositionOffset = 50
-    local combatOffset = 15
+    local waitingPositionOffset = 60
+    local combatOffset = 20
     if enemy ~= nil and enemy.HealthPercent > 0 then
         f.Echo("Found " .. enemyName)
         if enemy.HealthPercent > hpTresholdPercent then
