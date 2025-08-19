@@ -210,6 +210,17 @@ function f.FlyToCoordinates(x, y, z)
     f.WaitForVnav()
 end
 
+---Moves player to a position within a specified distance from the target position using vnav.
+---@param targetPosition Vector3
+---@param distance number
+function f.MoveWithInDistanceTo(targetPosition, distance)
+    IPC.vnavmesh.PathfindAndMoveTo(targetPosition, Entity.Player.IsMounted)
+    while (targetPosition - Entity.Player.Position):Length() > distance do
+        f.Wait(0.1)
+    end
+    IPC.vnavmesh.Stop()
+end
+
 ---Executes a Lifestream command and waits until it has finished.
 ---@param command string
 function f.Lifestream(command)
@@ -480,7 +491,7 @@ end
 
 ---Opens the Party Finder and joins a listing from The Hunt category. If there is no listing, it creates one.
 function f.JoinHuntGroup()
-
+    -- WIP!
 end
 
 ---Flies toward the map flag while scanning for and engaging hunt marks.
@@ -543,7 +554,7 @@ end
 function f.SearchAndDestroySRank(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
     local hpTresholdPercent = 95
-    local offset = 30
+    local offset = 40
     if enemy ~= nil and enemy.HealthPercent > 0 then
         f.Echo("Found " .. enemyName)
         if enemy.HealthPercent > hpTresholdPercent then
@@ -566,48 +577,15 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
 
         f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, engaging")
         yield("/vbm ar set " .. vbmPreset)
+        enemy = Entity.GetEntityByName(enemyName)
         enemy:SetAsTarget()
+        f.MoveWithInDistanceTo(enemy.Position, 15)
         f.Dismount()
         f.WaitForCombat()
         f.WaitForOutOfCombat()
         yield("/vbm ar clear")
     end
 end
-
--- ---Searches for an enemy by name, moves to it, engages, and waits for combat to end.
--- ---@param enemyName string
--- ---@param vbmPreset string
--- function f.SearchAndDestroy(enemyName, vbmPreset)
---     local enemy = Entity.GetEntityByName(enemyName)
---     local offset = 15
---     if enemy ~= nil and enemy.HealthPercent > 0 then
---         if enemy.DistanceTo > 100 then
---             return
---         end
-
---         f.Echo("Found " .. enemyName .. " alive and within range, flying to position " .. offset .. "y away")
---         -- calculate and move to a position offset units away from the enemy towards the player
---         local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
---         direction = direction / direction:Length() -- normalize to length 1
---         local newPosition = enemy.Position + direction * offset -- move offset units toward playerPos
---         -- select ground spot to land on so the end point is not in the air
---         local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 1) -- 1-yard search radius
---         if groundedPos then
---             newPosition = groundedPos
---         end
---         IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
-
---         f.Echo("Waiting until we are close enough to position")
---         f.WaitForVnavDistance(newPosition, 1)
---         f.Echo(enemyName .. " is close enough, dismounting and activating preset")
---         f.Dismount()
---         yield("/vbm ar set " .. vbmPreset)
---         enemy:SetAsTarget()
---         f.Wait(5)
---         f.WaitForOutOfCombat()
---         yield("/vbm ar clear")
---     end
--- end
 
 -- ---Searches for an enemy by name, moves hoverHeight yards above it, waits until its HP is below hpTreshold%, then engages.
 -- ---@param enemyName string
