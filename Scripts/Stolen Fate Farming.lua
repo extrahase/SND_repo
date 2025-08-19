@@ -709,7 +709,9 @@ FatesData = {
                 { fateName="Grand Designs: Aigokeros", npcName="Meletos the Inscrutable" },
                 { fateName="Nature's Staunch Protector", npcName="Monoceros Monitor" },
             },
-            fatesWithContinuations = {},
+            fatesWithContinuations = {
+                "Grand Designs: Unknown Execution",
+            },
             blacklistedFates= {}
         }
     },
