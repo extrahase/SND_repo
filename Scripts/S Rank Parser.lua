@@ -79,7 +79,9 @@ end
 
 f.Echo("Moving to map coordinates (" .. mapX .. ", " .. mapY .. ")")
 Instances.Map.Flag:SetFlagMapMarker(f.ConvertToRealCoordinates(targetTerritoryId, mapX, mapY))
-f.FlyToFlag()
+f.MountUp()
+yield("/vnav flyflag")
+f.WaitForVnavBusy()
 
 f.Echo("Constructing table with Hunt Marks for current zone")
 local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
