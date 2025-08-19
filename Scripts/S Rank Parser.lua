@@ -6,6 +6,7 @@ local f = require("functions")
 
 HUNT_MARKS = require("huntMarks")
 ZONE_LIST = require("vac_lists").Zone_List
+WORLD_ID_LIST = require("vac_lists").World_ID_List
 
 HUNT_RANK = "S"
 VBM_PRESET = "A Ranks"
@@ -68,15 +69,27 @@ f.Echo("X: " .. (mapX or "nil") .. ", Y: " .. (mapY or "nil"))
 --#endregion
 
 local targetTerritoryId = f.FindTerritoryIdByZoneName(zoneName) or 0
+local targetWorldId = f.FindWorldIdByWorldName(worldName) or 0
 
-f.Echo("Moving to " .. worldName .. ", " .. zoneName .. ", " .. aetheryteName)
-f.Lifestream(worldName)
-if Svc.ClientState.TerritoryType ~= targetTerritoryId then
-    f.Lifestream("tp " .. aetheryteName)
-    f.WaitForZone(targetTerritoryId)
+f.Echo("Initiating world check")
+if Entity.Player.CurrentWorld ~= targetWorldId then
+    f.Echo("Travelling to " .. worldName)
+    f.Lifestream(worldName)
+    f.WaitForWorld(targetWorldId)
+else
+    f.Echo("Already in " .. worldName .. ", moving on")
 end
 
-f.Echo("Accounting for instances")
+f.Echo("Initiating zone check")
+if Svc.ClientState.TerritoryType ~= targetTerritoryId then
+    f.Echo("Teleporting to " .. aetheryteName)
+    f.Lifestream("tp " .. aetheryteName)
+    f.WaitForZone(targetTerritoryId)
+else
+    f.Echo("Already in " .. zoneName .. ", moving on")
+end
+
+f.Echo("Initiating instance check")
 local instance = IPC.Lifestream.GetCurrentInstance()
 if instance == 0 then
     f.Echo("No instances detected, moving on")
