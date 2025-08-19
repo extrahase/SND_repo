@@ -546,28 +546,6 @@ function f.SearchAndDestroy(enemyName, vbmPreset)
             return
         end
 
-        -- f.Echo("Found " .. enemyName .. " alive and within range, flying to position " .. offset .. "y away")
-        -- -- calculate and move to a position offset units away from the enemy towards the player
-        -- local direction = Entity.Player.Position - enemy.Position -- vector pointing from huntMark to player
-        -- direction = direction / direction:Length() -- normalize to length 1
-        -- local newPosition = enemy.Position + direction * offset -- move offset units toward playerPos
-        -- -- select ground spot to land on so the end point is not in the air
-        -- local groundedPos = IPC.vnavmesh.PointOnFloor(newPosition, false, 1) -- 1-yard search radius
-        -- if groundedPos then
-        --     newPosition = groundedPos
-        -- end
-        -- IPC.vnavmesh.PathfindAndMoveTo(newPosition, Entity.Player.IsMounted)
-
-        -- f.Echo("Waiting until we are close enough to position")
-        -- f.WaitForVnavDistance(newPosition, 1)
-        -- f.Echo(enemyName .. " is close enough, dismounting and activating preset")
-        -- f.Dismount()
-        -- yield("/vbm ar set " .. vbmPreset)
-        -- enemy:SetAsTarget()
-        -- f.Wait(5)
-        -- f.WaitForOutOfCombat()
-        -- yield("/vbm ar clear")
-
         f.Echo("Found " .. enemyName .. " alive and within range, engaging")
         yield("/vbm ar set " .. vbmPreset)
         enemy = Entity.GetEntityByName(enemyName)
