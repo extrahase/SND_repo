@@ -369,9 +369,9 @@ function f.FindTerritoryIdByZoneName(zoneName)
     end
 end
 
----Finds the territory ID for a given zone name.
+---Finds the world ID for a given world name.
 ---@param worldName string
----@return number|nil territoryId
+---@return number|nil worldId
 function f.FindWorldIdByWorldName(worldName)
     for worldKey, world in pairs(WORLD_ID_LIST) do
         if worldKey == worldName then
@@ -559,13 +559,13 @@ end
 ---@param vbmPreset string
 function f.SearchAndDestroySRank(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
-    local hpTresholdPercent = 95
+    local hpThresholdPercent = 95
     local waitingPositionOffset = 40
     local combatOffset = 20
     if enemy ~= nil and enemy.HealthPercent > 0 then
         f.Echo("Found " .. enemyName)
-        if enemy.HealthPercent > hpTresholdPercent then
-            f.Echo(enemyName .. " is above " .. hpTresholdPercent .. "% HP, moving to waiting position")
+        if enemy.HealthPercent > hpThresholdPercent then
+            f.Echo(enemyName .. " is above " .. hpThresholdPercent .. "% HP, moving to waiting position")
             f.Wait(1) -- sometimes character doesn't fly off the ground; this is to help with that (needs testing)
             f.MoveWithInDistanceTo(enemy.Position, waitingPositionOffset)
 
@@ -574,13 +574,13 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
             yield("/vbm ar set " .. vbmPreset)
 
             f.Echo("Standing by and checking enemy HP periodically")
-            while enemy and enemy.HealthPercent > hpTresholdPercent do
+            while enemy and enemy.HealthPercent > hpThresholdPercent do
                 enemy = Entity.GetEntityByName(enemyName)
                 f.Wait(0.1)
             end
         end
 
-        f.Echo(enemyName .. " is below " .. hpTresholdPercent .. "% HP, engaging")
+        f.Echo(enemyName .. " is below " .. hpThresholdPercent .. "% HP, engaging")
         yield("/vbm ar set " .. vbmPreset)
         enemy = Entity.GetEntityByName(enemyName)
         enemy:SetAsTarget() --because entities can be sensed, but not targeted, from very far away
