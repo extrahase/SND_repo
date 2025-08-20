@@ -540,7 +540,7 @@ end
 ---@param vbmPreset string
 function f.SearchAndDestroy(enemyName, vbmPreset)
     local enemy = Entity.GetEntityByName(enemyName)
-    local combatOffset = 20
+    local combatOffset = 15
     if enemy ~= nil and enemy.HealthPercent > 0 and enemy.DistanceTo < 100 then
         f.Echo("Found " .. enemyName .. " alive and within range, engaging")
         yield("/vbm ar set " .. vbmPreset)
