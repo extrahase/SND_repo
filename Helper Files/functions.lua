@@ -17,6 +17,25 @@ function f.Error(message)
      yield("/echo " .. tostring(message))
 end
 
+---Initiates a callback to an addon with two parameters and waits for 0.1s
+---@param addonName string
+---@param a number
+---@param b number
+function f.Callback2(addonName, a, b)
+    yield("/callback " .. addonName .. " true " .. a .. " " .. b)
+    f.Wait(0.1)
+end
+
+---Initiates a callback to an addon with three parameters and waits for 0.1s
+---@param addonName string
+---@param a number
+---@param b number
+---@param c number
+function f.Callback3(addonName, a, b, c)
+    yield("/callback " .. addonName .. " true " .. a .. " " .. b.. " " .. c)
+    f.Wait(0.1)
+end
+
 ---Closes an addon window via callback.
 ---@param addonName string
 function f.CloseAddon(addonName)
@@ -467,15 +486,6 @@ function f.BuyFromShop(shopName, category, index, amount)
         f.Wait(0.1)
     until not Addons.GetAddon("SelectYesno").Exists and not Addons.GetAddon("ShopExchangeItemDialog").Exists
     f.WaitForAddon(shopName)
-end
-
----Navigates to a specific category in a shop UI.
----@param shopName string
----@param a number
----@param b number
-function f.Callback2(shopName, a, b)
-    yield("/callback " .. shopName .. " true " .. a .. " " .. b)
-    f.Wait(0.1)
 end
 
 ---Waits for addon to be visible and ready, then selects a list option via callback, then waits for the addon to close.
