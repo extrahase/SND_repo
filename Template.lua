@@ -24,3 +24,9 @@ DEBUG = true
 -- ############
 -- ### MAIN ###
 -- ############
+
+f.Echo("Starting script!")
+
+
+
+f.Echo("Script done!")
