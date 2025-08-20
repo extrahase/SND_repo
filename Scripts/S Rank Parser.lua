@@ -111,6 +111,9 @@ f.MountUp()
 yield("/vnav flyflag")
 f.WaitForVnavBusy()
 
+f.Echo("Running Hunt Party Finder")
+yield("/snd run Hunt Party Finder")
+
 f.Echo("Constructing table with Hunt Marks for current zone")
 local huntMarks = { }
 for _, expansion in pairs(HUNT_MARKS) do
