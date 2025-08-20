@@ -134,8 +134,9 @@ while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
     f.Wait(0.1)
 end
 
+f.Error("Warning: leaving/disbanding party and teleporting in 10s")
 f.Wait(10)
 f.Lifestream("tp " .. FREE_DESTINATION)
-yield("/partycmd leave")
+f.LeaveParty()
 
 f.Echo("Script done!")
