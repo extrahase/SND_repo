@@ -37,6 +37,26 @@ function f.SelectNo(addonName)
     yield("/callback " .. addonName .. " true 1")
     f.WaitForAddonClose(addonName)
 end
+
+---Disbands or leaves the current world party.
+function f.LeaveParty()
+    f.Echo("Checking if already in a party")
+    if Svc.Party.Length == 0 then
+        f.Echo("Not in a party")
+    else
+        f.Echo("In a party, checking if party leader")
+        if Svc.Party[Svc.Party.PartyLeaderIndex].ContentId == Svc.ClientState.LocalContentId then
+            f.Echo("We are the party leader, disbanding party")
+            yield("/partycmd breakup")
+        else
+            f.Echo("We are not the party leader, leaving party")
+            yield("/partycmd leave")
+        end
+        while Svc.Party.Length ~= 0 do
+            f.Wait(0.1)
+        end
+    end
+end
 --#endregion
 
 --#region Wait functions
