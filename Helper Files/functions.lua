@@ -81,6 +81,7 @@ function f.LeaveParty()
         if Svc.Party[Svc.Party.PartyLeaderIndex].ContentId == Svc.ClientState.LocalContentId then
             f.Echo("We are the party leader, disbanding party")
             yield("/partycmd breakup")
+            f.SelectYes("SelectYesno")
         else
             f.Echo("We are not the party leader, leaving party")
             yield("/partycmd leave")
