@@ -43,13 +43,14 @@ for i = 0, 3 do
         f.Echo("Found a listing for The Hunt, joining")
         f.SelectListOption("LookingForGroupDetail", 0) -- clicks Join Party
         f.SelectYes("SelectYesno")
+        f.Wait(1)
     else
         f.Echo("Listing is not for The Hunt, going to next one")
     end
     f.CloseAddon("LookingForGroupDetail")
     if Svc.Party.Length ~= 0 then
         f.Echo("Joined a party, stopping search")
-        break
+        return
     end
 end
 
