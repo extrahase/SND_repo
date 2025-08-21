@@ -237,7 +237,7 @@ end
 function f.Dismount()
     while Svc.Condition[4] do
         yield('/gaction "Mount Roulette"')
-        f.Wait(1)
+        f.Wait(0.2)
     end
 end
 
@@ -353,26 +353,13 @@ function f.ChangeInstance(targetInstance, aetheryteName)
     f.WaitForInstance(targetInstance)
 end
 
----Calculates the distance between two 3D vector positions.
----@param vectorA Vector3
----@param vectorB Vector3
----@return number distance
-function f.DistanceBetweenVectors(vectorA, vectorB)
-    local distance = math.sqrt(
-        (vectorB.X - vectorA.X)^2 +
-        (vectorB.Y - vectorA.Y)^2 +
-        (vectorB.Z - vectorA.Z)^2
-    )
-    return distance
-end
-
 ---Estimates ETA to the map flag while flying.
 ---@return number eta
 function f.CalculateEtaFlight3()
     local playerPos = Player.Entity.Position
     playerPos.Y = 0
     local flagPos = Instances.Map.Flag.Vector3
-    local distance = f.DistanceBetweenVectors(playerPos, flagPos)
+    local distance = (flagPos - playerPos):Length()
     local eta = distance / MOUNT_SPEED
     return eta
 end
@@ -390,7 +377,7 @@ function f.CalculateEtaTp3()
     for _, entry in ipairs(aetherytePos) do
         local pos = entry.position
         local id = entry.id
-        local distance = f.DistanceBetweenVectors(flagPos, pos)
+        local distance = (pos - flagPos):Length()
         if distance < shortestDistance then
             shortestDistance = distance
             closestAetheryteId = id
