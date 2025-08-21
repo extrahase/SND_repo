@@ -25,7 +25,20 @@ yield("/send OEM_3")
 f.WaitForAddon("LookingForGroup")
 
 f.Echo("Joining existing listing")
--- WIP!
+f.Callback2("LookingForGroup", 20, 0) -- navigates to Data Center tab
+f.Callback2("LookingForGroup", 21, 11) -- navigates to The Hunt tab
+f.Echo("Starting loop to enter existing listings")
+for i = 0, 3 do
+    f.Callback3("LookingForGroup", 11, i, 0) -- clicks on next listing
+    for k = 1, 10 do
+        if not Addons.GetAddon("LookingForGroupDetail").Ready then
+            f.Wait(0.1)
+        else
+            f.SelectListOption("LookingForGroupDetail", 0) -- clicks Join Party
+            f.SelectYes("SelectYesno")
+        end
+    end
+end
 
 f.Echo("Creating new listing")
 f.Callback2("LookingForGroup", 20, 0) -- navigates to Data Center tab
