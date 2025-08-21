@@ -1175,8 +1175,8 @@ function SelectNextFateHelper(tempFate, nextFate)
             if nextFate.isBonusFate and not tempFate.isBonusFate then return nextFate end
         elseif criteria == "TimeLeft" then
             Dalamud.Log("[FATE] Comparing time left: "..tempFate.timeLeft.." vs "..nextFate.timeLeft)
-            if tempFate.timeLeft > nextFate.timeLeft then return tempFate end
-            if tempFate.timeLeft < nextFate.timeLeft then return nextFate end
+            if tempFate.timeLeft < nextFate.timeLeft then return tempFate end
+            if tempFate.timeLeft > nextFate.timeLeft then return nextFate end
         elseif criteria == "Distance" then
             local tempDist = GetDistanceToPoint(tempFate.position)
             local nextDist = GetDistanceToPoint(nextFate.position)
@@ -2923,7 +2923,7 @@ ShouldSummonChocobo = ChocoboStance == "Follow"
 
 ShouldAutoBuyGysahlGreens = Config.Get("Buy Gysahl Greens?")    --
 MountToUse                          = "mount roulette"       --The mount you'd like to use when flying between fates
-FatePriority                        = {"DistanceTeleport", "Progress", "Bonus", "TimeLeft", "Distance"}
+FatePriority                        = { "Progress", "TimeLeft", "DistanceTeleport", "Distance", "Bonus" }
 
 --Fate Combat Settings
 CompletionToIgnoreFate = Config.Get("Ignore FATE if progress is over (%)")
