@@ -34,6 +34,7 @@ for i = 0, 3 do
         if not Addons.GetAddon("LookingForGroupDetail").Ready then
             f.Wait(0.1)
         else
+            f.Wait(1)
             f.SelectListOption("LookingForGroupDetail", 0) -- clicks Join Party
             f.SelectYes("SelectYesno")
         end
