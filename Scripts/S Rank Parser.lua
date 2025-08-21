@@ -100,8 +100,7 @@ elseif instance == targetInstance then
     f.Echo("Already in correct instance, moving on")
 else
     f.Echo("Changing to instance " .. targetInstance)
-    IPC.Lifestream.ChangeInstance(targetInstance)
-    f.WaitForInstance(targetInstance)
+    f.ChangeInstance(targetInstance, aetheryteName)
 end
 --#endregion
 
