@@ -32,18 +32,19 @@ f.CloseAddon("LookingForGroup")
 yield("/send OEM_3")
 f.WaitForAddon("LookingForGroup")
 
-f.Echo("Joining existing listing")
+f.Echo("Trying to join existing listing")
 f.Callback2("LookingForGroup", 20, 0) -- navigates to Data Center tab
 f.Callback2("LookingForGroup", 21, 11) -- navigates to The Hunt tab
 f.Echo("Starting loop to enter existing listings")
 for i = 0, 3 do
     f.Callback3("LookingForGroup", 11, i, 0) -- clicks on next listing
     f.WaitForAddon("LookingForGroupDetail")
+    f.Wait(1) -- needed for Worlds with high ping
     if Addons.GetAddon("LookingForGroupDetail"):GetAtkValue(15).ValueString == "The Hunt" then
         f.Echo("Found a listing for The Hunt, joining")
         f.SelectListOption("LookingForGroupDetail", 0) -- clicks Join Party
         f.SelectYes("SelectYesno")
-        f.Wait(1)
+        f.Wait(1) -- needed for the party join to be completed before the next check
     else
         f.Echo("Listing is not for The Hunt, going to next one")
     end
