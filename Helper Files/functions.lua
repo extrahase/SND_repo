@@ -280,6 +280,9 @@ end
 ---@param distance number
 function f.MoveWithInDistanceTo(targetPosition, distance)
     IPC.vnavmesh.PathfindAndMoveTo(targetPosition, Entity.Player.IsMounted)
+    while not IPC.vnavmesh.IsRunning() do
+        f.Wait(0.1)
+    end
     while (targetPosition - Entity.Player.Position):Length() > distance do
         f.Wait(0.1)
     end
@@ -329,6 +332,25 @@ function f.TpToAetheryte(aetheryteId)
     f.WaitForBusy()
     f.WaitForReady()
     f.WaitForVnav()
+end
+
+---Changes the instance to the specified target instance and waits for the player to be ready.
+---@param targetInstance number
+---@param aetheryteName string
+function f.ChangeInstance(targetInstance, aetheryteName)
+    local aetheryte = Entity.GetEntityByName("Aetheryte")
+    if IPC.Lifestream.CanChangeInstance() then
+    elseif aetheryte and aetheryte.DistanceTo < 100 then
+        f.MoveWithInDistanceTo(aetheryte.Position, 10)
+    else
+        f.Lifestream("tp " .. aetheryteName)
+        f.WaitForBusy()
+        f.WaitForZone(Svc.ClientState.TerritoryType)
+        aetheryte = Entity.GetEntityByName("Aetheryte")
+        f.MoveWithInDistanceTo(aetheryte.Position, 10)
+    end
+    IPC.Lifestream.ChangeInstance(targetInstance)
+    f.WaitForInstance(targetInstance)
 end
 
 ---Calculates the distance between two 3D vector positions.
