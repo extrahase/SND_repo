@@ -38,14 +38,18 @@ f.Callback2("LookingForGroup", 21, 11) -- navigates to The Hunt tab
 f.Echo("Starting loop to enter existing listings")
 for i = 0, 3 do
     f.Callback3("LookingForGroup", 11, i, 0) -- clicks on next listing
-    for k = 1, 10 do
-        if not Addons.GetAddon("LookingForGroupDetail").Ready then
-            f.Wait(0.1)
-        else
-            f.Wait(1)
-            f.SelectListOption("LookingForGroupDetail", 0) -- clicks Join Party
-            f.SelectYes("SelectYesno")
-        end
+    f.WaitForAddon("LookingForGroupDetail")
+    if Addons.GetAddon("LookingForGroupDetail"):GetAtkValue(15).ValueString == "The Hunt" then
+        f.Echo("Found a listing for The Hunt, joining")
+        f.SelectListOption("LookingForGroupDetail", 0) -- clicks Join Party
+        f.SelectYes("SelectYesno")
+    else
+        f.Echo("Listing is not for The Hunt, going to next one")
+    end
+    f.CloseAddon("LookingForGroupDetail")
+    if Svc.Party.Length ~= 0 then
+        f.Echo("Joined a party, stopping search")
+        break
     end
 end
 
