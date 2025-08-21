@@ -66,24 +66,25 @@ f.WaitForVnavBusy()
 
 f.Echo("Constructing table with A and S Hunt Marks for current zone")
 local zoneName = f.FindZoneNameByTerritoryId(Svc.ClientState.TerritoryType)
-local aRankNames = { }
-local sRankNames = { }
+local aRankNames = {}
+local sRankNames = {}
+
 for _, expansion in pairs(HUNT_MARKS) do
+    local foundA = false
     if expansion["A"] then
         for _, mark in ipairs(expansion["A"]) do
             if mark.zone == zoneName then
                 f.Echo("Adding " .. mark.name .. " to A Ranks")
                 table.insert(aRankNames, mark.name)
+                foundA = true
             end
         end
     end
-    if expansion["S"] then
+    if foundA and expansion["S"] then
         for _, mark in ipairs(expansion["S"]) do
-            if mark.zone == zoneName then
+            if mark.zone == zoneName or mark.zone == "all" then
                 f.Echo("Adding " .. mark.name .. " to S Ranks")
-                table.insert(aRankNames, mark.name)
-                f.Echo("Adding " .. expansion["S"][7].name .. " to S Ranks")
-                table.insert(sRankNames, expansion["S"][7].name)
+                table.insert(sRankNames, mark.name)
             end
         end
     end
