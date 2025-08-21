@@ -601,11 +601,11 @@ function f.SearchAndDestroy(enemyName, vbmPreset)
     local combatOffset = 15
     if enemy ~= nil and enemy.HealthPercent > 0 and enemy.DistanceTo < 100 then
         f.Echo("Found " .. enemyName .. " alive and within range, engaging")
-        yield("/vbm ar set " .. vbmPreset)
         enemy = Entity.GetEntityByName(enemyName)
         f.MoveWithInDistanceTo(enemy.Position, combatOffset)
         enemy:SetAsTarget()
         f.Dismount()
+        yield("/vbm ar set " .. vbmPreset)
         f.WaitForCombat()
         f.WaitForOutOfCombat()
         yield("/vbm ar clear")
@@ -626,24 +626,22 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
             f.Echo(enemyName .. " is above " .. hpThresholdPercent .. "% HP, moving to waiting position")
             f.Wait(1) -- sometimes character doesn't fly off the ground; this is to help with that (needs testing)
             f.MoveWithInDistanceTo(enemy.Position, waitingPositionOffset)
-
             f.Echo("Clearing target and activating preset")
             Player.Entity:ClearTarget()
             yield("/vbm ar set " .. vbmPreset)
-
             f.Echo("Standing by and checking enemy HP periodically")
             while enemy and enemy.HealthPercent > hpThresholdPercent do
                 enemy = Entity.GetEntityByName(enemyName)
                 f.Wait(0.1)
             end
         end
-
         f.Echo(enemyName .. " is below " .. hpThresholdPercent .. "% HP, engaging")
-        yield("/vbm ar set " .. vbmPreset)
+        yield("/vbm ar clear")
         enemy = Entity.GetEntityByName(enemyName)
         enemy:SetAsTarget() --because entities can be sensed, but not targeted, from very far away
         f.MoveWithInDistanceTo(enemy.Position, combatOffset) -- TODO: create a version that checks distance to entities
         f.Dismount()
+        yield("/vbm ar set " .. vbmPreset)
         f.WaitForCombat()
         f.WaitForOutOfCombat()
         yield("/vbm ar clear")
