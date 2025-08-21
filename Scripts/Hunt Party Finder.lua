@@ -49,7 +49,7 @@ for i = 0, 3 do
     end
     f.CloseAddon("LookingForGroupDetail")
     if Svc.Party.Length ~= 0 then
-        f.Echo("Joined a party, stopping search")
+        f.Echo("Joined a party, stopping script")
         return
     end
 end
