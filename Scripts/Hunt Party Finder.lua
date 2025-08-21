@@ -16,8 +16,16 @@ DEBUG = true
 
 f.Echo("Starting script!")
 
-f.Echo("Making sure we are party-less")
-f.LeaveParty()
+-- f.Echo("Making sure we are party-less")
+-- f.LeaveParty()
+
+f.Echo("Checking if already in a party")
+if Svc.Party.Length == 0 then
+    f.Echo("Not in a party, moving on")
+else
+    f.Echo("Already in a party, stopping script")
+    return
+end
 
 f.Echo("Opening Party Finder")
 f.CloseAddon("LookingForGroup")
