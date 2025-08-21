@@ -37,7 +37,7 @@ f.Callback2("LookingForGroup", 20, 0) -- navigates to Data Center tab
 f.Callback2("LookingForGroup", 21, 11) -- navigates to The Hunt tab
 f.Echo("Starting loop to enter existing listings")
 for run = 1, 2 do
-    for listingIndex = 0, 2 do
+    for listingIndex = 0, 1 do
         f.Callback3("LookingForGroup", 11, listingIndex, 0) -- clicks on next listing
         f.WaitForAddon("LookingForGroupDetail")
         f.Wait(1) -- needed for Worlds with high ping
