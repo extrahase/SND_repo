@@ -12,7 +12,7 @@ MOUNT_SPEED = 20
 RUN_SPEED = 6
 TP_DELAY = 11
 
-DEBUG = true
+DEBUG = false
 
 -- ############
 -- ### MAIN ###

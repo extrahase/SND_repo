@@ -4,7 +4,7 @@
 
 local f = require("functions")
 
-DEBUG = true
+DEBUG = false
 
 -- #################
 -- ### FUNCTIONS ###
