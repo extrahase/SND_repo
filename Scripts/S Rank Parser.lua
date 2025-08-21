@@ -99,7 +99,7 @@ if instance == 0 then
 elseif instance == targetInstance then
     f.Echo("Already in correct instance, moving on")
 else
-    f.Echo("Switching to instance " .. targetInstance)
+    f.Echo("Changing to instance " .. targetInstance)
     IPC.Lifestream.ChangeInstance(targetInstance)
     f.WaitForInstance(targetInstance)
 end
@@ -137,9 +137,9 @@ while IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() do
     f.Wait(0.1)
 end
 
-f.Error("Warning: leaving/disbanding party and teleporting in 10s")
-f.Wait(10)
-f.Lifestream("tp " .. FREE_DESTINATION)
-f.LeaveParty()
+-- f.Error("Warning: leaving/disbanding party and teleporting in 10s")
+-- f.Wait(10)
+-- f.Lifestream("tp " .. FREE_DESTINATION)
+-- f.LeaveParty()
 
 f.Echo("Script done!")
