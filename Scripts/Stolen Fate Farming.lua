@@ -711,6 +711,7 @@ FatesData = {
             },
             fatesWithContinuations = {
                 { fateName="Grand Designs: Unknown Execution", continuationIsBoss=true },
+                { fateName="Grand Designs: Aigokeros", continuationIsBoss=true },
             },
             blacklistedFates= {}
         }
