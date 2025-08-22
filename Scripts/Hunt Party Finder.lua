@@ -31,6 +31,7 @@ f.Echo("Opening Party Finder")
 f.CloseAddon("LookingForGroup")
 yield("/send OEM_3")
 f.WaitForAddon("LookingForGroup")
+f.Wait(0.5)
 
 f.Echo("Trying to join existing listing")
 f.Callback2("LookingForGroup", 20, 0) -- navigates to Data Center tab
