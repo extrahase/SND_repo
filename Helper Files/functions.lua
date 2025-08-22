@@ -237,7 +237,7 @@ end
 function f.Dismount()
     while Svc.Condition[4] do
         yield('/gaction "Mount Roulette"')
-        f.Wait(0.2)
+        f.Wait(0.5)
     end
 end
 
