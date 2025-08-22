@@ -24,7 +24,7 @@ function f.SelectListOption(addonName, a)
     f.Echo("Executing /callback " .. addonName .. " true " .. a)
     f.WaitForAddon(addonName)
     yield("/callback " .. addonName .. " true " .. a)
-    f.Wait(0.1)
+    f.Wait(0.5)
 end
 
 ---Initiates a callback to an addon with two parameters and waits for 0.1s
@@ -35,7 +35,7 @@ function f.Callback2(addonName, a, b)
     f.Echo("Executing /callback " .. addonName .. " true " .. a .. " " .. b)
     f.WaitForAddon(addonName)
     yield("/callback " .. addonName .. " true " .. a .. " " .. b)
-    f.Wait(0.1)
+    f.Wait(0.5)
 end
 
 ---Initiates a callback to an addon with three parameters and waits for 0.1s
@@ -47,7 +47,7 @@ function f.Callback3(addonName, a, b, c)
     f.Echo("Executing /callback " .. addonName .. " true " .. a .. " " .. b.. " " .. c)
     f.WaitForAddon(addonName)
     yield("/callback " .. addonName .. " true " .. a .. " " .. b.. " " .. c)
-    f.Wait(0.1)
+    f.Wait(0.5)
 end
 
 ---Closes an addon window via callback.
