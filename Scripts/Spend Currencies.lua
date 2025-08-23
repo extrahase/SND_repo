@@ -23,6 +23,14 @@ ITEMS_TO_DESYNTH = {
         { name = "Neo Kingdom Armlets of Healing", shop = 3, category = 0, index = 13, price = 70 },
         { name = "Neo Kingdom Boots of Casting", shop = 3, category = 0, index = 16, price = 70 },
         { name = "Neo Kingdom Boots of Healing", shop = 3, category = 0, index = 17, price = 70 },
+        { name = "Neo Kingdom Earrings of Casting", shop = 3, category = 0, index = 18, price = 55 },
+        { name = "Neo Kingdom Earrings of Healing", shop = 3, category = 0, index = 19, price = 55 },
+        { name = "Neo Kingdom Choker of Casting", shop = 3, category = 0, index = 20, price = 55 },
+        { name = "Neo Kingdom Choker of Healing", shop = 3, category = 0, index = 21, price = 55 },
+        { name = "Neo Kingdom Bangles of Casting", shop = 3, category = 0, index = 22, price = 55 },
+        { name = "Neo Kingdom Bangles of Healing", shop = 3, category = 0, index = 23, price = 55 },
+        { name = "Neo Kingdom Ring of Casting", shop = 3, category = 0, index = 24, price = 55 },
+        { name = "Neo Kingdom Ring of Healing", shop = 3, category = 0, index = 25, price = 55 },
     }
 }
 
