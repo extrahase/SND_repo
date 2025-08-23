@@ -19,16 +19,8 @@ ITEMS_TO_DESYNTH = {
     poetics = { },
     uncapped = { },
     nuts = {
-        -- { name = "Neo Kingdom Tulwar", shop = 2, category = 0, index = 0, price = 140 },
-        -- { name = "Neo Kingdom Kite Shield", shop = 2, category = 0, index = 0, price = 140 },
-        { name = "Neo Kingdom Hat of Casting", shop = 3, category = 0, index = 8, price = 70 },
-        { name = "Neo Kingdom Hat of Healing", shop = 3, category = 0, index = 9, price = 70 },
-        { name = "Neo Kingdom Coat of Casting", shop = 3, category = 0, index = 10, price = 120 },
-        { name = "Neo Kingdom Coat of Healing", shop = 3, category = 0, index = 11, price = 120 },
         { name = "Neo Kingdom Armlets of Casting", shop = 3, category = 0, index = 12, price = 70 },
         { name = "Neo Kingdom Armlets of Healing", shop = 3, category = 0, index = 13, price = 70 },
-        { name = "Neo Kingdom Breeches of Casting", shop = 3, category = 0, index = 14, price = 120 },
-        { name = "Neo Kingdom Breeches of Healing", shop = 3, category = 0, index = 15, price = 120 },
         { name = "Neo Kingdom Boots of Casting", shop = 3, category = 0, index = 16, price = 70 },
         { name = "Neo Kingdom Boots of Healing", shop = 3, category = 0, index = 17, price = 70 },
     }
