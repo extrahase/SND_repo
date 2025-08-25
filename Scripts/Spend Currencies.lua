@@ -19,10 +19,6 @@ ITEMS_TO_DESYNTH = {
     poetics = { },
     uncapped = { },
     nuts = {
-        { name = "Neo Kingdom Armlets of Casting", shop = 3, category = 0, index = 12, price = 70 },
-        { name = "Neo Kingdom Armlets of Healing", shop = 3, category = 0, index = 13, price = 70 },
-        { name = "Neo Kingdom Boots of Casting", shop = 3, category = 0, index = 16, price = 70 },
-        { name = "Neo Kingdom Boots of Healing", shop = 3, category = 0, index = 17, price = 70 },
         { name = "Neo Kingdom Earrings of Casting", shop = 3, category = 0, index = 18, price = 55 },
         { name = "Neo Kingdom Earrings of Healing", shop = 3, category = 0, index = 19, price = 55 },
         { name = "Neo Kingdom Choker of Casting", shop = 3, category = 0, index = 20, price = 55 },
