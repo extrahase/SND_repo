@@ -121,8 +121,8 @@ local function SpendPoetics()
     f.Wait(0.5) -- wait for last purchase to be processed
     f.CloseAddon(shopName)
 
-    f.Echo("Moving back to line up with Aetheryte lmao")
-    f.MoveToCoordinates(45.64, -1.63, 55.19)
+    -- f.Echo("Moving back to line up with Aetheryte lmao")
+    -- f.MoveToCoordinates(45.64, -1.63, 55.19)
 end
 
 local function SpendUncapped()
