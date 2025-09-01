@@ -75,8 +75,7 @@ local function DesynthItems()
             local itemId = f.FindItemID(item.name)
             if Inventory.GetItemCount(itemId) > 0 then
                 yield("/desynth "..itemId)
-                f.WaitForReady()
-                f.Wait(1)
+                f.WaitForAddon("SalvageResult")
                 f.CloseAddon("SalvageResult")
             end
         end
