@@ -33,12 +33,11 @@ yield("/send OEM_3")
 f.WaitForAddon("LookingForGroup")
 f.Wait(0.5)
 
-f.Echo("Trying to join existing listing")
-f.Callback2("LookingForGroup", 20, 0) -- navigates to Data Center tab
-f.Callback2("LookingForGroup", 21, 11) -- navigates to The Hunt tab
-f.Echo("Starting loop to enter existing listings")
+f.Echo("Starting loop to join existing listings")
 for run = 1, 2 do
     for listingIndex = 0, 1 do
+        f.Callback2("LookingForGroup", 20, 0) -- navigates to Data Center tab
+        f.Callback2("LookingForGroup", 21, 11) -- navigates to The Hunt tab
         f.Callback3("LookingForGroup", 11, listingIndex, 0) -- clicks on next listing
         f.WaitForAddon("LookingForGroupDetail")
         f.Wait(1) -- needed for Worlds with high ping
