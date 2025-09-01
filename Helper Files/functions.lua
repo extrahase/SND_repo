@@ -53,22 +53,28 @@ end
 ---Closes an addon window via callback.
 ---@param addonName string
 function f.CloseAddon(addonName)
-    yield("/callback " .. addonName .. " true -1")
-    f.WaitForAddonClose(addonName)
+    while Addons.GetAddon(addonName).Exists do
+        yield("/callback " .. addonName .. " true -1")
+        f.Wait(0.1)
+    end
 end
 
 ---Selects "Yes" in a confirmation dialog via callback.
 ---@param addonName string
 function f.SelectYes(addonName)
-    yield("/callback " .. addonName .. " true 0")
-    f.WaitForAddonClose(addonName)
+    while Addons.GetAddon(addonName).Exists do
+        yield("/callback " .. addonName .. " true 0")
+        f.Wait(0.1)
+    end
 end
 
 ---Selects "No" in a confirmation dialog via callback.
 ---@param addonName string
 function f.SelectNo(addonName)
-    yield("/callback " .. addonName .. " true 1")
-    f.WaitForAddonClose(addonName)
+    while Addons.GetAddon(addonName).Exists do
+        yield("/callback " .. addonName .. " true 1")
+        f.Wait(0.1)
+    end
 end
 
 ---Disbands or leaves the current world party.
@@ -506,9 +512,7 @@ function f.BuyFromShop(shopName, category, index, amount)
     repeat -- account for potentially multiple confirmation dialogues
         f.Wait(0.1)
         f.SelectYes("SelectYesno")
-        f.Wait(0.1)
         f.SelectYes("ShopExchangeItemDialog")
-        f.Wait(0.1)
     until not Addons.GetAddon("SelectYesno").Exists and not Addons.GetAddon("ShopExchangeItemDialog").Exists
     f.WaitForAddon(shopName)
 end
