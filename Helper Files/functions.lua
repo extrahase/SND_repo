@@ -510,7 +510,7 @@ function f.BuyFromShop(shopName, category, index, amount)
     f.WaitForAddon(shopName)
     yield("/callback " .. shopName .. " true " .. category .. " " .. index .. " " .. amount)
     repeat -- account for potentially multiple confirmation dialogues
-        f.Wait(0.2)
+        f.Wait(0.5)
         f.SelectYes("SelectYesno")
         f.SelectYes("ShopExchangeItemDialog")
     until not Addons.GetAddon("SelectYesno").Exists and not Addons.GetAddon("ShopExchangeItemDialog").Exists
