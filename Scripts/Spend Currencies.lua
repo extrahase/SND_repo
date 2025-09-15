@@ -11,9 +11,9 @@ UNCAPPED_DESTINATION = "Solution Nine"
 
 DEBUG = false
 
-MIN_POETICS = 1640
+MIN_POETICS = 1500
 MIN_UNCAPPED = 1800
-MIN_NUTS = 3520
+MIN_NUTS = 3500
 
 ITEMS_TO_DESYNTH = {
     poetics = { },
@@ -43,9 +43,9 @@ ITEMS_TO_DESYNTH = {
 }
 
 POETICS_VENDOR = {
-    name = "Rowena's Representative",
-    shopName = "InclusionShop",
-    zoneId = 132,
+    name = "Jubrunnah",
+    shopName = "ShopExchangeCurrency",
+    zoneId = 963,
 }
 
 UNCAPPED_VENDOR = {
@@ -94,36 +94,56 @@ local function SpendPoetics()
         return
     end
 
-    f.Echo("Teleporting to " .. FREE_DESTINATION .. " if not already there")
-        if Svc.ClientState.TerritoryType ~= POETICS_VENDOR.zoneId then
-            f.Lifestream("tp " .. FREE_DESTINATION)
-            f.WaitForZone(POETICS_VENDOR.zoneId)
-        end
-
-    f.Echo("Navigating to vendor")
-    f.MoveToCoordinates(37.52, -1.69, 57.55)
-
-    f.Echo("Interacting with " .. vendorName)
-    Entity.GetEntityByName(vendorName):SetAsTarget()
-    Entity.Target:Interact()
+    f.Lifestream("EW Relic")
 
     f.Echo("Waiting for " .. shopName .. " window")
     f.WaitForAddon(shopName)
 
-    f.Echo("Navigating to Combat Supplies > Special Arms Materials")
-    f.Callback2(shopName, 12, 7)
-    f.Callback2(shopName, 13, 1)
-
-    f.Echo("Buying " .. math.floor(poeticsAmount / 150) .. " Unidentifiable Shells")
-    local buyAmount = math.floor(poeticsAmount / 150)
-    f.BuyFromShop(shopName, 14, 6, buyAmount)
+    f.Echo("Buying Relic Materials")
+    f.BuyFromShop(shopName, 0, 0, 3)
 
     f.Echo("Closing shop")
     f.Wait(0.5) -- wait for last purchase to be processed
     f.CloseAddon(shopName)
 
-    -- f.Echo("Moving back to line up with Aetheryte lmao")
-    -- f.MoveToCoordinates(45.64, -1.63, 55.19)
+
+
+    -- local vendorName = POETICS_VENDOR.name
+    -- local shopName = POETICS_VENDOR.shopName
+    -- local poeticsAmount = Inventory.GetItemCount(28)
+
+    -- f.Echo("Checking if minimum Poetics treshold is met")
+    -- if poeticsAmount < MIN_POETICS then
+    --     return
+    -- end
+
+    -- f.Echo("Teleporting to " .. FREE_DESTINATION .. " if not already there")
+    --     if Svc.ClientState.TerritoryType ~= POETICS_VENDOR.zoneId then
+    --         f.Lifestream("tp " .. FREE_DESTINATION)
+    --         f.WaitForZone(POETICS_VENDOR.zoneId)
+    --     end
+
+    -- f.Echo("Navigating to vendor")
+    -- f.MoveToCoordinates(37.52, -1.69, 57.55)
+
+    -- f.Echo("Interacting with " .. vendorName)
+    -- Entity.GetEntityByName(vendorName):SetAsTarget()
+    -- Entity.Target:Interact()
+
+    -- f.Echo("Waiting for " .. shopName .. " window")
+    -- f.WaitForAddon(shopName)
+
+    -- f.Echo("Navigating to Combat Supplies > Special Arms Materials")
+    -- f.Callback2(shopName, 12, 7)
+    -- f.Callback2(shopName, 13, 1)
+
+    -- f.Echo("Buying " .. math.floor(poeticsAmount / 150) .. " Unidentifiable Shells")
+    -- local buyAmount = math.floor(poeticsAmount / 150)
+    -- f.BuyFromShop(shopName, 14, 6, buyAmount)
+
+    -- f.Echo("Closing shop")
+    -- f.Wait(0.5) -- wait for last purchase to be processed
+    -- f.CloseAddon(shopName)
 end
 
 local function SpendUncapped()
