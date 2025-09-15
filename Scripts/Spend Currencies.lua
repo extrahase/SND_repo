@@ -95,8 +95,8 @@ local function SpendPoetics()
     end
 
     f.Echo("Checking if max amount of mats is reached")
-    if Inventory.GetItemCount(38420) >= 57 then
-        f.Echo("Max amount of mats reached, skipping Poetics spend")
+    if Inventory.GetItemCount(38420) >= 54 then
+        f.Error("Max amount of mats reached, skipping Poetics spend")
         return
     end
 
