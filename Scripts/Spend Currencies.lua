@@ -94,7 +94,13 @@ local function SpendPoetics()
         return
     end
 
-    f.Lifestream("EW Relic")
+    f.Echo("Checking if max amount of mats is reached")
+    if Inventory.GetItemCount(38420) >= 57 then
+        f.Echo("Max amount of mats reached, skipping Poetics spend")
+        return
+    end
+
+    f.Lifestream("EWRelic")
 
     f.Echo("Waiting for " .. shopName .. " window")
     f.WaitForAddon(shopName)
