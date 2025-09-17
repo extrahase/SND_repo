@@ -94,9 +94,18 @@ local function SpendPoetics()
         return
     end
 
-    f.Echo("Checking if max amount of mats is reached")
-    if Inventory.GetItemCount(38420) >= 54 then
-        f.Error("Max amount of mats reached, skipping Poetics spend")
+    f.Echo("Checking which item to buy")
+    local index = nil
+    if Inventory.GetItemCount(38420) < 54 then
+        index = 0
+    elseif Inventory.GetItemCount(38940) < 54 then
+        index = 1
+    elseif Inventory.GetItemCount(40322) < 54 then
+        index = 2
+    elseif Inventory.GetItemCount(41032) < 54 then
+        index = 3
+    else
+        f.Error("All relic materials are at cap, cannot spend Poetics")
         return
     end
 
@@ -106,7 +115,9 @@ local function SpendPoetics()
     f.WaitForAddon(shopName)
 
     f.Echo("Buying Relic Materials")
-    f.BuyFromShop(shopName, 0, 0, 3)
+    if index then
+        f.BuyFromShop(shopName, 0, index, 3)
+    end
 
     f.Echo("Closing shop")
     f.Wait(0.5) -- wait for last purchase to be processed
