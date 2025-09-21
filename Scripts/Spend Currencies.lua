@@ -12,7 +12,7 @@ UNCAPPED_DESTINATION = "Solution Nine"
 DEBUG = false
 
 MIN_POETICS = 1500
-MIN_UNCAPPED = 1800
+MIN_UNCAPPED = 1500
 MIN_NUTS = 3500
 
 ITEMS_TO_DESYNTH = {
@@ -173,36 +173,64 @@ local function SpendUncapped()
         return
     end
 
-    f.Echo("Teleporting to " .. UNCAPPED_DESTINATION .. " if not already there")
-        if Svc.ClientState.TerritoryType ~= UNCAPPED_VENDOR.zoneId then
-            f.Lifestream("tp " .. UNCAPPED_DESTINATION)
-            f.WaitForZone(UNCAPPED_VENDOR.zoneId)
-            IPC.Lifestream.AethernetTeleport("Nexus Arcade")
-            f.WaitForLifestream()
-        end
+    f.Echo("Checking item max quantity")
+    if Inventory.GetItemCount(46850) >= 60 then
+        f.Error("Relic material is at cap, cannot spend Uncapped")
+        return
+    end
+
+    f.Echo("Teleporting to " .. HOME_POINT .. " if not already there")
+    if Svc.ClientState.TerritoryType ~= NUTS_VENDOR.zoneId then
+        f.Return()
+        f.WaitForZone(NUTS_VENDOR.zoneId)
+        f.WaitForLifestream()
+    end
 
     f.Echo("Navigating to vendor")
-    f.MoveToCoordinates(-185.25, 0.66, -28.00)
+    f.Lifestream("Relic")
 
-    f.Echo("Interacting with " .. vendorName)
-    Entity.GetEntityByName(vendorName):SetAsTarget()
-    Entity.Target:Interact()
+    f.Echo("Waiting for " .. shopName .. " window")
+    f.WaitForAddon(shopName)
 
-    f.Echo("Selecting shop: Allagan Tomestones of Heliometry (Other)")
-    f.SelectListOption("SelectIconString", 3)
-
-    f.Echo("Buying items from shop")
-    local buyAmount = math.floor(uncappedAmount / 6 / 20)
-    f.BuyFromShop(shopName, 0, 0, buyAmount)
-    f.BuyFromShop(shopName, 0, 1, buyAmount)
-    f.BuyFromShop(shopName, 0, 2, buyAmount)
-    f.BuyFromShop(shopName, 0, 3, buyAmount)
-    f.BuyFromShop(shopName, 0, 4, buyAmount)
-    f.BuyFromShop(shopName, 0, 5, buyAmount)
+    f.Echo("Buying Relic Materials")
+    f.BuyFromShop(shopName, 0, 0, 3)
 
     f.Echo("Closing shop")
     f.Wait(0.5) -- wait for last purchase to be processed
     f.CloseAddon(shopName)
+
+
+
+    -- f.Echo("Teleporting to " .. UNCAPPED_DESTINATION .. " if not already there")
+    --     if Svc.ClientState.TerritoryType ~= UNCAPPED_VENDOR.zoneId then
+    --         f.Lifestream("tp " .. UNCAPPED_DESTINATION)
+    --         f.WaitForZone(UNCAPPED_VENDOR.zoneId)
+    --         IPC.Lifestream.AethernetTeleport("Nexus Arcade")
+    --         f.WaitForLifestream()
+    --     end
+
+    -- f.Echo("Navigating to vendor")
+    -- f.MoveToCoordinates(-185.25, 0.66, -28.00)
+
+    -- f.Echo("Interacting with " .. vendorName)
+    -- Entity.GetEntityByName(vendorName):SetAsTarget()
+    -- Entity.Target:Interact()
+
+    -- f.Echo("Selecting shop: Allagan Tomestones of Heliometry (Other)")
+    -- f.SelectListOption("SelectIconString", 3)
+
+    -- f.Echo("Buying items from shop")
+    -- local buyAmount = math.floor(uncappedAmount / 6 / 20)
+    -- f.BuyFromShop(shopName, 0, 0, buyAmount)
+    -- f.BuyFromShop(shopName, 0, 1, buyAmount)
+    -- f.BuyFromShop(shopName, 0, 2, buyAmount)
+    -- f.BuyFromShop(shopName, 0, 3, buyAmount)
+    -- f.BuyFromShop(shopName, 0, 4, buyAmount)
+    -- f.BuyFromShop(shopName, 0, 5, buyAmount)
+
+    -- f.Echo("Closing shop")
+    -- f.Wait(0.5) -- wait for last purchase to be processed
+    -- f.CloseAddon(shopName)
 end
 
 local function SpendNuts()
