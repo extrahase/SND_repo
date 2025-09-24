@@ -174,7 +174,7 @@ local function SpendUncapped()
     end
 
     f.Echo("Checking item max quantity")
-    if Inventory.GetItemCount(46850) >= 54 then
+    if Inventory.GetItemCount(46850) >= 51 then
         f.Error("Relic material is at cap, cannot spend Uncapped")
         return
     end
