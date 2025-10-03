@@ -30,7 +30,6 @@ end
 ---Initiates a callback to an addon with one parameter and waits.
 ---@param addonName string
 ---@param a number
----@param b number
 function f.Callback1(addonName, a)
     f.Echo("Executing /callback " .. addonName .. " true " .. a)
     f.WaitForAddon(addonName)
