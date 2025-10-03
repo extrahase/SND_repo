@@ -17,7 +17,7 @@ function f.Error(message)
      yield("/echo " .. tostring(message))
 end
 
----Initiates a callback to an addon with one parameter and waits for 0.1s
+---Initiates a callback to an addon with one parameter and waits.
 ---@param addonName string
 ---@param a number
 function f.SelectListOption(addonName, a)
@@ -27,7 +27,18 @@ function f.SelectListOption(addonName, a)
     f.Wait(0.5)
 end
 
----Initiates a callback to an addon with two parameters and waits for 0.1s
+---Initiates a callback to an addon with one parameter and waits.
+---@param addonName string
+---@param a number
+---@param b number
+function f.Callback1(addonName, a)
+    f.Echo("Executing /callback " .. addonName .. " true " .. a)
+    f.WaitForAddon(addonName)
+    yield("/callback " .. addonName .. " true " .. a)
+    f.Wait(0.5)
+end
+
+---Initiates a callback to an addon with two parameters and waits.
 ---@param addonName string
 ---@param a number
 ---@param b number
@@ -38,7 +49,7 @@ function f.Callback2(addonName, a, b)
     f.Wait(0.5)
 end
 
----Initiates a callback to an addon with three parameters and waits for 0.1s
+---Initiates a callback to an addon with three parameters and waits.
 ---@param addonName string
 ---@param a number
 ---@param b number
