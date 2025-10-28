@@ -193,7 +193,7 @@ local function SpendUncapped()
     f.WaitForAddon(shopName)
 
     f.Echo("Buying Relic Materials")
-    f.BuyFromShop(shopName, 0, 0, 3)
+    f.BuyFromShop(shopName, 0, 1, 1)
 
     f.Echo("Closing shop")
     f.Wait(0.5) -- wait for last purchase to be processed
