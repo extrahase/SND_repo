@@ -630,7 +630,7 @@ function f.SearchAndDestroySRank(enemyName, vbmPreset)
             f.MoveWithInDistanceTo(enemy.Position, waitingPositionOffset)
             f.Echo("Clearing target and activating preset")
             Player.Entity:ClearTarget()
-            yield("/vbm ar set " .. vbmPreset)
+            -- yield("/vbm ar set " .. vbmPreset)
             f.Echo("Standing by and checking enemy HP periodically")
             while enemy and enemy.HealthPercent > hpThresholdPercent do
                 enemy = Entity.GetEntityByName(enemyName)
