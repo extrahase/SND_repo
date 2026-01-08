@@ -4,12 +4,15 @@
 
 local f = require("functions")
 
+DEBUG = false
+
 ITEM_LIST = require("vac_lists").Item_List
+
 HOME_POINT = "Tuliyollal"
 FREE_DESTINATION = "New Gridania"
 UNCAPPED_DESTINATION = "Solution Nine"
 
-DEBUG = false
+UNCAPPED_ID = 48
 
 MIN_POETICS = 1500
 MIN_UNCAPPED = 1500
@@ -166,7 +169,7 @@ end
 local function SpendUncapped()
     local vendorName = UNCAPPED_VENDOR.name
     local shopName = UNCAPPED_VENDOR.shopName
-    local uncappedAmount = Inventory.GetItemCount(47)
+    local uncappedAmount = Inventory.GetItemCount(UNCAPPED_ID)
 
     f.Echo("Checking if minimum Uncapped treshold is met")
     if uncappedAmount < MIN_UNCAPPED then
